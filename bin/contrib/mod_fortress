@@ -1,0 +1,23 @@
+# Created by Kevin J. Menard, Jr. <kmenard@wpi.edu>, June 1, 2003.
+
+notice "$MENUTRUE" "Getting Mod Fortress v$MODFORTRESS ready . . .\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_fortress.c" ]; then
+
+  cd $root/src
+  check_source "mod_fortress-${MODFORTRESS}.tar.gz" "http://unc.dl.sourceforge.net/sourceforge/modfortress/mod_fortress-${MODFORTRESS}.tar.gz"
+  explode mod_fortress-${MODFORTRESS}.tar.gz
+  notice "$MENUTRUE" " Untar'ed Mod Fortress . . .\n"
+  notice "$MENUTRUE" " Mod Fortress: Copying header files . . ."
+  localcopy "mod_fortress-headerfiles" "$CP -f $root/src/fortress/mod_fortress.h $root/apache_$APACHE/src/modules/extra"
+  if [ -f "$root/apache_$APACHE/src/modules/extra/mod_fortress.h" ]; then
+   echo " [$DONE]"
+  else
+   echo " [$FAILED]"
+  fi
+else 
+  notice "$MENTRUE" "Mod Fortress already setup\n"
+fi
+
+APACHECFG="$APACHECFG --add-module=$root/src/fortress/mod_fortress.c $r"
+cd $root

@@ -1,0 +1,16 @@
+# Created by Kevin J. Menard, Jr. <kmenard@wpi.edu>, June 1, 2003.
+
+notice "$MENUTRUE" "Getting Mod CVS v$MODCVS ready . . .\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_cvs.c" ]; then
+
+  cd $root/src
+  check_source "mod_cvs-${MODCVS}.tar.gz" "ftp://ftp.isk.kth.se/pub/people/main/mod_cvs/mod_cvs-${MODCVS}.tar.gz"
+  explode mod_cvs-${MODCVS}.tar.gz
+  notice "$MENUTRUE" " Untar'ed Mod CVS . . .\n"
+else 
+  notice "$MENTRUE" "Mod CVS already setup\n"
+fi
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_cvs-${MODCVS}/mod_cvs.c $r"
+cd $root
