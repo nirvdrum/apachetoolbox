@@ -23,7 +23,7 @@ if [ ! $LIBXML2PATH ];then
  echo " [$FAILED] -installing..."
 
  cd $root/src
- check_source "libxml2-${LIBXML2}.tar.gz" "ftp://ftp.gnome.org/pub/GNOME/sources/libxml2/2.4/libxml2-${LIBXML2}.tar.gz"
+ check_source "libxml2-${LIBXML2}.tar.gz" "ftp://ftp.gnome.org/pub/GNOME/sources/libxml2/2.5/libxml2-${LIBXML2}.tar.gz"
  explode libxml2-${LIBXML2}.tar.gz
  cd libxml2-${LIBXML2}
 
