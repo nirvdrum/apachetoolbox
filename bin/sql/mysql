@@ -150,8 +150,8 @@ if [ ! -x "$MYSQLD" ];then
   #/etc/init.d/mysql start >/dev/null 2>&1
  fi
 
-  if [ -f "${MYSQLPREFIX}/bin/safe_mysqld" ] && [ -x "${MYSQLPREFIX}/bin/safe_mysqld" ];then
-	 ${MYSQLPREFIX}/bin/safe_mysqld --user=$MYSQLUSER &
+  if [ -f "${MYSQLPREFIX}/bin/mysqld_safe" ] && [ -x "${MYSQLPREFIX}/bin/mysqld_safe" ];then
+	 ${MYSQLPREFIX}/bin/mysqld_safe --user=$MYSQLUSER &
 	echo " [$DONE]"
 	notice "$MENUTRUE" " Please change root's password in MySQL! \n"
 	notice "$MENUTRUE" "     *** mysqladmin -u root -p password 'new-password' *** \n"
