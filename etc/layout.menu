@@ -29,6 +29,7 @@ item 9 "SuSE"
 item 10 "BSDI"
 item 11 "Solaris"
 item 12 "OpenBSD"
+item 13 "FreeBSD"
 
 echo
 echo -e "   off)   Turn off layout and use prefix..."
@@ -86,6 +87,9 @@ echo -e "   99)     Descriptions"
 	 ;;
 	12)
 	 APACHELAYOUT="OpenBSD"
+	 ;;
+	13)
+	 APACHELAYOUT="FreeBSD"
 	 ;;
 
 
