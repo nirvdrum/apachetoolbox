@@ -213,6 +213,7 @@ echo -e "   99) Descriptions"
 		test_choice INSTALL_PHP_SUPHP $INSTALL_PHP_SUPHP
 		INSTALL_PHP_SUPHP=$var
 		INSTALL_PHP_CGI=$var
+		INSTALL_PHP=$var
 		;;
             99)   
                 print_descriptions
