@@ -3,12 +3,12 @@ notice "$MENUTRUE" "Setting up Alternative PHP Cache (APC)...\n"
 
 if [ ! -d $root/src/php-$PHP/ext/apc ] ; then
   
-  check_source "apc-$APC.tar.gz" "http://apc.communityconnect.com/sources/apc-$APC.tar.gz"
+  check_source "APC-$APC.tgz" "http://pear.php.net/get/APC-$APC.tgz"
 
-explode apc-$APC.tar.gz
+explode APC-$APC.tgz
 
   notice "$MENUTRUE" " Untared APC...\n"
-  $MV -f $root/src/apc $root/src/php-$PHP/ext/apc
+  $MV -f $root/src/APC-$APC $root/src/php-$PHP/ext/APC-$APC
   notice "$MENUTRUE" " Copied APC into php source tree...\n"
   cd $root/src/php-$PHP
   $AUTOCONF &> $logdir/apc-php-autoconf.log
