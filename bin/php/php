@@ -41,6 +41,7 @@ test $INSTALL_PHP_XSLT -eq $TRUE && . $root/bin/php/php-xslt
 test $INSTALL_PHP_GMP -eq $TRUE && . $root/bin/php/php-gmp
 test $INSTALL_PHP_GD -eq $TRUE && . $root/bin/php/php-gd
 test $INSTALL_PHP_GD -eq $FALSE && . $root/bin/php/php-gdlibs
+test $INSTALL_PHP_SUPHP -eq $TRUE && . $root/bin/php/php-suphp
 . $root/bin/php/php-mysql
 . $root/bin/php/php-postgres
 . $root/bin/php/php-frontbase
@@ -52,6 +53,10 @@ test $INSTALL_PHP_GD -eq $FALSE && . $root/bin/php/php-gdlibs
 
 #	build the PHP configure script as go.sh in the php
 #	source root, and make it executable
+
+ if [ $INSTALL_PHP_CGI -eq $FALSE ]; then
+   CONFIGPHP="$CONFIGPHP --with-apache=$root/apache_$APACHE"
+ fi
 
  notice "$MENUTRUE" " PHP: creating configuration script..."
  cd $root/src/php-$PHP
@@ -137,4 +142,6 @@ notice "$MENUTRUE" "PHP setup!\n"
 
 cd $root
 
-APACHECFG="$APACHECFG --activate-module=src/modules/php$PHPROOT/libphp$PHPROOT.a $r"
+if [ $INSTALL_PHP_CGI -eq $FALSE ]; then
+  APACHECFG="$APACHECFG --activate-module=src/modules/php$PHPROOT/libphp$PHPROOT.a $r"
+fi
