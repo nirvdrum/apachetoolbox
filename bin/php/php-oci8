@@ -1,0 +1,12 @@
+# OCI8 (Oracle 8i support) PHP compilation option
+# Needs ORACLE_HOME environment variable to be set to the ORACLE path
+# (obviously, needs ORACLE to be installed !)
+
+test -d $ORACLE_HOME && OCI8SEARCHPATH="$ORACLE_HOME"
+
+if [ $OCI8SEARCHPATH ];then
+ CONFIGPHP="$CONFIGPHP --with-oci8=\"${OCI8SEARCHPATH}\" $r"
+ notice "$MENUTRUE" "  -Oracle 8i detected, support compiled into PHP\n"
+else
+ notice "$MENUFALSE" "  -Oracle 8i libraries not found, please set ORACLE_HOME\n"
+fi

@@ -1,0 +1,42 @@
+notice "$MENUTRUE" " sablotron: Checking for an existing installation..."
+
+test -f /usr/local/lib/libsablot.so && SABLOTRONPATH=/usr/local
+test -f $LOCAL_PATH/lib/libsablot.so && SABLOTRONPATH=$LOCAL_PATH
+test -f /usr/lib/libsablot.so && SABLOTRONPATH=/usr
+ 
+
+if [ ! $SABLOTRONPATH ];then
+ echo " [$FAILED] -installing..."
+
+ . $root/bin/php/expat
+
+ cd $root/src
+ check_source "Sablot-${SABLOTRON}.tar.gz" "http://download-2.gingerall.cz/download/sablot/Sablot-${SABLOTRON}.tar.gz"
+ explode Sablot-${SABLOTRON}.tar.gz
+ cd Sablot-${SABLOTRON}
+
+ notice "$MENUTRUE" " Sablotron : configuring..."
+ ./configure --prefix="$LOCAL_PATH" &> $logdir/sablotron-configure.log
+ 
+ testcheck $? sablotron-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  Sablotron: compiling..."
+ $MAKE &> $logdir/sablotron-compile.log
+ testcheck $? sablotron-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  Sablotron: installing..."
+ inst sablotron-install.log
+ testcheck $? sablotron-isntall.log
+ SABLOTRONPATH=$LOCAL_PATH
+ echo " [$DONE]"
+else
+ #found an existing installation
+ echo " [$DONE]"
+fi
+
+cd $root
+CONFIGPHP="$CONFIGPHP --enable-xslt $r"
+CONFIGPHP="$CONFIGPHP --with-xslt-sablot=${SABLOTRONPATH} $r"
+notice "$MENUTRUE" "  -xslt (sablotron) v${SABLOTRON} compiled into PHP\n"

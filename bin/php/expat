@@ -1,0 +1,39 @@
+notice "$MENUTRUE" " Detecting EXPAT library..."
+
+for i in / /usr /usr/local $LOCAL_PATH; do
+	test -f $i/lib/libexpat.a && export LIBEXPAT_DIR=$i
+done
+
+
+if [ -z $LIBEXPAT_DIR ]; then
+	echo " [$FAILED]"
+	cd $root/src
+
+	check_source "expat-${EXPAT}.tar.gz" "http://telia.dl.sourceforge.net/expat/expat-${EXPAT}.tar.gz"
+
+	notice "$MENUTRUE" " EXPAT  library - uncompressing...\n"
+	test -d "$root/src/expat-${EXPAT}" && rm -rf "$root/src/expat-${EXPAT}"
+	explode expat-${EXPAT}.tar.gz
+	cd expat-${EXPAT}
+	notice "$MENUTRUE" "  EXPAT library - uncompressed\n"
+
+	notice "$MENUTRUE" "  EXPAT library - configuring..."
+	./configure --prefix="$LOCAL_PATH" > $logdir/libexpat-configure.log
+	testcheck $? libexpat-configure.log
+	echo " [$DONE]"
+
+	notice "$MENUTRUE" "  EXPAT library - compiling..."
+	$MAKE > $logdir/libexpat-compile.log
+	testcheck $? libexpat-compile.log
+	echo " [$DONE]"
+
+	notice "$MENUTRUE" "  EXPAT library - installing..."
+	inst libexpat
+	echo " [$DONE]"
+
+	cd $root
+	notice "$MENUTRUE" " EXPAT library setup!\n"
+	export LIBEXPAT_DIR="$LOCAL_PATH"
+else
+	echo " [$FOUND @ $LIBEXPAT_DIR]"
+fi

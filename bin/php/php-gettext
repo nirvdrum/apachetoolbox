@@ -1,0 +1,36 @@
+cd $root/src
+
+for i in /usr /usr/local $LOCAL_PATH /opt; do
+    if test -r $i/include/libintl.h; then
+          GETTEXT_DIR=$i
+    fi
+done
+
+
+if [ -z $GETTEXT_DIR ]; then
+	notice $MENUTRUE " Gettext headers not found, downloading source...\n"
+	check_source "gettext-$GETTEXT.tar.gz" "http://www.apachetoolbox.com/mirror/gettext-$GETTEXT.tar.gz"
+	explode "gettext-$GETTEXT.tar.gz"
+
+	cd gettext-$GETTEXT
+
+	notice $MENUTRUE "  Gettext - configuring..."
+	./configure --prefix="$LOCAL_PATH" > $logdir/gettext-configure.log
+	testcheck $? gettext-configure.log
+	echo " [$DONE]"
+
+	notice $MENUTRUE "  Gettext - compiling..."
+	$MAKE > $logdir/gettext-compile.log 2>&1
+	echo " [$DONE]"
+
+	notice $MENUTRUE "  Gettext - installing to $LOCAL_PATH..."
+	$MAKE install > $logdir/gettext-install.log
+	echo " [$DONE]"
+
+	cd ..
+	GETTEXT_DIR=$LOCAL_PATH;
+fi
+
+
+CONFIGPHP="$CONFIGPHP --with-gettext=\"$GETTEXT_DIR\" $r"
+notice "$MENUTRUE" "  -gettext support compiled into PHP\n"

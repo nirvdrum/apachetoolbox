@@ -1,0 +1,110 @@
+cd $root/src
+notice "$MENUTRUE" "Setting up PgSQL...\n"
+
+for i in /usr/local, /usr, /opt, /usr/local/pgsql, $LOCAL_PATH; do
+	test -x $i/bin/postmaster && PGSQLD="$i/bin/postmaster"
+done
+
+
+if [ ! -x "$PGSQLD" ];then
+ check_source "postgresql-$POSTGRESQL.tar.gz" "ftp://ftp9.us.postgresql.org/pub/mirrors/postgresql/v$POSTGRESQL/postgresql-$POSTGRESQL.tar.gz"
+ notice "$MENUTRUE" " PgSQL: uncompressing...\n"
+ explode postgresql-$POSTGRESQL.tar.gz
+
+ cd postgresql-$POSTGRESQL
+
+ CONFIGPGSQL="--prefix=\"$PGSQLPREFIX\" $r--with-pgport=\"$PGSQLTCPPORT\" $r--datadir=\"$PGSQLLIBDIR\" $r--sysconfdir=\"$PGSQLCONFIGDIR\" $r--localstatedir=\"$PGSQLLIBDIR\" $r--mandir=\"$PGSQLMAN\""
+
+test $PGSQLOPENSSL -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--with-openssl=\"$OPENSSL_DIR\" $r"
+test $PGSQLODBC -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--enable-odbc $r"
+test $PGSQLPERL -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--with-perl $r"
+test $PGSQLPYTHON -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--with-python $r"
+test $PGSQLJAVA -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--with-java $r"
+test $PGSQLTCL -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--with-tcl $r"
+test $PGSQLUNICODE -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--enable-unicode-conversion $r"
+test $PGSQLMULTIBYTE -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--enable-multibyte $r"
+test $PGSQLRECODE -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--enable-recode $r"
+test $PGSQLLOCALE -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--enable-locale $r"
+test $PGSQLSYSLOG -eq $TRUE && CONFIGPGSQL="$CONFIGPGSQL $r--enable-syslog $r"
+
+
+ #test if the user/group pgsql already exists, if not create
+ TESTUSER=`cat /etc/passwd |grep $PGSQLUSER`
+ TESTGROUP=`cat /etc/group |grep $PGSQLUSER`
+
+ if [ "$TESTUSER" = "" ] && [ "$TESTGROUP" = "" ]; then #pgsql user not found in /etc/passwd
+  notice "$MENUTRUE" "  User and Group \"$PGSQLUSER\" not found on system, creating... \n"
+
+  test -x /sbin/groupadd && GROUPADD=/sbin/groupadd
+  test -x /usr/sbin/groupadd && GROUPADD=/usr/sbin/groupadd
+  test -x /usr/local/sbin/groupadd && GROUPADD=/usr/local/sbin/groupadd
+  test -x $LOCAL_PATH/sbin/groupadd && GROUPADD=$LOCAL_PATH/sbin/groupadd
+
+  test -x /sbin/useradd && USERADD=/sbin/useradd
+  test -x /usr/sbin/useradd && USERADD=/usr/sbin/useradd
+  test -x /usr/local/sbin/useradd && USERADD=/usr/local/sbin/useradd
+  test -x $LOCAL_PATH/sbin/useradd && USERADD=$LOCAL_PATH/sbin/useradd
+
+  if [ -x "$GROUPADD" ] && [ -x "$USERADD" ]; then #only add to the system if existing useradd/groupadd scripts exist
+   notice "$MENUTRUE" "  useradd & groupadd scripts found! \n"
+
+   notice "$MENUTRUE" " Adding group \"$PGSQLUSER\" to your system..."
+   $GROUPADD $PGSQLUSER > $logdir/pgsql-groupadd.log
+   echo " [$DONE]"
+
+   notice "$MENUTRUE" " Adding user \"$PGSQLUSER\" to your system with no shell for security..."
+   $USERADD -d $PGSQLLIBDIR -c "$PGSQLUSERDESC" -g $PGSQLUSER -s $PGSQLSHELL $PGSQLUSER > $logdir/pgsql-useradd.log
+   echo " [$DONE]"
+
+  else #user not found and add user/group script not found
+   NOPGSQLUSER=$TRUE
+  fi
+
+ else #pgsql user found in /etc/passwd
+  notice "$MENUTRUE" " \"$PGSQLUSER\" user and group already found on your system! \n"
+ fi
+
+
+
+
+
+
+
+ notice "$MENUTRUE" " Configuring PgSQL..."
+ echo -e "./configure $CONFIGPGSQL" > $root/src/postgresql-$POSTGRESQL/go.sh
+ chmod a+x $root/src/postgresql-$POSTGRESQL/go.sh
+ ./go.sh > $logdir/pgsql-configure.log 2>&1
+ testcheck $? pgsql-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " Compiling PgSQL..."
+ $MAKE &> $logdir/pgsql-compile.log
+ testcheck $? pgsql-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " Installing PgSQL..."
+ inst pgsql
+ echo " [$DONE]"
+
+
+# etc dir crap
+
+ if [ ! -d $PGSQLCONFIGDIR ];then mkdir $PGSQLCONFIGDIR; fi
+
+ notice "$MENUTRUE" " PgSQL database initalization ..."
+ su - $PGSQLUSER -c "$PGSQLPREFIX/bin/initdb -D $PGSQLPREFIX/data" > $logdir/pgsql-db-init.log 2>&1
+ echo " [$DONE]"
+ cd ..
+
+
+ echo
+ notice "$MENUTRUE" "  -- Check $root/src/postgresql-$POSTGRESQL/start-scripts/ for init scripts! -- \n"
+ echo
+
+
+
+else  #pgsql already installed
+	notice "$MENUTRUE" "PgSQL already installed\n"
+fi
+
+cd $root

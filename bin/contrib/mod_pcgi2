@@ -1,0 +1,49 @@
+cd $root/src
+
+notice "$MENUTRUE" "Setting up mod PCGI2...\n"
+if [ ! -d $root/apache_$APACHE/src/modules/pcgi2 ];then
+ check_source "mod_pcgi2-${MODPCGI2}-src.tar.gz" "http://www.zope.org/Members/phd/mod_pcgi2/mod_pcgi2-${MODPCGI2}-src.tar.gz"
+
+ notice "$MENUTRUE" " Mod PCGI2 uncompressing...\n"
+ explode mod_pcgi2-${MODPCGI2}-src.tar.gz
+ notice "$MENUTRUE" " Mod PCGI2 uncompressed\n"
+ notice "$MENUTRUE" " Mod PCGI2 moving to apache source...\n"
+ $MV $root/src/pcgi2 $root/apache_$APACHE/src/modules/
+ notice "$MENUTRUE" " Mod PCGI2 moved to apache source.\n"
+
+ notice "$MENUTRUE" " Mod PCGI2 patching...\n"
+echo "3c3
+<    CFLAGS=\"\$CFLAGS -DMOD_PCGI2 -DUNIX -DHAVE_UNION_SEMUN\"
+---
+>    CFLAGS=\"\$CFLAGS -DMOD_PCGI2 -DUNIX\"" | patch -p0 ${root}/apache_${APACHE}/src/modules/pcgi2/libpcgi2.module &> $logdir/mod_pcgi2-patch.log
+testcheck $? mod_pcgi2-patch.log
+ notice "$MENUTRUE" " Mod PCGI2 patched.\n"
+
+echo "
+#************* Mod PCGI2 ***************
+# http://www.zope.org/Members/phd/mod_pcgi2/
+
+#<IfModule mod_pcgi2.c>
+#PCGI_NAME Zope
+#PCGI_MODULE_PATH /usr/local/Zope/lib/python/Zope
+#PCGI_PUBLISHER /usr/local/Zope/pcgi/pcgi_publisher.py
+#PCGI_EXE /usr/local/bin/python
+#PCGI_SOCKET_FILE /usr/local/Zope/var/pcgi.soc
+#PCGI_PID_FILE /usr/local/Zope/var/pcgi.pid
+#PCGI_ERROR_LOG /usr/local/Zope/var/pcgi.log
+#PCGI_DISPLAY_ERRORS 1
+
+#<Location /pcgi>
+#SetHandler pcgi-handler
+#PCGI_ROOT /mysite
+#PCGI_SetEnv SiteRootPATH /
+#</Location>
+#</IfModule>
+#************* Mod PCGI2 ***************" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Mod PCGI2 setup in httpd.conf-dist\n"
+ notice "$MENUTRUE" "Mod PCGI2 setup!\n"
+else
+ notice "$MENUTRUE" "Mod PCGI2 already setup!\n"
+fi
+
+APACHECFG="$APACHECFG --activate-module=src/modules/pcgi2/libpcgi2.a $r"

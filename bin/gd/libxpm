@@ -1,0 +1,18 @@
+notice "$MENUTRUE" " Detecting XPM library source..."
+
+test -d $root/src/libxpm && export LIBXPM_DIR="$root/src/libxpm";
+
+if [ -z $LIBXPM_DIR ];then
+ check_source "libXpm-${LIBXPM}.tar.gz" "http://www.apachetoolbox.com/data/cvs/src/libXpm-${LIBXPM}.tar.gz"
+
+ notice "$MENUTRUE" "  XPM library uncompressing...\n"
+ explode libXpm-$LIBXPM.tar.gz
+ test -d "$root/src/libxpm" && $RM -rf "$root/src/libxpm"
+ $MV -f xpm-?.?* libxpm
+ notice "$MENUTRUE" "  XPM library uncompressed.\n"
+ notice "$MENUTRUE" " XPM library setup!\n"
+ cd $root
+ export LIBXPM_DIR="$root/src/libxpm";
+else
+echo " [$FOUND]"
+fi

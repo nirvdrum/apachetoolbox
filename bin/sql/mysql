@@ -1,0 +1,229 @@
+# some hacks by greg cope <gjjc@rubberplant.freeserve.co.uk>                                                                 
+
+cd $root/src
+notice "$MENUTRUE" "Setting up MySQL...\n"  
+
+  test -x /usr/local/bin/safe_mysqld && MYSQLD=/usr/local/bin/safe_mysqld
+  test -x /usr/bin/safe_mysqld && MYSQLD=/usr/bin/safe_mysqld
+  test -x /opt/mysql/bin/safe_mysqld && MYSQLD=/opt/mysql/bin/safe_mysqld
+  test -x /usr/local/mysql/bin/safe_mysqld && MYSQLD=/usr/local/mysql/bin/safe_mysqld
+  test -x $LOCAL_PATH/bin/safe_mysqld && MYSQLD=$LOCAL_PATH/bin/safe_mysqld
+  test -x $LOCAL_PATH/mysql/bin/safe_mysqld && MYSQLD=$LOCAL_PATH/mysql/bin/safe_mysqld
+
+if [ ! -x "$MYSQLD" ];then
+ check_source "mysql-$MYSQL.tar.gz" "http://mysql.towardex.com/Downloads/MySQL-3.23/mysql-$MYSQL.tar.gz"
+ notice "$MENUTRUE" " MySQL: uncompressing...\n"
+ explode mysql-$MYSQL.tar.gz
+
+ cd mysql-$MYSQL
+ CONFIGMYSQL="--prefix=\"$MYSQLPREFIX\" $r--with-tcp-port=\"$MYSQLTCPPORT\"  $r--with-unix-socket-path=\"$MYSQLUNIXSOCKET\" $r"
+ CONFIGMYSQL="$CONFIGMYSQL --without-debug $r--with-low-memory $r"
+ CONFIGMYSQL="$CONFIGMYSQL --without-bench $r--datadir=\"$MYSQLLIBDIR\" $r--localstatedir=\"$MYSQLLIBDIR\" $r--sysconfdir=\"$MYSQLCONFIGDIR\" $r"
+ CONFIGMYSQL="$CONFIGMYSQL --infodir=\"$MYSQLINFO\" $r--mandir=\"$MYSQLMAN\" $r"
+ test $MYSQLTCPWRAPPERS -eq $TRUE && CONFIGMYSQL="$CONFIGMYSQL $r--with-libwrap $r"
+ test $MYSQLBERKELEYDB -eq $TRUE && CONFIGMYSQL="$CONFIGMYSQL $r--with-berkeley-db $r"
+ test $MYSQLINNOBASEDB -eq $TRUE && CONFIGMYSQL="$CONFIGMYSQL $r--with-innodb $r"
+ test $MYSQLGEMINIDB -eq $TRUE && CONFIGMYSQL="$CONFIGMYSQL $r--with-gemini $r"
+ test $MYSQLRAID -eq $TRUE && CONFIGMYSQL="$CONFIGMYSQL $r--with-raid $r"
+ #NOMYSQLLINK=$TRUE
+
+
+
+ #test if the user/group mysql already exists, if not create
+ TESTUSER=`cat /etc/passwd |grep $MYSQLUSER`
+ TESTGROUP=`cat /etc/group |grep $MYSQLUSER`
+
+ if [ "$TESTUSER" = "" ] && [ "$TESTGROUP" = "" ]; then #mysql user not found in /etc/passwd
+  notice "$MENUTRUE" "  User and Group \"$MYSQLUSER\" not found on system, creating... \n"
+
+  test -x /sbin/groupadd && GROUPADD=/sbin/groupadd
+  test -x /usr/sbin/groupadd && GROUPADD=/usr/sbin/groupadd
+  test -x /usr/local/sbin/groupadd && GROUPADD=/usr/local/sbin/groupadd
+  test -x $LOCAL_PATH/sbin/groupadd && GROUPADD=$LOCAL_PATH/sbin/groupadd
+
+  test -x /sbin/useradd && USERADD=/sbin/useradd
+  test -x /usr/sbin/useradd && USERADD=/usr/sbin/useradd
+  test -x /usr/local/sbin/useradd && USERADD=/usr/local/sbin/useradd
+  test -x $LOCAL_PATH/sbin/useradd && USERADD=$LOCAL_PATH/sbin/useradd
+
+  if [ -x "$GROUPADD" ] && [ -x "$USERADD" ]; then #only add to the system if existing useradd/groupadd scripts exist
+   notice "$MENUTRUE" "  useradd & groupadd scripts found! \n"
+
+   notice "$MENUTRUE" " Adding group \"$MYSQLUSER\" to your system..."
+   $GROUPADD $MYSQLUSER > $logdir/mysql-groupadd.log
+   echo " [$DONE]"
+
+   notice "$MENUTRUE" " Adding user \"$MYSQLUSER\" to your system with no shell for security..."
+   $USERADD -d $MYSQLLIBDIR -c "$MYSQLUSERDESC" -g $MYSQLUSER -s $MYSQLSHELL $MYSQLUSER > $logdir/mysql-useradd.log
+   echo " [$DONE]"
+
+   CONFIGMYSQL="$CONFIGMYSQL --with-mysqld-user=$MYSQLUSER $r";
+  else #user not found and add user/group script not found
+   NOMYSQLUSER=$TRUE
+  fi
+
+ else #mysql user found in /etc/passwd
+  notice "$MENUTRUE" " \"$MYSQLUSER\" user and group already found on your system! \n"
+  CONFIGMYSQL="$CONFIGMYSQL --with-mysqld-user=$MYSQLUSER $r";
+ fi
+
+
+
+
+
+
+
+ notice "$MENUTRUE" " Configuring MySQL..."
+ echo -e "./configure $CONFIGMYSQL" > $root/src/mysql-$MYSQL/go.sh
+ chmod a+x $root/src/mysql-$MYSQL/go.sh
+ ./go.sh > $logdir/mysql-configure.log 2>&1
+ testcheck $? mysql-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " Compiling MySQL..."
+ $MAKE &> $logdir/mysql-compile.log
+ testcheck $? mysql-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " Installing MySQL..."
+ inst mysql
+ echo " [$DONE]"
+
+ if [ -z $NOMYSQLLINK ];then
+  notice "$MENUTRUE" " Creating MySQL link..."
+  localcopy "mysqllinkcreation" "$LN -s $MYSQLPREFIX $LOCAL_PATH/mysql"
+  echo " [$DONE]"
+ fi
+
+
+# etc dir crap
+
+ if [ ! -d $MYSQLCONFIGDIR ];then mkdir $MYSQLCONFIGDIR; fi
+
+ if [ ! -e $MYSQLCONFIGDIR/my.cnf ]; then
+  notice "$MENUTRUE" " Copying MySQL configuration file to \"$MYSQLCONFIGDIR/my.cnf\"..."
+  localcopy "mysqlconfigcopy" "$CP -f $MYSQLLIBDIR/mysql/my-medium.cnf $MYSQLCONFIGDIR/my.cnf"
+  echo " [$DONE]"
+ fi
+
+ notice "$MENUTRUE" " Changing MySQL configuration file mode to 700..."
+ $CHMOD 700 $MYSQLCONFIGDIR/my.cnf
+ echo " [$DONE]"
+
+ cd scripts
+ notice "$MENUTRUE" " Default MySQL database installing (mysql_install_db) ..."
+ ./mysql_install_db > $logdir/mysql-default-db-install.log 2>&1
+ echo " [$DONE]"
+ cd ..
+
+ if [ -z $NOMYSQLUSER ];then
+  notice "$MENUTRUE" " Changing the owner of the database directories..."
+  changeowner $MYSQLUSER $MYSQLUSER "$MYSQLLIBDIR"
+  echo " [$DONE]"
+ fi
+
+
+
+
+
+
+ if [ -d /etc/rc.d/init.d ] && [ -w /etc/rc.d/init.d ] ;then
+  localcopy "mysqlinitcopy" "$CP -f support-files/mysql.server /etc/rc.d/init.d/mysql"
+  $CHMOD 755 /etc/rc.d/init.d/mysql
+  notice "$MENUTRUE" " init script copied to /etc/rc.d/init.d/ ...\n"
+  notice "$MENUTRUE" " init script linked at /etc/rc.d/init.d/rc3.d for bootup...\n"
+  localcopy "mysqlinitcopy" "$LN /etc/rc.d/init.d/mysql /etc/rc.d/rc3.d/S99mysql"
+  notice "$MENUTRUE" " init script linked at /etc/rc.d/init.d/rc6.d for shutdown...\n"
+  localcopy "mysqlinitcopy" "$LN  /etc/rc.d/init.d/mysql /etc/rc.d/rc6.d/K90mysql"
+  notice "$MENUTRUE" " MySQL daemon starting..."
+  #/etc/rc.d/init.d/mysql start >/dev/null 2>&1
+ elif [ -d /etc/init.d ] && [ -w /etc/init.d ] ;then
+  localcopy "mysqlinitcopy" "$CP -f support-files/mysql.server /etc/init.d/mysql"
+  $CHMOD 755 /etc/init.d/mysql
+  notice "$MENUTRUE" " init script copied to /etc/rc.d/ ...\n"
+  notice "$MENUTRUE" " init script linked at /etc/rc.d/rc3.d for bootup...\n"
+  localcopy "mysqlinitcopy" "$LN /etc/init.d/mysql /etc/rc3.d/S99mysql"
+  notice "$MENUTRUE" " init script linked at /etc/rc.d/rc6.d for shutdown...\n"
+  localcopy "mysqlinitcopy" "$LN /etc/init.d/mysql /etc/rc6.d/K90mysql"
+  notice "$MENUTRUE" " init script copied to /etc/init.d/ ...\n"
+  notice "$MENUTRUE" " MySQL daemon starting..."
+  #/etc/init.d/mysql start >/dev/null 2>&1
+ fi
+
+  if [ -f "${MYSQLPREFIX}/bin/safe_mysqld" ] && [ -x "${MYSQLPREFIX}/bin/safe_mysqld" ];then
+	 ${MYSQLPREFIX}/bin/safe_mysqld --user=$MYSQLUSER &
+	echo " [$DONE]"
+	notice "$MENUTRUE" " Please change root's password in MySQL! \n"
+	notice "$MENUTRUE" "     *** mysqladmin -u root -p password 'new-password' *** \n"
+	echo -e ".\c"; sleep 1; echo -e ".\c"; sleep 1; echo -e ".\c"; sleep 1; echo -e ".\c"; sleep 1; echo ".";
+	cd ..
+ 
+	notice "$MENUTRUE" "MySQL setup!\n"
+  else
+	notice $MENUFALSE "MySQL install failed!\n";
+	exit 1
+  fi
+
+
+
+
+
+
+
+ #check to make sure mysqld started and it running...
+ MYSQL_START=$FALSE
+ test -r /tmp/mysql.sock && MYSQL_START=$TRUE
+ test -r /var/run/mysqld/mysqld.sock && MYSQL_START=$TRUE
+ test -r /var/tmp/mysql.sock && MYSQL_START=$TRUE
+ test -r /var/lib/mysql/mysql.sock && MYSQL_START=$TRUE
+ test -r /var/mysql/mysql.sock && MYSQL_START=$TRUE
+ test -r $MYSQLUNIXSOCKET && MYSQL_START=$TRUE
+
+ if [ ! $MYSQL_START -eq $TRUE ]; then
+  notice "$MENUFALSE" "MySQL failed to start, exiting.\n\n"
+  echo
+  notice "$MENUFALSE" "Test \"${MYSQLPREFIX}/bin/safe_mysqld --user=$MYSQLUSER &\"...\n";
+  exit 1
+ fi
+
+
+
+
+
+
+else  #mysql already installed, start it if it isn't already running
+
+ MYSQL_START=$FALSE
+ test -r /tmp/mysql.sock && MYSQL_START=$TRUE
+ test -r /var/run/mysqld/mysqld.sock && MYSQL_START=$TRUE
+ test -r /var/tmp/mysql.sock && MYSQL_START=$TRUE
+ test -r /var/lib/mysql/mysql.sock && MYSQL_START=$TRUE
+ test -r /var/mysql/mysql.sock && MYSQL_START=$TRUE
+ test -r $MYSQLUNIXSOCKET && MYSQL_START=$TRUE
+
+ #if it's already running $MYSQL_START will be true
+ if [ "$MYSQL_START" -eq "$FALSE" ]; then #if it's installed but not running start it
+  $MYSQLD & >/dev/null 2>&1
+  notice "$MENUTRUE" "MySQL starting...\n"
+  $SLEEP 4
+ fi
+
+ #test to make sure it started ok
+ test -r /tmp/mysql.sock && MYSQL_START=$TRUE
+ test -r /var/run/mysqld/mysqld.sock && MYSQL_START=$TRUE
+ test -r /var/tmp/mysql.sock && MYSQL_START=$TRUE
+ test -r /var/lib/mysql/mysql.sock && MYSQL_START=$TRUE
+ test -r /var/mysql/mysql.sock && MYSQL_START=$TRUE
+ test -r $MYSQLUNIXSOCKET && MYSQL_START=$TRUE
+
+ #if it didn't start correctly from a previously installed version dir
+ if [ "$MYSQL_START" -eq "$FALSE" ]; then
+  notice "$MENUTRUE" "MySQL ($MYSQLD) failed to start, exiting.\n\n\n"
+  exit 1
+ fi
+
+notice "$MENUTRUE" "MySQL already installed\n"
+fi
+
+
+cd $root

@@ -1,0 +1,42 @@
+notice "$MENUTRUE" "Getting Mod_Random ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_random.c" ] ; then
+cd $root/src
+check_source "mod_random-$MODRANDOM.tar.gz" "http://www.tangent.org/mod_random/mod_random-$MODRANDOM.tar.gz"
+ 
+ explode mod_random-$MODRANDOM.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Random...\n"
+
+echo "
+
+####### Mod Random #########
+# http://www.tangent.org/mod_random
+
+#random URL:
+#<Location /geekythings>
+#        SetHandler random
+#        RandomURL http://www.slashdot.org/
+#        RandomURL http://www.tangent.org/
+#        RandomURL http://www.freshmeat.net/
+#        RandomURL http://www.linux.org/
+#        RandomFile /usr/local/apache/conf/random.conf
+#</Location>
+
+#For using the random quote feature you would
+#do the following:
+#<VirtualHost www.sample.com>
+#        RandomEngine On
+#        RandomQuoteFile /usr/local/apache/conf/randomquotes.txt
+#        RandomQuoteTXT \"<P>Three blind mice give this site a raiting of two.</P>\"
+#</virtualhost>
+
+############################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Random\n"
+else
+ notice "$MENUTRUE" "Mod_Random already setup!\n"
+fi
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_random-$MODRANDOM/mod_random.c $r"
+cd $root

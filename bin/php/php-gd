@@ -1,0 +1,13 @@
+notice "$MENUTRUE" "Setting up GD support for PHP...\n"
+
+. $root/bin/gd/libz
+. $root/bin/gd/libpng
+. $root/bin/gd/libjpeg
+
+CONFIGPHP="$CONFIGPHP --with-gd $r--with-zlib-dir=\"$LIBZ_DIR\" $r"
+CONFIGPHP="$CONFIGPHP --with-png-dir=\"$LIBPNG_DIR\" $r"
+CONFIGPHP="$CONFIGPHP --with-jpeg-dir=\"$LIBJPEG_DIR\" $r"
+
+notice "$MENUTRUE" "GD support for PHP setup!\n"
+
+cd $root

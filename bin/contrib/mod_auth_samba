@@ -1,0 +1,81 @@
+notice "$MENUTRUE" "Setting up Mod_Auth_Samba $MODAUTHSAMBA...\n"
+
+
+if [ ! -f $root/apache_$APACHE/src/modules/extra/mod_auth_samba.c ];then
+
+ cd $root/src
+ check_source "mod_auth_samba-$MODAUTHSAMBA.tar.gz" "ftp://download.sourceforge.net/pub/sourceforge/modauthsamba/mod_auth_samba-$MODAUTHSAMBA.tar.gz"
+ explode mod_auth_samba-$MODAUTHSAMBA.tar.gz
+ notice "$MENUTRUE" " Mod_Auth_Samba: Copying header files..."
+ localcopy "mod_auth_samba-headerfiles" "$CP -f $root/src/mod_auth_samba/*.h $root/apache_$APACHE/src/modules/extra"
+ if [ -f $root/apache_$APACHE/src/modules/extra/mod_auth_samba.h ];then
+  echo " [DONE]"
+ else
+  echo " [FAILED]"
+ fi
+
+ notice "$MENUTRUE" " Mod_Auth_Samba: Patching mod_auth_samba.c source for db.h support..."
+echo "
+12c12
+< #include <ndbm.h>
+---
+> #include <db.h>" |patch -p0 $root/src/mod_auth_samba/mod_auth_samba.c > $logs/mod_auth_samba.c-patch.log
+ testcheck $? $logs/mod_auth_samba.c-patch.log
+ echo " [DONE]"
+
+
+
+ notice "$MENUTRUE" " Mod_Auth_Samba: testing for PAM plugin directory..."
+ test -d /usr/lib/security && PAMDIR=/usr/lib/security
+ test -d /usr/local/lib/security && PAMDIR=/usr/local/lib/security
+ test -d $LOCAL_PATH/lib/security && PAMDIR=$LOCAL_PATH/lib/security
+ test -d /lib/security && PAMDIR=/lib/security
+
+ if [ -n $PAMDIR ];then
+  echo " [DONE]"
+  notice "$MENUTRUE" " Mod_Auth_Samba: checking for pam_smb_auth.so..."
+  if [ ! -f $PAMDIR/pam_smb_auth.so ];then 
+   echo " [FAILED]"
+   notice "$MENUTRUE" "  Mod_Auth_Samba: Setting up pam_smb_auth.so for mod_auth_samba.\n"
+   check_source "pam_smb-$PAMSMBAUTH.tar.gz" "http://www.csn.ul.ie/~airlied/pam_smb/pam_smb-$PAMSMBAUTH.tar.gz"
+   explode pam_smb-$PAMSMBAUTH.tar.gz
+   cd pam_smb
+
+    notice "$MENUTRUE" "  Mod_Auth_Samba: configuring pam_smb_auth..."
+    ./configure --disable-encrypt-pass > $logdir/pam_smb_auth-configure.log
+    testcheck $? $logdir/pam_smb_auth-configure.log
+    echo " [DONE]"
+
+    notice "$MENUTRUE" "  Mod_Auth_Samba: compiling pam_smb_auth..."
+    $MAKE &> $logdir/pam_smb_auth-compile.log
+    testcheck $? $logdir/pam_smb_auth-compile.log
+    echo " [DONE]"
+
+   notice "$MENUTRUE" "  Mod_Auth_Samba: copying pam_smb_auth.so to $PAMDIR..."
+   localcopy "pam_smb_auth-so-copy.log" "$CP -f $root/src/pam_smb/pam_smb_auth.so $PAMDIR/pam_smb_auth.so"
+   echo " [DONE]"
+
+   if [ -d /etc/pam.d ];then
+    notice "$MENUTRUE" "  Mod_Auth_Samba: copying pam_smb_auth pam conf to /etc/pam.d ..."
+    localcopy "pam_smb_auth-conf-example-copy.log" "$CP -f $root/src/pam_smb/pam_smb.conf.example /etc/pam.d/smb.conf.example"
+    echo " [DONE]"
+   else
+    notice "$MENUTRUE" "  Mod_Auth_Samba: *** Please manually copy $root/src/pam_smb/pam_smb.conf.example to your PAM conf directory and edit it ***"
+   fi
+
+   notice "$MENUTRUE" " Mod_Auth_Samba: pam_smb_auth setup!\n"
+  else
+   echo " [DONE]"
+  fi
+ else
+  echo " [FAILED]"
+  notice "$MENUFALSE" "Can't setup mod_auth_samba without pam_smb_auth.so. Couldn't autodetect your PAM plugin directory, usually \"/lib/security\"."
+  exit
+ fi
+
+notice "$MENUTRUE" " Mod_Auth_Samba setup!\n"
+fi
+
+export APACHECFLAGS="$APACHECFLAGS -DDB_DBM_HSEARCH"
+export APACHELIBS="$APACHELIBS /lib/security/pam_smb_auth.so -lpam -ldb -ldl"
+APACHECFG="$APACHECFG --add-module=$root/src/mod_auth_samba/mod_auth_samba.c $r"

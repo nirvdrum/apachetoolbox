@@ -1,0 +1,41 @@
+cd $root/src
+notice "$MENUTRUE" "PHP+unixODBC: checking for unixODBC..."
+
+
+if [ ! -d $LOCAL_PATH/unixODBC ]
+then
+ echo " [$FAILED] -installing"
+ check_source "unixODBC-$UNIXODBC.tar.gz" "http://www.unixodbc.org/unixODBC-$UNIXODBC.tar.gz"
+ explode unixODBC-$UNIXODBC.tar.gz
+ notice "$MENUTRUE" " Untared unixODBC Source...\n"
+ cd unixODBC-$UNIXODBC
+ notice "$MENUTRUE" " unixODBC: Configuring..."
+ ./configure --prefix="$LOCAL_PATH/unixODBC" --sysconfdir="$LOCAL_PATH/etc" --disable-X --disable-gui > $logdir/unixODBC-configure.log
+ testcheck $? unixODBC-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " unixODBC: Compiling..."
+ $MAKE &> $logdir/unixODBC-compile.log
+ testcheck $? unixODBC-compile.log 
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " unixODBC: Installing to \"$LOCAL_PATH/unixODBC\"..." 
+ inst unixODBC-install
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " unixODBC: Creating symlink for libodbc.so.1 in /usr/lib..." 
+ $LN -s "$LOCAL_PATH/unixODBC/lib/libodbc.so.1" /usr/lib >/dev/null 2>&1
+ if [ $? = 0 ];then
+  echo " [$DONE]"
+ else
+  echo " [$FAILED] -not a big deal"
+ fi
+
+else
+ echo " [$DONE]"
+fi
+
+notice "$MENUTRUE" "PHP+unixODBC ready!\n"
+
+CONFIGPHP="$CONFIGPHP --with-unixodbc="$LOCAL_PATH/unixODBC" $r"
+cd $root

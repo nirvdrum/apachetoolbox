@@ -1,0 +1,3 @@
+if [ $LIBGD_DIR ];then
+  notice "$MENUTRUE" "  -GD libs detected and compiled into PHP $PHP\n"
+fi

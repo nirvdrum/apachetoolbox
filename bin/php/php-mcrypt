@@ -1,0 +1,38 @@
+test -f /usr/lib/libmcrypt.a && MCRYPTDIR=/usr
+test -f /usr/local/lib/libmcrypt.a && MCRYPTDIR=/usr/local
+test -f $LOCAL_PATH/lib/libmcrypt.a && MCRYPTDIR=$LOCAL_PATH
+
+if [ -z "$MCRYPTDIR" ];then
+ MCRYPTDIR=$LOCAL_PATH
+ cd $root/src
+ notice "$MENUTRUE" "Getting Mcrypt Source ready for PHP...\n"
+ check_source "libmcrypt-$MCRYPT.tar.gz" "ftp://mcrypt.hellug.gr/pub/crypto/mcrypt/libmcrypt/libmcrypt-$MCRYPT.tar.gz"
+ explode libmcrypt-$MCRYPT.tar.gz
+ notice "$MENUTRUE" " Untared libmcrypt Source for PHP...\n"
+ cd libmcrypt-$MCRYPT
+
+ notice "$MENUTRUE" "  libmcrypt -configuring..."
+ # as per http://www.php.net/manual/en/ref.mcrypt.php
+ ./configure --prefix="$LOCAL_PATH" --disable-posix-threads &> $logdir/libmcrypt-configure.log 2>&1
+ testcheck $? libmcrypt-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  libmcrypt -compiling..."
+ $MAKE &> $logdir/libmcrypt-compile.log 2>&1
+ testcheck $? libmcrypt-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  libmcrypt -installing..."
+ inst libmcrypt
+ echo " [$DONE]"
+
+ make clean > $logdir/libmcrypt-clean.log
+ cd ..
+ notice "$MENUTRUE" "libmcrypt Source for PHP setup\n"
+
+else
+ notice "$MENUTRUE" "libmcrypt already installed!\n"
+fi
+cd $root
+
+CONFIGPHP="$CONFIGPHP --with-mcrypt=$MCRYPTDIR $r"

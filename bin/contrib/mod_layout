@@ -1,0 +1,40 @@
+notice "$MENUTRUE" "Getting Mod_Layout source ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_layout.c" ] ; then
+cd $root/src
+check_source "mod_layout-$MODLAYOUT.tar.gz" "http://software.tangent.org/download/mod_layout-$MODLAYOUT.tar.gz"
+ 
+ explode mod_layout-$MODLAYOUT.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Layout...\n"
+ if [ -d $root/apache_$APACHE/src/modules/layout ];then rm -rf $root/apache_$APACHE/src/modules/layout; fi
+ $MV -f $root/src/mod_layout-$MODLAYOUT $root/apache_$APACHE/src/modules/layout
+ $CP -f $root/apache_$APACHE/src/modules/layout/Makefile.STATIC $root/apache_$APACHE/src/modules/layout/Makefile
+  #fix for a bug in Makefile.tmpl
+ $LN -s $root/apache_$APACHE/src/modules/layout/directives.h $root/apache_$APACHE/src/modules/layout/mod_layout_directives.h
+
+ $CHMOD -R 777 $root/apache_$APACHE/src/modules/layout
+echo "
+
+####### Mod Layout #########
+# http://www.tangent.org/mod_layout/
+#<Virtualhost www.example.com>
+#        LayoutFooter /footer.php
+#        LayoutHeader /header.php
+#        LayoutHandler application/x-httpd-php 
+#        LayoutHandler application/x-httpd-php3
+#        LayoutHandler application/x-httpd-php3-source
+#	 LayoutHandler httpd/unix-directory
+#	 LayoutMerge On
+#	 LayoutIgnoreURI *.rss
+#	 LayoutIgnoreURI *.css
+#</virtualhost>
+############################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Layout\n"
+else
+ notice "$MENUTRUE" "Mod_Layout already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --activate-module=src/modules/layout/liblayout.a $r"

@@ -1,0 +1,40 @@
+cd $root/src
+
+
+#---------------------------------------------------------------------------------------------------
+
+. $root/bin/ssl/openssl
+  
+#---------------------------------------------------------------------------------------------------
+
+. $root/bin/ssl/ssl-mm
+  
+#---------------------------------------------------------------------------------------------------  
+  
+notice "$MENUTRUE" "Setting up Mod_SSL...\n"
+if [ -d mod_ssl-$MODSSL ];then rm -rf mod_ssl-$MODSSL;fi
+
+ check_source "mod_ssl-$MODSSL.tar.gz" "http://www.modssl.org/source/mod_ssl-$MODSSL.tar.gz"
+
+ explode mod_ssl-$MODSSL.tar.gz
+ notice "$MENUTRUE" " Untared Mod_SSL...\n"
+ cd mod_ssl-$MODSSL
+ ./configure --with-apache="$root/apache_$APACHE" > $logdir/mod_ssl-configure.log
+ testcheck $? mod_ssl-configure.log
+ notice "$MENUTRUE" " Configured Mod_SSL...\n"
+
+ cd ..
+ notice "$MENUTRUE" "Mod_SSL setup\n"
+
+
+ APACHECFG="$APACHECFG --enable-module=ssl $r"
+
+ #if [ $OPENSSLSYSTEM -eq $TRUE ]; then SSLBASE=SYSTEM; else SSLBASE=$OPENSSL_DIR; fi
+
+ MOD_SSL_CONFIG="export SSL_BASE=$OPENSSL_DIR\nexport EAPI_MM=$root/src/mm-$MM"
+
+ notice "$MENUTRUE" "Mod_SSL var's echoed into the apache configuration script\n"
+
+
+cd $root
+

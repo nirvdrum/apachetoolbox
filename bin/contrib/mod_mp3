@@ -1,0 +1,51 @@
+notice "$MENUTRUE" "Getting Mod_MP3 v$MODMP3 ready...\n"
+
+if [ ! -d "$root/apache_$APACHE/src/modules/mp3" ] ; then
+
+ cd $root/src
+ check_source "mod_mp3-${MODMP3}.tar.gz" "http://software.tangent.org/download/mod_mp3-${MODMP3}.tar.gz" 
+ explode mod_mp3-${MODMP3}.tar.gz
+ notice "$MENUTRUE" " Untared Mod_MP3...\n"
+ notice "$MENUTRUE" " Copying Mod_MP3..."
+ $CP -rf $root/src/mod_mp3-$MODMP3 $root/apache_$APACHE/src/modules/mp3
+
+ if [ -f "$root/apache_$APACHE/src/modules/mp3/Makefile.STATIC" ] ; then
+  $CP -f $root/apache_$APACHE/src/modules/mp3/Makefile.STATIC $root/apache_$APACHE/src/modules/mp3/Makefile
+  echo " [$DONE]"
+ else
+  echo " [$FAILED]"
+  exit
+ fi
+
+echo "
+
+####### Mod MP3 #########
+# http://media.tangent.org/
+
+#Listen 8000
+#<VirtualHost www.example.com:8000>
+#ServerName www.example.com
+#MP3Engine On
+#MP3CastName "Brian\'s Tunes"
+#MP3Genre "Much, nutty"
+#MP3 /export/mp3
+#MP3 /tmp/madonna.mp3
+#MP3 /tmp/cows.mp3
+#MP3Random On
+##Increase this if your connections are timing out
+#Timeout 1200
+#ErrorLog /usr/local/apache/logs/music_error_log
+#</VirtualHost>
+
+
+############################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_MP3\n"
+else
+ notice "$MENUTRUE" "Mod_MP3 already setup!\n"
+fi
+
+APACHECFG="$APACHECFG --activate-module=src/modules/mp3/libmp3.a $r"
+cd $root

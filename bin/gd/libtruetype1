@@ -1,0 +1,38 @@
+notice "$MENUTRUE" " Detecting TrueType1 libraries..."
+
+
+for i in / /usr /usr/local $LOCAL_PATH; do
+        test -f $i/include/t1lib.h && export LIBTRUETYPE1_DIR="$i"
+done
+
+
+if [ -z $LIBTRUETYPE1_DIR ]; then
+
+ echo " [$FAILED]"
+ check_source "t1lib-${T1LIB}.tar.gz" "ftp://ftp.neuroinformatik.ruhr-uni-bochum.de/pub/software/t1lib/t1lib-${T1LIB}.tar.gz"
+ explode t1lib-${T1LIB}.tar.gz
+ notice "$MENUTRUE" "  Untared TrueType1 libraries...\n"
+ test -d "$root/src/t1lib" && rm -rf $root/src/t1lib
+ mv -f "$root/src/t1lib-${T1LIB}" "$root/src/t1lib"
+ cd $root/src/t1lib
+
+ notice "$MENUTRUE" "  Configuring TrueType1 libraries..."  
+ ./configure --without-x --prefix="$LOCAL_PATH" > $logdir/t1libs-configure.log
+ testcheck $? t1libs-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  Compiling TrueType1 libraries..."
+ $MAKE without_doc > $logdir/t1libs-compile.log
+ testcheck $? t1libs-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  Installing TrueType1 libraries..."
+ inst t1libs
+ echo " [$DONE]"
+ notice "$MENUTRUE" " TrueType1 libraries setup!\n"
+ export LIBTRUETYPE1_DIR="${LOCAL_PATH}";
+ cd $root
+
+else
+	echo " [$FOUND @ $LIBTRUETYPE1_DIR]"
+fi

@@ -1,0 +1,27 @@
+notice "$MENUTRUE" "Getting Mod_AccessRef source ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_access_referer.c" ] ; then
+cd $root/src
+check_source "mod_access_referer-$MODACCESSREF.tar.gz" "http://download.sourceforge.net/accessreferer/mod_access_referer-$MODACCESSREF.tar.gz"
+ 
+ explode mod_access_referer-$MODACCESSREF.tar.gz 
+ notice "$MENUTRUE" " Untared Mod_AccessRef...\n"
+echo "
+
+################## Mod_AccessRef ######################
+#<Location /secret>
+#        Default_Referer         deny_referer
+#        Order_Referer           deny_referer,allow_referer
+#        Deny_Referer from       all
+#        Allow_Referer from      .w3.org 200.10.243.0/255.255.255.0
+#</Location>
+################## Mod_AccessRef ######################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_AccessRef\n"
+else
+ notice "$MENUTRUE" "Mod_AccessRef already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_access_referer-$MODACCESSREF/mod_access_referer.c $r"

@@ -1,0 +1,2 @@
+CONFIGPHP="$CONFIGPHP --enable-sysvshm $r"
+notice "$MENUTRUE" "  -Enabling System V shared memory support\n"

@@ -1,0 +1,9 @@
+test -d /usr/local/velocis && VELOCISPATH="/usr/local/velocis"
+test -d $LOCAL_PATH/velocis && VELOCISPATH="$LOCAL_PATH/velocis"
+
+
+if [ $VELOCISPATH ];then
+
+ CONFIGPHP="$CONFIGPHP --with-velocis=\"${VELOCISPATH}\" $r"
+ notice "$MENUTRUE" "  -Velocis detected, support compiled into PHP\n"
+fi

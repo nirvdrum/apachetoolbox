@@ -1,0 +1,41 @@
+notice "$MENUTRUE" "Getting Mod_Index_RSS ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_index_rss.c" ] ; then
+cd $root/src
+check_source "mod_index_rss-$MODINDEXRSS.tar.gz" "http://software.tangent.org/download/mod_index_rss-$MODINDEXRSS.tar.gz"
+ 
+ explode mod_index_rss-$MODINDEXRSS.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Index_RSS...\n"
+
+echo "
+
+####### Mod Index RSS #########
+# http://www.tangent.org/mod_index_rss
+#This would enable mod_index_rss for a virtualhost
+#and only allow for file that have .htm and .html
+#extensions to be sent.
+
+#<virtualhost>
+#        IndexRSSEnabled \"*.htm\"
+#        IndexRSSEnabled \"*.html\"
+#</virtualhost>
+
+#This example would allow all files to be published
+#except gif and jpeg files.
+
+#<virtualhost>
+#        IndexRSSDisabled \"*.gif\"
+#        IndexRSSDisabled \"*.jpg\"
+#</virtualhost>
+
+#You will find a faq at http://www.tangent.org/mod_index_rss/
+############################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Index_RSS\n"
+else
+ notice "$MENUTRUE" "Mod_Index_RSS already setup!\n"
+fi
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_index_rss-0.8/mod_index_rss.c $r"
+cd $root

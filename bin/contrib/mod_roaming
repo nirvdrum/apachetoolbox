@@ -1,0 +1,58 @@
+notice "$MENUTRUE" "Setting up Mod_Roaming...\n"
+if [ ! -f apache_$APACHE/src/module/extra/mod_roaming.c ] ; then
+cd $root/src
+check_source "mod_roaming-$MODROAMING.tar.gz" "http://www.klomp.org/mod_roaming/mod_roaming-$MODROAMING.tar.gz"
+ 
+ explode mod_roaming-$MODROAMING.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Roaming...\n"
+
+echo "
+
+######################## Mod_Roaming #################################
+# http://www.klomp.org/mod_roaming/
+#RoamingAlias /roaming /usr/local/apache/roaming
+#   
+#   The first argument is the uri prefix that mod_roaming will respond
+#   to, the second argument is the directory where the roaming access  
+#   files will be stored. Make sure the webserver has write permissions
+#   to this directory. Preferrably, no other user should have read or
+#   write permissions to this directory to protect the privacy of the
+#   users.
+#   
+#   A subdirectory is automatically created for each user, e.g. the
+#   roaming access files for user vinny will be stored under
+#/usr/local/apache/roaming/vinny
+#   and can be accessed via
+#http://<host>/roaming/vinny/...
+#   
+#   Make sure that any requests made to the roaming directory are
+#   authorized. You can do this in a number of different ways:   
+#   a. by putting a .htaccess file in the roaming directory (e.g.
+#      /usr/local/apache/roaming). If you do this, make sure
+#      Apache is reading the .htaccess file and the directives in it
+#      are allowed (AllowOverride AuthConfig),
+#   b. by putting a
+#      <Directory /usr/local/apache/roaming>
+#      block in httpd.conf, or
+#   c. by putting a
+#      <Location /roaming> 
+#      block in httpd.conf.
+#   
+#   This file or block should contains something like this:
+#AuthUserFile /usr/local/apache/conf/roaming-htpasswd
+#AuthType Basic
+#AuthName \"Roaming Access\"
+#<Limit GET PUT MOVE DELETE>
+#        require valid-user
+#</Limit>
+######################## Mod_Roaming ##################################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Roaming\n"
+ notice "$MENUTRUE" "Mod_Roaming setup\n"
+else
+ notice "$MENUTRUE" "Mod_Roaming already installed\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_roaming-$MODROAMING/mod_roaming.c $r"

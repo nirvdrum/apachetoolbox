@@ -1,0 +1,33 @@
+Install
+=-=-=-=
+
+1) as root run ./install.sh
+ 1a) if you're running the program for the 2nd time and don't want
+    to change your options use the -f or --fast switch when running
+    install.sh .
+2) select what you want to compile into apache
+ 2a) type "apache" to get to the apache menu as shown in the menu
+ 2b) type "php" to get to the php menu as shown in the menu
+ 2c) type "page2" to get to the 2nd modules menu as shown in the menu
+3) continue and let it compile by typing 'go'
+ 3a) if the source is missing it will try to download it
+4) cd into the apache_1.3.* source directory
+5) run "make" manually to compile apache, watch for errors
+6) if everything went ok run "make install" to install/upgrade
+
+
+
+Know good
+=-=-=-=-=
+
+FreeBSD v4.4
+12/20/01
+apache+php(+imap+libmcrypt+mhash+gettext+bcmath+sys5sem+sys5sha+mysql+openssl+gd+libcurl+snmp)+gd(+zlib+jpeg+png+t1libs+freetype2)+mysql+mod_ssl+mod_python+mod_perl
+*With freebsd mod_ssl and the frontpage hack seem to conflict
+
+Redhat 7.1
+12/20/01
+apache+php+mod_ssl+mod_python+mysql+frontpage 2002+mod_perl
+
+
+*Only compile in what you need, nothing else!

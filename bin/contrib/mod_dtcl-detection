@@ -1,0 +1,42 @@
+if [ $INSTALL_MODTCL -eq $FALSE ];then
+ say "Mod_TCL requires TCL v8.2+. "
+ if [ -x /usr/bin/tclsh8.4 ];then export TCLVER=8.4;fi
+ if [ -x /usr/local/bin/tclsh8.4 ];then export TCLVER=8.4;fi
+ if [ -x $LOCAL_PATH/bin/tclsh8.4 ];then export TCLVER=8.4;fi
+ if [ -x /usr/bin/tclsh8.3 ];then export TCLVER=8.3;fi
+ if [ -x /usr/local/bin/tclsh8.3 ];then export TCLVER=8.3;fi
+ if [ -x $LOCAL_PATH/bin/tclsh8.3 ];then export TCLVER=8.3;fi
+ if [ -x /usr/bin/tclsh8.2 ];then export TCLVER=8.2;fi
+ if [ -x /usr/local/bin/tclsh8.2 ];then export TCLVER=8.2;fi
+ if [ -x $LOCAL_PATH/bin/tclsh8.2 ];then export TCLVER=8.2;fi
+ if [ -x /usr/bin/tclsh8.1 ];then export TCLVER=8.1;fi
+ if [ -x /usr/local/bin/tclsh8.1 ];then export TCLVER=8.1;fi
+ if [ -x $LOCAL_PATH/bin/tclsh8.1 ];then export TCLVER=8.1;fi
+ if [ -x /usr/bin/tclsh8.0 ];then export TCLVER=8.0;fi
+ if [ -x /usr/local/bin/tclsh8.0 ];then export TCLVER=8.0;fi
+ if [ -x $LOCAL_PATH/bin/tclsh8.0 ];then export TCLVER=8.0;fi
+               
+ if [ "$TCLVER" != "" ];then
+  say "v$TCLVER detected!$n"
+  part1=`echo $TCLVER |cut -d . -f 1`
+  part2=`echo $TCLVER |cut -d . -f 2`
+                
+  if [ $part1 -eq 8 ];then
+   if [ $part2 -le 2 ];then
+    say "TCL needs to be upgraded to at least version 8.2!$n"
+    INSTALL_MODTCL=$FALSE
+   else
+    test_choice INSTALL_MODTCL $INSTALL_MODTCL
+    INSTALL_MODTCL=$var
+   fi
+  fi
+
+ else
+  say "No TCL detected.$n"
+  INSTALL_MODTCL=$FALSE
+ fi
+
+HitAnyKey
+else
+  INSTALL_MODTCL=$FALSE
+fi

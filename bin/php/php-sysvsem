@@ -1,0 +1,3 @@
+
+CONFIGPHP="$CONFIGPHP --enable-sysvsem $r"
+notice "$MENUTRUE" "  -Enabling System V semaphore support\n"

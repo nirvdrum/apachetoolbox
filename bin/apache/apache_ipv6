@@ -1,0 +1,27 @@
+cd $root/src
+
+notice "$MENUTRUE" "Getting Apache source already for IPv6 support...\n"
+# ftp://ftp.kame.net/pub/kame/misc/
+
+if [ ! -f $root/apache_${APACHE}/README.v6 ];then
+
+ if [ ! -f $root/src/apache-${APACHE}-v6-${IPV6}.diff ];then
+  check_source "apache-${IPV6}.diff.gz" "http://motoyuki.bsdclub.org/data/IPv6/apache-${IPV6}.diff.gz"
+ fi
+
+ if [ -f $root/src/apache-${IPV6}.diff.gz ];then
+  notice "$MENUTRUE" " Apache IPv6 patch uncompressing...\n"
+  $GUNZIP apache-${IPV6}.diff.gz
+  notice "$MENUTRUE" " Apache IPv6 patch uncompressed.\n"
+ fi
+
+ notice "$MENUTRUE" " Patching Apache for IPv6 support...\n"
+ cd $root/apache_${APACHE}
+ $PATCH -p0 < $root/src/apache-${IPV6}.diff &> $logdir/ipv6-patch.log
+ testcheck $? ipv6-patch.log
+ notice "$MENUTRUE" " Patched Apache for IPv6 support.\n"
+else
+ notice "$MENUTRUE" "Apache source already patched for IPv6 support.\n"
+fi
+
+APACHECFG="$APACHECFG --enable-rule=INET6 $r"

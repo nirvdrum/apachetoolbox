@@ -1,0 +1,44 @@
+notice "$MENUTRUE" " Detecting JPEG library..."
+
+for i in / /usr /usr/local $LOCAL_PATH; do
+	test -f $i/lib/libjpeg.a && export LIBJPEG_DIR=$i
+done
+
+
+if [ -z $LIBJPEG_DIR ]; then
+	echo " [$FAILED]"
+	cd $root/src
+
+	check_source "jpegsrc.v${LIBJPEG}.tar.gz" "http://www.apachetoolbox.com/data/cvs/src/jpegsrc.v${LIBJPEG}.tar.gz"
+
+	notice "$MENUTRUE" "  JPEG library - uncompressing...\n"
+	test -d "$root/src/jpeg-${LIBJPEG}" && rm -rf "$root/src/jpeg-${LIBJPEG}"
+	explode jpegsrc.v${LIBJPEG}.tar.gz
+	cd jpeg-${LIBJPEG}
+	notice "$MENUTRUE" "  JPEG library - uncompressed\n"
+
+	notice "$MENUTRUE" "  JPEG library - configuring..."
+	./configure --prefix="$LOCAL_PATH" --enable-shared --enable-static > $logdir/libjpeg-configure.log
+	testcheck $? libjpeg-configure.log
+	echo " [$DONE]"
+
+	notice "$MENUTRUE" "  JPEG library - compiling..."
+	$MAKE > $logdir/libjpeg-compile.log
+	testcheck $? libjpeg-compile.log
+	echo " [$DONE]"
+
+	notice "$MENUTRUE" "  JPEG library - installing..."
+	# bug fix in the makefile for libjpeg
+	$INSTALL -d $LOCAL_PATH/bin
+	$INSTALL -d $LOCAL_PATH/man/man1
+	inst libjpeg
+	$MAKE install-lib > $logdir/libjpeg-install-libs.log
+	$MAKE install-headers > $logdir/libjpeg-install-headers.log
+	echo " [$DONE]"
+
+	cd $root
+	notice "$MENUTRUE" " JPEG library setup!\n"
+	export LIBJPEG_DIR="$LOCAL_PATH"
+else
+	echo " [$FOUND @ $LIBJPEG_DIR]"
+fi

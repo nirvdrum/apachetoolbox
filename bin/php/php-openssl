@@ -1,0 +1,27 @@
+#if [ $INSTALL_PHP_SSL -eq $TRUE ];then
+	. $root/bin/ssl/openssl
+#fi
+
+for i in /usr /usr/local $LOCAL_PATH /usr/ssl /usr/local/ssl $LOCAL_PATH/ssl; do
+	test -f $i/bin/openssl && OPENSSLBIN="$i/bin/openssl"
+done
+
+if [ $OPENSSLBIN ];then
+ OPENSSLVERSION=`$OPENSSLBIN version | cut -d " " -f2`
+ OPENSSLVERSION_OK=`expr $OPENSSLVERSION '>=' '0.9.6'`
+  if [ $OPENSSLVERSION_OK -eq 1 ];then
+   notice "$MENUTRUE" " Detected OpenSSL version equal to or greater then 0.9.6! ($OPENSSLVERSION)\n"
+
+   if [ -d $OPENSSL_DIR ];then
+    notice "$MENUTRUE" "  Found existing OpenSSL in \"$OPENSSL_DIR\" \n"
+    CONFIGPHP="$CONFIGPHP --with-openssl=\"$OPENSSL_DIR\" $r"
+   else
+    CONFIGPHP="$CONFIGPHP --with-openssl $r"
+   fi
+
+   notice "$MENUTRUE" "  -OpenSSL v$OPENSSLVERSION detected and compiled into PHP\n"
+
+  else
+   notice "$MENUFALSE" " Detected OpenSSL, but version less then 0.9.6! ($OPENSSLVERSION)\n"
+ fi
+fi

@@ -1,0 +1,37 @@
+notice "$MENUTRUE" "Setting up Mod_AuthPOP3...\n"
+if [ ! -f apache_$APACHE/src/modules/extra/mod_auth_pop.c ];then
+cd $root/src
+check_source "mod_auth_pop3-$MODAUTHPOP3.tgz" "http://www.verat.net/~awl/MOD_AUTH_POP/mod_auth_pop3-$MODAUTHPOP3.tgz"
+
+ explode mod_auth_pop3-$MODAUTHPOP3.tgz
+ notice "$MENUTRUE" " Untared Mod_AuthPOP3...\n"
+ if [ -d mod_auth_pop3-$MODAUTHPOP3 ] ;then rm -rf mod_auth_pop3-$MODAUTHPOP3; fi
+ $MV -f src mod_auth_pop3-$MODAUTHPOP3
+ notice "$MENUTRUE" " Renamed Mod_AuthPOP3 dir...\n"
+echo "
+
+############## Mod Auth_POP3 ##############
+# http://www.verat.net/~awl/MOD_AUTH_POP3  
+#<Directory /secret>
+#Auth_POP_Server localhost
+#Auth_POP_Port 110
+#AuthType Basic   
+#Auth_Radius_Authoritative on
+#AuthName Goingon
+#        <limit GET POST HEAD>
+#        order deny,allow
+#        allow from all  
+#        require user BOB
+#        </limit>
+#</directory>
+###########################################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Apache httpd.conf-dist setup for Mod_AuthPOP3...\n"
+ notice "$MENUTRUE" "Mod_AuthPOP3 setup\n"
+else
+ notice "$MENUTRUE" "Mod_AuthPOP3 already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_auth_pop3-$MODAUTHPOP3/modules/pop/mod_auth_pop.c $r"

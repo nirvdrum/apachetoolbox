@@ -1,0 +1,28 @@
+
+#	look for a running copy of MySQL for use
+#	with the --with-mysql PHP switch.
+
+ INSTALL_PHP_MYSQL=$FALSE
+ test -r /tmp/mysql.sock && INSTALL_PHP_MYSQL=$TRUE
+ test -r /var/run/mysqld/mysqld.sock && INSTALL_PHP_MYSQL=$TRUE
+ test -r /var/tmp/mysql.sock && INSTALL_PHP_MYSQL=$TRUE
+ test -r /var/lib/mysql/mysql.sock && INSTALL_PHP_MYSQL=$TRUE
+ test -r /var/mysql/mysql.sock && INSTALL_PHP_MYSQL=$TRUE
+
+
+
+#	Check for the needed mysql headers in /usr, /usr/local, $LOCAL_PATH,
+#	/usr/mysql, and $LOCAL_PATH/mysql.
+
+ if [ $INSTALL_PHP_MYSQL -eq $TRUE ];then
+  test -f /usr/include/mysql/mysql.h && MYSQLPATH="=/usr"
+  test -f /usr/mysql/include/mysql/mysql.h && MYSQLPATH="=/usr/mysql"
+  test -f /usr/local/include/mysql/mysql.h && MYSQLPATH="=/usr/local"
+  test -f /usr/local/mysql/include/mysql/mysql.h && MYSQLPATH="=/usr/local/mysql"
+  test -f $LOCAL_PATH/include/mysql/mysql.h && MYSQLPATH="=$LOCAL_PATH"
+  test -f $LOCAL_PATH/mysql/include/mysql/mysql.h && MYSQLPATH="=$LOCAL_PATH/mysql"
+
+  CONFIGPHP="$CONFIGPHP --with-mysql${MYSQLPATH} $r"
+  notice "$MENUTRUE" "  -MySQL detected and compiled into PHP $PHP\n"
+ fi
+

@@ -1,0 +1,34 @@
+
+notice "$MENUTRUE" "Getting Mod_DoS_evasive source ready...\n"
+
+
+if [ ! -f "$root/apache_$APACHE/src/modules/dosevasive/mod_dosevasive.c" ] ; then
+cd $root/src
+check_source "mod_dosevasive.tar.gz" "http://www.networkdweebs.com/stuff/mod_dosevasive.tar.gz"
+cd $root/apache_$APACHE/src/modules 
+ explode $root/src/mod_dosevasive.tar.gz
+ notice "$MENUTRUE" " Untared Mod_DoS_evasive...\n"
+
+echo "
+####### Mod DoS Evasive ########
+#http://www.networkdweebs.com/stuff/security.html
+
+<IfModule mod_dosevasive.c>
+    DOSHashTableSize    3097
+    DOSPageCount        2
+    DOSSiteCount        50
+    DOSPageInterval     1
+    DOSSiteInterval     1
+    DOSBlockingPeriod   10
+</IfModule>
+
+################################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_DoS_evasive\n"
+else
+ notice "$MENUTRUE" "Mod_DoS_evasive already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/apache_$APACHE/src/modules/dosevasive/mod_dosevasive.c $r"

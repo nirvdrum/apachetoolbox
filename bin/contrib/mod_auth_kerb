@@ -1,0 +1,38 @@
+notice "$MENUTRUE" "Getting Mod_Auth_Kerb source ready...\n"
+
+if [ ! -f "apache_$APACHE/src/modules/extra/mod_auth_kerb.c" ] ; then
+ cd $root/src
+
+ notice "$MENUTRUE" "  Mod_Auth_Kerb: checking for Kerberos includes . . ."
+ test -d /usr/kerberos/include && KERBINCDIR=/usr/kerberos/include
+ test -d /usr/local/kerberos/include && KERBINCDIR=/usr/local/kerberos/include
+ test -d $LOCAL_PATH/kerberos/include && KERBINCDIR=$LOCAL_PATH/kerberos/include
+ test -d /usr/include/kerberos/include && KERBINCDIR=/usr/include/kerberos/include
+ test -d /usr/local/include/kerberos/include && KERBINCDIR=/usr/local/include/kerberos/include
+ test -d $LOCAL_PATH/include/kerberos/include && KERBINCDIR=$LOCAL_PATH/include/kerberos/include
+ if [ ! -z $KERBINCDIR ]; then echo " [DONE]"; else echo " [FAILED]"; exit; fi;
+
+ notice "$MENUTRUE" "  Mod_Auth_Kerb: checking for Kerberos libraries . . ."
+ test -d /usr/kerberos/lib && KERBLIBDIR=/usr/kerberos/lib
+ test -d /usr/lib/kerberos/lib && KERBLIBDIR=/usr/lib/kerberos/lib
+ test -d /usr/local/lib/kerberos/lib && KERBLIBDIR=/usr/local/lib/kerberos/lib
+ test -d $LOCAL_PATH/lib/kerberos/lib && KERBLIBDIR=$LOCAL_PATH/lib/kerberos/lib
+ test -d /usr/local/kerberos/lib && KERBLIBDIR=/usr/local/kerberos/lib
+ test -d $LOCAL_PATH/kerberos/lib && KERBLIBDIR=$LOCAL_PATH/kerberos/lib
+ if [ ! -z $KERBLIBDIR ]; then echo " [DONE]"; else echo " [FAILED]"; exit; fi;
+
+ check_source "mod_auth_kerb-$MODAUTHKERB.tar.gz" "http://stonecold.unity.ncsu.edu/software/mod_auth_kerb/downloads/mod_auth_kerb-$MODAUTHKERB.tar.gz"
+
+ explode mod_auth_kerb-$MODAUTHKERB.tar.gz
+ $MV -f $root/src/src $root/src/mod_auth_kerb
+
+ notice "$MENUTRUE" " Untared Mod_Auth_Kerb...\n"
+else
+ notice "$MENUTRUE" "Mod_Auth_Kerb already setup\n"
+fi
+cd $root
+
+APACHELIBS="$APACHELIBS -L$KERLIBDIR -lkrb5 -lkrb4 -lcrypto -lcom_err -lsocket -lresolv -lnsl"
+APACHECFLAGS="$APACHECFLAGS -DKRB5 -DKRB4"
+APACHEINCLUDES="$APACHEINCLUDES -I$KERBINCDIR"
+APACHECFG="$APACHECFG --add-module=$root/src/mod_auth_kerb/modules/kerberos/mod_auth_kerb.c $r"

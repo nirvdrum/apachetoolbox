@@ -1,0 +1,41 @@
+notice "$MENUTRUE" "Checking for Flex $FLEX..."
+
+if [ ! -x /bin/flex ] && [ ! -x /usr/bin/flex ] && [ ! -x $LOCAL_PATH/bin/flex ] && [ ! -x /opt/sfw/bin/flex ]; then
+ cd $root/src
+ echo " [$TXT_FAILED]"
+
+ check_source "flex-${FLEX}.tar.gz" "ftp://ftp.gnu.org/gnu/non-gnu/flex/flex-${FLEX}.tar.gz"
+ notice "$MENUTRUE" " Flex: uncompressing...\n"
+ explode flex-${FLEX}.tar.gz
+ cd flex-${FLEX}
+
+ notice "$MENUTRUE" " Flex: configuring..."
+ ./configure --prefix="$LOCAL_PATH" &> /$logdir/flex-configure.log 
+ testcheck $? flex-configure.log
+ echo " [$DONE]"
+
+
+ notice "$MENUTRUE" " Flex: compiling..."
+ $MAKE &> /$logdir/flex-compile.log
+ testcheck $? flex-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " Flex: installing..."
+ inst flex
+
+  if [ ! -x `which flex` ]; then
+   echo " [$TXT_FAILED]"
+   exit
+  else
+   echo " [$DONE]"
+  fi
+
+ cd ..;rm -rf flex-$FLEX
+ notice "$MENUTRUE" "Flex setup!\n"
+ cd $root
+ CONFIGPHP="$CONFIGPHP --with-flex=\"$LOCAL_PATH\" $r"
+else
+ echo " [$DONE]"
+fi
+
+

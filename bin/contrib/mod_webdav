@@ -1,0 +1,38 @@
+notice "$MENUTRUE" "Setting up WebDAV...\n"
+if [ ! -f apache_$APACHE/src/modules/dav/libdav.a ];then
+cd $root/src
+check_source "mod_dav-$WEBDAV.tar.gz" "http://www.webdav.org/mod_dav/mod_dav-$WEBDAV.tar.gz"
+
+ explode mod_dav-$WEBDAV.tar.gz
+ notice "$MENUTRUE" " Untared WebDAV...\n"
+ cd mod_dav-$WEBDAV
+ ./configure --with-apache=$root/apache_$APACHE > $logdir/webdav-configure.log
+ notice "$MENUTRUE" " Configured WebDAV\n"
+ $MAKE > $logdir/webdav-compile.log
+ testcheck $? webdav-compile.log
+ notice "$MENUTRUE" " Compiled WebDAV.\n"
+ inst webdav
+ notice "$MENUTRUE" " Installed WebDAV in apache source...\n"
+ $MAKE clean >/dev/null 2>&1
+echo "
+
+####### WebDAV ########
+#http://www.webdav.org/mod_dav/install.html#apache
+#<Directory /usr/local/apache/htdocs>
+#DAV On
+#DAVLockDB /usr/local/apache/var/DAVLock
+#</Directory>
+#
+#mkdir /usr/local/apache/var/DAVLock
+#make sure the user apache runs as owns \"/usr/local/apache/var/DAVLock\" this is usually nobody and nobody or nogroup
+####### WebDAV ########
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Apache httpd.conf-dist updated for WebDAV...\n"
+ notice "$MENUTRUE" "WebDAV setup\n"
+else
+ notice "$MENUTRUE" "WebDAV already installed in Apache source\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --activate-module=src/modules/dav/libdav.a $r"

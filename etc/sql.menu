@@ -1,0 +1,38 @@
+CONTINUE5=$FALSE
+CHOICE5=
+    while [ $CONTINUE5 -eq $FALSE ]
+    do
+        clear 
+        banner
+
+comp_menu_item 1 "$INSTALL_MYSQL" "MySQL v$MYSQL Menu\n"
+comp_menu_item 2 "$INSTALL_PGSQL" "PostgresSQL v$POSTGRESQL Menu\n"
+
+echo -e "   go)     Back to main menu..."
+echo -e "   99)     Descriptions"
+        echo_line
+        echo -e "Choice [?] \c"
+        read CHOICE5
+        case "$CHOICE5" in
+
+	1)
+	. $root/etc/mysql.menu ;;
+	2)
+	. $root/etc/pgsql.menu ;;
+
+
+	    99)
+                print_descriptions
+                ;;
+            go)   
+                CONTINUE5=$TRUE
+                ;;
+            q)
+                CONTINUE5=$TRUE
+                ;;
+            *)
+                echo "Invalid Selection..."
+                HitAnyKey
+        esac
+    done
+

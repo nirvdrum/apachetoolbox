@@ -1,0 +1,278 @@
+CONTINUE2=$FALSE
+CHOICE2=
+    while [ $CONTINUE2 -eq $FALSE ]
+    do
+        clear 
+        banner
+
+comp_menu_item global "$FALSE" "Global installation path: $LOCAL_PATH\n"
+comp_menu_item path "$FALSE" "Apache installation path: $APACHE_PATH\n"
+comp_menu_item hack "$APACHE_HACK" "Apache hacking menu...\n"
+comp_menu_item 0 "$INSTALL_DSO" "Modules as DSO's" TAB; TAB; 		comp_menu_item 1 "$INSTALL_APACHE_SO" "Modules static but with DSO support\n"
+
+comp_menu_item 2 "$INSTALL_APACHE_ACCESS" "mod_access"; TAB; 		
+comp_menu_item 3 "$INSTALL_APACHE_ASIS" "mod_asis" TAB; TAB; TAB;
+comp_menu_item 4 "$INSTALL_APACHE_AUTH_DB" "mod_auth_db\n";
+ 		
+comp_menu_item 5 "$INSTALL_APACHE_AUTOINDEX" "mod_autoindex"; TAB;
+comp_menu_item 6 "$INSTALL_APACHE_DIGEST" "mod_digest"; TAB;
+comp_menu_item 7 "$INSTALL_APACHE_EXAMPLE" "mod_example\n"
+
+comp_menu_item 8 "$INSTALL_APACHE_IMAP" "mod_imap"; TAB;TAB;
+comp_menu_item 9 "$INSTALL_APACHE_LOG_AGENT" "mod_log_agent"; TAB;
+comp_menu_item 10 "$INSTALL_APACHE_MIME" "mod_mime\n";
+
+comp_menu_item 11 "$INSTALL_APACHE_NEGOTIATION" "mod_negotiation"; TAB;
+comp_menu_item 12 "$INSTALL_APACHE_SETENVIF" "mod_setenvif"; TAB; 
+comp_menu_item 13 "$INSTALL_APACHE_STATUS" "mod_status\n"
+
+comp_menu_item 14 "$INSTALL_APACHE_USERTRACK" "mod_usertrack"; TAB;
+comp_menu_item 15 "$INSTALL_APACHE_ACTIONS" "mod_actions"; TAB;
+comp_menu_item 16 "$INSTALL_APACHE_AUTH" "mod_auth\n";
+
+comp_menu_item 17 "$INSTALL_APACHE_AUTH_DBM" "mod_auth_dbm"; TAB;
+comp_menu_item 18 "$INSTALL_APACHE_CERN_META" "mod_cern_meta"; TAB;
+comp_menu_item 19 "$INSTALL_APACHE_DIR" "mod_dir\n";
+
+comp_menu_item 20 "$INSTALL_APACHE_EXPIRES" "mod_expires"; TAB;
+comp_menu_item 21 "$INSTALL_APACHE_INCLUDE" "mod_include"; TAB;
+comp_menu_item 22 "$INSTALL_APACHE_LOG_CONFIG" "mod_log_config\n";
+
+comp_menu_item 23 "$INSTALL_APACHE_MIME_MAGIC" "mod_mime_magic"; TAB;
+comp_menu_item 24 "$INSTALL_APACHE_PROXY" "mod_proxy"; TAB;
+comp_menu_item 25 "$INSTALL_APACHE_UNIQUE_ID" "mod_unique_id\n";
+
+comp_menu_item 26 "$INSTALL_APACHE_VHOST_ALIAS" "mod_vhost_alias"; TAB;
+comp_menu_item 27 "$INSTALL_APACHE_ALIAS" "mod_alias"; TAB;
+comp_menu_item 28 "$INSTALL_APACHE_AUTH_ANON" "mod_auth_anon\n";
+
+comp_menu_item 29 "$INSTALL_APACHE_AUTH_DIGEST" "mod_auth_digest"; TAB;
+comp_menu_item 30 "$INSTALL_APACHE_CGI" "mod_cgi"; TAB;TAB;
+comp_menu_item 31 "$INSTALL_APACHE_ENV" "mod_env\n";
+
+
+comp_menu_item 32 "$INSTALL_APACHE_HEADERS" "mod_headers"; TAB; 	
+comp_menu_item 33 "$INSTALL_APACHE_INFO" "mod_info"; TAB;
+comp_menu_item 34 "$INSTALL_APACHE_LOG_REFERER" "mod_log_referer\n";
+
+comp_menu_item 35 "$INSTALL_APACHE_MMAP_STATIC" "mod_mmap_static"; TAB;
+comp_menu_item 36 "$INSTALL_APACHE_REWRITE" "mod_rewrite"; TAB;
+comp_menu_item 37 "$INSTALL_APACHE_SPELING" "mod_speling\n"
+
+comp_menu_item 38 "$INSTALL_APACHE_USERDIR" "mod_userdir\n"
+
+echo -e "   layout) Change the apache layout..."
+echo -e "   go)     Back to main menu..."
+echo -e "   99)     Descriptions"
+        echo_line
+        echo -e "Choice [?] \c"
+        read CHOICE2
+        case "$CHOICE2" in
+
+
+	[lL][aA][yY][oO][uU][tT])
+	. etc/layout.menu
+	;;
+
+	[Hh][aA][Cc][Kk])
+	. etc/apache_hacking.menu
+	;;
+
+	[Gg][Ll][Oo][Bb][Aa][Ll])
+        echo
+        echo -e "Enter the installation path the tools [/usr/local]: \c"
+        read LOCAL_PATH2
+        if [ -z "$LOCAL_PATH2" ]; then
+                echo "No path specified, defaulting to /usr/local/."
+        else    
+                LOCAL_PATH="$LOCAL_PATH2"
+        fi
+	;;
+
+	[pP][aA][tT][hH])
+        echo
+        echo -e "Enter the installation path of apache now [$LOCAL_PATH/apache]: \c"
+        read APACHE_PATH2
+        if [ -z "$APACHE_PATH2" ]; then
+                echo "No path specified, defaulting to $LOCAL_PATH/apache."
+                APACHE_PATH="$LOCAL_PATH/apache"
+        else    
+                APACHE_PATH="$APACHE_PATH2"
+        fi
+	;;
+
+
+	0)
+	 test_choice INSTALL_DSO $INSTALL_DSO
+	 INSTALL_DSO=$var
+	 if [ $var -eq $TRUE ] ;then INSTALL_APACHE_SO=$FALSE;fi
+	 ;;
+	1)
+	 test_choice INSTALL_APACHE_SO $INSTALL_APACHE_SO
+	 INSTALL_APACHE_SO=$var
+	 if [ $var -eq $TRUE ] ;then INSTALL_DSO=$FALSE;fi
+	 ;;
+	2)
+	 test_choice INSTALL_APACHE_ACCESS $INSTALL_APACHE_ACCESS
+	 INSTALL_APACHE_ACCESS=$var
+	 ;;
+	4)
+	 test_choice INSTALL_APACHE_AUTH_DB $INSTALL_APACHE_AUTH_DB
+	 INSTALL_APACHE_AUTH_DB=$var
+	 ;;
+	6)
+	 test_choice INSTALL_APACHE_DIGEST $INSTALL_APACHE_DIGEST
+	 INSTALL_APACHE_DIGEST=$var
+	 ;;
+	8)
+	 test_choice INSTALL_APACHE_IMAP $INSTALL_APACHE_IMAP
+	 INSTALL_APACHE_IMAP=$var
+	 ;;
+	10)
+	 test_choice INSTALL_APACHE_MIME $INSTALL_APACHE_MIME
+	 INSTALL_APACHE_MIME=$var
+	 ;;
+	12)
+	 test_choice INSTALL_APACHE_SETENVIF $INSTALL_APACHE_SETENVIF
+	 INSTALL_APACHE_SETENVIF=$var
+	 ;;
+	14)
+	 test_choice INSTALL_APACHE_USERTRACK $INSTALL_APACHE_USERTRACK
+	 INSTALL_APACHE_USERTRACK=$var
+	 ;;
+	16)
+	 test_choice INSTALL_APACHE_AUTH $INSTALL_APACHE_AUTH
+	 INSTALL_APACHE_AUTH=$var
+	 ;;
+	18)
+	 test_choice INSTALL_APACHE_CERN_META $INSTALL_APACHE_CERN_META
+	 INSTALL_APACHE_CERN_META=$var
+	 ;;
+	20)
+	 test_choice INSTALL_APACHE_EXPIRES $INSTALL_APACHE_EXPIRES
+	 INSTALL_APACHE_EXPIRES=$var
+	 ;;
+	22)
+	 test_choice INSTALL_APACHE_LOG_CONFIG $INSTALL_APACHE_LOG_CONFIG
+	 INSTALL_APACHE_LOG_CONFIG=$var
+	 ;;
+	24)
+	 test_choice INSTALL_APACHE_PROXY $INSTALL_APACHE_PROXY
+	 INSTALL_APACHE_PROXY=$var
+	 ;;
+	26)
+	 test_choice INSTALL_APACHE_VHOST_ALIAS $INSTALL_APACHE_VHOST_ALIAS
+	 INSTALL_APACHE_VHOST_ALIAS=$var
+	 ;;
+	28)
+	 test_choice INSTALL_APACHE_AUTH_ANON $INSTALL_APACHE_AUTH_ANON
+	 INSTALL_APACHE_AUTH_ANON=$var
+	 ;;
+	30)
+	 test_choice INSTALL_APACHE_CGI $INSTALL_APACHE_CGI
+	 INSTALL_APACHE_CGI=$var
+	 ;;
+	32)
+	 test_choice INSTALL_APACHE_HEADERS $INSTALL_APACHE_HEADERS
+	 INSTALL_APACHE_HEADERS=$var
+	 ;;
+	34)
+	 test_choice INSTALL_APACHE_LOG_REFERER $INSTALL_APACHE_LOG_REFERER
+	 INSTALL_APACHE_LOG_REFERER=$var
+	 ;;
+	36)
+	 test_choice INSTALL_APACHE_REWRITE $INSTALL_APACHE_REWRITE
+	 INSTALL_APACHE_REWRITE=$var
+	 ;;
+	38)
+	 test_choice INSTALL_APACHE_USERDIR $INSTALL_APACHE_USERDIR
+	 INSTALL_APACHE_USERDIR=$var
+	 ;;
+	3)
+	 test_choice INSTALL_APACHE_ASIS $INSTALL_APACHE_ASIS
+	 INSTALL_APACHE_ASIS=$var
+	 ;;
+	5)
+	 test_choice INSTALL_APACHE_AUTOINDEX $INSTALL_APACHE_AUTOINDEX
+	 INSTALL_APACHE_AUTOINDEX=$var
+	 ;;
+	7)
+	 test_choice INSTALL_APACHE_EXAMPLE $INSTALL_APACHE_EXAMPLE
+	 INSTALL_APACHE_EXAMPLE=$var
+	 ;;
+	9)
+	 test_choice INSTALL_APACHE_LOG_AGENT $INSTALL_APACHE_LOG_AGENT
+	 INSTALL_APACHE_LOG_AGENT=$var
+	 ;;
+	11)
+	 test_choice INSTALL_APACHE_NEGOTIATION $INSTALL_APACHE_NEGOTIATION
+	 INSTALL_APACHE_NEGOTIATION=$var
+	 ;;
+	13)
+	 test_choice INSTALL_APACHE_STATUS $INSTALL_APACHE_STATUS
+	 INSTALL_APACHE_STATUS=$var
+	 ;;
+	15)
+	 test_choice INSTALL_APACHE_ACTIONS $INSTALL_APACHE_ACTIONS
+	 INSTALL_APACHE_ACTIONS=$var
+	 ;;
+	17)
+	 test_choice INSTALL_APACHE_AUTH_DBM $INSTALL_APACHE_AUTH_DBM
+	 INSTALL_APACHE_AUTH_DBM=$var
+	 ;;
+	19)
+	 test_choice INSTALL_APACHE_DIR $INSTALL_APACHE_DIR
+	 INSTALL_APACHE_DIR=$var
+	 ;;
+	21)
+	 test_choice INSTALL_APACHE_INCLUDE $INSTALL_APACHE_INCLUDE
+	 INSTALL_APACHE_INCLUDE=$var
+	 ;;
+	23)
+	 test_choice INSTALL_APACHE_MIME_MAGIC $INSTALL_APACHE_MIME_MAGIC
+	 INSTALL_APACHE_MIME_MAGIC=$var
+	 ;;
+	25)
+	 test_choice INSTALL_APACHE_UNIQUE_ID $INSTALL_APACHE_UNIQUE_ID
+	 INSTALL_APACHE_UNIQUE_ID=$var
+	 ;;
+	27)
+	 test_choice INSTALL_APACHE_ALIAS $INSTALL_APACHE_ALIAS
+	 INSTALL_APACHE_ALIAS=$var
+	 ;;
+	29)
+	 test_choice INSTALL_APACHE_AUTH_DIGEST $INSTALL_APACHE_AUTH_DIGEST
+	 INSTALL_APACHE_AUTH_DIGEST=$var
+	 ;;
+	31)
+	 test_choice INSTALL_APACHE_ENV $INSTALL_APACHE_ENV
+	 INSTALL_APACHE_ENV=$var
+	 ;;
+	33)
+	 test_choice INSTALL_APACHE_INFO $INSTALL_APACHE_INFO
+	 INSTALL_APACHE_INFO=$var
+	 ;;
+	35)
+	 test_choice INSTALL_APACHE_MMAP_STATIC $INSTALL_APACHE_MMAP_STATIC
+	 INSTALL_APACHE_MMAP_STATIC=$var
+	 ;;
+	37)
+	 test_choice INSTALL_APACHE_SPELING $INSTALL_APACHE_SPELING
+	 INSTALL_APACHE_SPELING=$var
+	 ;;
+
+	    99)
+                print_descriptions
+                ;;
+            go)   
+                CONTINUE2=$TRUE
+                ;;
+            q)
+                CONTINUE2=$TRUE
+                ;;
+            *)
+                echo "Invalid Selection..."
+                HitAnyKey
+        esac
+    done
+

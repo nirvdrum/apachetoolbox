@@ -1,0 +1,480 @@
+notice $MENUTRUE "Setting up Apache Contrib Modules...$n"
+condir=contrib
+consrc="$root/src/apache-contrib-$APACHECONTRIB"
+condst="$root/apache_$APACHE/src/modules/$condir"
+notice $MENUTRUE " Variables set...$n"
+
+cd $root/src
+
+check_source "apache-contrib-$APACHECONTRIB.tar.gz" "http://httpd.apache.org/dist/contrib/modules/1.3/apache-contrib-$APACHECONTRIB.tar.gz"
+
+if [ ! -d apache-contrib-$APACHECONTRIB ]; then explode apache-contrib-$APACHECONTRIB.tar.gz; notice $MENUTRUE " Uncompressed sources...$n"; fi
+
+
+if [ $INSTALL_MODRELOCATE -eq $TRUE ]; then
+ check_source "mod_relocate-$MODRELOCATE.tar.gz" "http://www.tangent.org/mod_relocate/mod_relocate-$MODRELOCATE.tar.gz"
+ explode mod_relocate-$MODRELOCATE.tar.gz
+ notice $MENUTRUE " -mod_relocate added...$n"
+ APACHECFG="$APACHECFG --add-module=$root/src/mod_relocate-$MODRELOCATE/mod_relocate.c $r"
+fi
+
+contribtest() {
+if [ $1 -eq $TRUE ]; then
+APACHECFG="$APACHECFG --add-module=$consrc/$2/$2.c $r"
+notice $MENUTRUE " -$2 added...$n"
+echo "
+################# Mod Relocate ##################
+# http://www.tangent.org/mod_relocate
+AddHandler relocate .relo
+#http://www.server.dom/?_URL=http://www.apachetoolbox.com&key=value
+################# Mod Relocate ##################
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+fi
+}
+
+contribtest $INSTALL_CONTRIB_mod_auth_cookie mod_auth_cookie 
+if [ $INSTALL_CONTRIB_mod_auth_cookie -eq $TRUE ]; then say "
+############### Mod_Auth_Cookie #############
+# ftp://ftp.kciLink.com/pub/
+
+#--cut here--
+#AuthName GCRC (User ID is your email address)
+#AuthType Basic
+#AuthGroupFile /dev/null
+#AuthMSQLHost localhost 
+#AuthMSQLDB govcon
+#AuthMSQLUserTable user_info
+
+#<Limit GET POST>
+#require valid-user
+#</Limit>
+#--cut here--
+
+#What this does is use Basic Authentication to prove who you are, then uses the
+#mSQL server on the localhost to find the user id and password.  If they match,
+#it allows access.
+
+#Now, to use my Cookie based module, I added the one directive AuthCookieName
+#to make the .htaccess file look like this:
+
+#--cut here--
+#AuthName GCRC (User ID is your email address)
+#AuthType Basic
+#AuthGroupFile /dev/null
+#AuthMSQLHost localhost 
+#AuthMSQLDB govcon
+#AuthMSQLUserTable user_info
+
+#AuthCookieName GovConID
+
+#<Limit GET POST>
+#require valid-user
+#</Limit>
+#--cut here--
+############### Mod_Auth_Cookie #############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_auth_cookie_file mod_auth_cookie_file
+if [ $INSTALL_CONTRIB_auth_cookie_file -eq $TRUE ]; then say "
+############ Mod Auth Cookie File ###############
+# http://med.jrc.it/~dirkx/
+############ Mod Auth Cookie File ###############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+
+contribtest $INSTALL_CONTRIB_allowdev mod_allowdev
+if [ $INSTALL_CONTRIB_allowdev -eq $TRUE ]; then say "
+############ Mod Allow Dev ###############
+# http://www.arctic.org/~dgaudet/apache/  
+# 
+#AllowDev /mount-point1 /mount-point2 ...
+#
+#For example, \"AllowDev /var\" would allow any file on the /var device
+#to be served.  Note that, for example, \"AllowDev /var/foo\" where foo
+#is not a mount point, probably doesn't do what you expect.  This case 
+#too would allow all files on /var to be served.
+#
+#Dynamic mount points:  This probably covers most intranet servers.
+#
+#    AllowDevDynamic regex subst
+#    
+#If the file to be served matches regex, then perform subst.  The
+#resulting path must be on the same device as the file served.  For
+#example:
+#
+#    AllowDevDynamic /home/([^/]*)/public_html /home/\$1
+#    
+#Says that if a file /home/userid/public_html/foobar is to be served, then
+#its device must match /home/userid.
+############ Mod Allow Dev ###############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_auth_external mod_auth_external
+if [ $INSTALL_CONTRIB_auth_external -eq $TRUE ]; then say " 
+########### Mod Auth External ###############
+#        AddExternalAuth <keyword> <path-to-authenticator>
+#        AddExternalGroup <keyword> <path-to-group-checker>
+#        SetExternalAuthMethod <keyword> <method>
+#        SetExternalGroupMethod <keyword> <method>
+#        
+#The SetExternalMethod directive specifies how the data is to be passed to
+#the external routine. There are currently three possible methods:
+#
+#        environment - pass in environment variables (default - fully tested)
+#        function - handle as an internal function   (fully tested)
+#        pipe - pass name=value pairs via stdin      (in development)
+#        
+#For environment and pipe, the option specifies a path to a program to run.
+#For function, the option specifies a special internal keyword that indicates
+#which internal function is to be used.
+#
+#To Use an internal function use:
+#        AddExternalAuth <keyword> <function>:<dir/file>
+#        
+#Usage in auth config files:
+#        AuthExternal <keyword>
+#        AuthExternal afs
+#        AuthExternal RADIUS:/usr/local/raddb
+#        GroupExternal <keyword>
+#        GroupExternal unix
+#        
+#AuthExternals are passed the userid and passwd in the USER and PASS environment
+#variables, and return a success code of 0 to indicate successful
+#authentication. Non-zero result indicates either a failure to authenticate, or
+#a failure to execute the authenticator.
+#
+#GroupExternals are passed the userid and desired group in the USER and GROUP
+#environment variables, and return a success code of 0 to indicate successful
+#authentication. Non-zero result indicates non-membersip or a failure to execute
+#the group checker. The need for this module arises from difficulties the
+#origional author had linking apache with other libraries (such as AFS, and
+#database access libs).
+########### Mod Auth External ###############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_auth_inst mod_auth_inst
+if [ $INSTALL_CONTRIB_auth_inst -eq $TRUE ]; then say "
+############ Mod Auth Inst ############
+#http://www.clifford.at/stuff/
+#
+#AuthName Cliffords Demo
+#AuthType basic
+#AuthInstUser clifford
+#AuthInstPass secret  
+#require valid-user   
+############ Mod Auth Inst ############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+
+
+#contribtest $INSTALL_CONTRIB_cache mod_cache
+
+contribtest $INSTALL_CONTRIB_cgisock mod_cgisock
+if [ $INSTALL_CONTRIB_cgisock -eq $TRUE ]; then say "
+########### Mod CGISock ###############
+#
+#<Location /sockets>   # Or any directory ...
+#SetHandler cgi-socket
+#CgisockPath /var/tmp   # Dont use this path on production servers
+#</Location>
+#
+#Use lynx or your favourite web browser to go to...
+#http://your.host.address/sockets/cgisock
+#And you will get the cheesy little bit of advertising guff
+#thats in test harness.
+########### Mod CGISock ###############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+
+
+contribtest $INSTALL_CONTRIB_cvs mod_cvs
+if [ $INSTALL_CONTRIB_cvs -eq $TRUE ]; then say "
+########### Mod CVS ##############
+# http://www.sub.nu/mod_cvs/ ftp://ftp.sub.nu/pub/mod_cvs/
+#CVSCheck On
+########### Mod CVS ##############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_disallow_id mod_disallow_id
+if [ $INSTALL_CONTRIB_disallow_id -eq $TRUE ]; then say "
+########### Mod Disallow ID ###########
+#Module to disallow serving of web pages based on the user or group ID
+#owning the web page. This is useful for sites where any following of 
+#symlinks must be allowed, so as to prevent files like /etc/passwd from
+#being served accidentally or otherwise through some misguided symlink.
+#
+#For instance, to prevent any super-user owned files from being served,
+#add the following line to your server resource configuration file:
+#
+#DisallowUid 0
+#
+#Group 0 is ussually privaledged enough to warrant not serving any files
+#owned by this group ID either. To stop these files from being served:  
+#
+#DisallowGid 0
+########### Mod Disallow ID ###########
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_eaccess mod_eaccess
+if [ $INSTALL_CONTRIB_eaccess -eq $TRUE ]; then say "
+########### Mod Eaccess (Extended Access control) #######
+#http://www.micronet.fr/~pasty/eaccess/
+# Deny all
+#EAccessEnable on
+#
+# Log grants and denies to logs/eaccess_log
+#EAccessLogLevel 1
+#
+# Allow cgi toto, called by GET, without any QUERY_STRING.
+#EAccessRule permit \"^GET /cgi-bin/toto\$\"
+#
+# Allow cgi titi, called by GET, with a QUERY_STRING starting with the text
+# "field1=".
+#EAccessRule permit \"^GET /cgi-bin/titi\?field1=\"
+#
+# The same, called by POST.
+#EAccessRule permit \"^POST /cgi-bin/titi\|field1=\"
+#
+# Allow cgi tata, called by GET, with 2 arguments. Each argument contains
+# up to 32 characters.
+#EAccessRule permit \"^GET /cgi-bin/tata\?field1=.{0,32}\&field2=.{0,32}\$\"
+#
+# Deny all others cgi
+#EAccessRule deny \"^GET /cgi-bin/.*\$\"
+#EAccessRule deny \"^GET /.*\.cgi.*\$\" 
+#
+# Allow all others URL, called by GET
+#EAccessRule permit \"^GET /.*\$\"   
+########### Mod Eaccess (Extended Access control) #######
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_ip_forwarding mod_ip_forwarding
+if [ $INSTALL_CONTRIB_ip_forwarding -eq $TRUE ]; then say " 
+########## Mod IP Forwarding ############
+# IP client address/name forwarding between proxies
+# http://dev.w3.org/cgi-bin/cvsweb/apache-modules/mod_ip_forwarding/
+# 
+# *    ForwardClientIPAddress [on/off (default)]
+# *          \"Controls sending of the X_Client_Address header\"
+# *          
+# *    AcceptForwardedClientIPAddress [on/off (default)]
+# *           \"Authorizes accepting an X_Client_Address header\"
+# *           
+# *    X_ClientIPAddrHeader string
+# *        \"Customizable header string for sending the client ip _addr\"
+# *        
+# *    AuthorizedProxies space separated list
+# *     \"List of authorized proxies who can send an X_Client_Address header\"
+########## Mod IP Forwarding ############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_macro mod_macro
+if [ $INSTALL_CONTRIB_macro -eq $TRUE ]; then say "
+######### Mod Macro ###########
+# Macros for the configuration files
+# http://www.cri.ensmp.fr/~coelho/mod_macro/
+<IfModule !mod_perl.c>
+Error (Mod_Macro):Hey, you forgot to install mod_perl! I need it!
+</IfModule>
+#
+#<Macro LocalAccessPolicy>
+#order deny,allow
+#deny from all   
+#allow from 10.2.16.0/24
+#</Macro>
+#
+#<Macro RestrictedAccessPolicy $ipnumbers>
+#order deny,allow
+#deny from all   
+#allow from $ipnumbers
+#</Macro>
+#
+#Use RestrictedAccessPolicy \"192.54.172.0/24 192.54.148.0/24\"
+#is equivalent, with the macros defined above, to:
+#   order deny,allow
+#   deny from all   
+#   allow from 10.2.16.0/24
+#   
+#   ...
+#      
+#   order deny,allow
+#   deny from all   
+#   allow from 192.54.172.0/24 192.54.148.0/24
+#   
+######### Mod Macro ###########
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+
+contribtest $INSTALL_CONTRIB_monitor mod_monitor
+if [ $INSTALL_CONTRIB_monitor -eq $TRUE ]; then say "
+######### Mod Monitor ############
+#Trivial module for monitoring resources
+#
+# Thats all the info I could gather on it.
+######### Mod Monitor ############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_peephole mod_peephole
+if [ $INSTALL_CONTRIB_peephole -eq $TRUE ]; then say "
+########## Mod Peephole ############
+#A request to URL /peep/a/b/c/ should lead to the normal processing for
+#URL /a/b/c including internal redirects (implicit ones via mod_dir
+#DirectoryIndex, or explicit ones via mod_rewrite rules), but instead
+#of the final output a short and easy to parse page should be send   
+#from where the real MTime and Owner can be determined.
+########## Mod Peephole ############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+
+contribtest $INSTALL_CONTRIB_put mod_put
+if [ $INSTALL_CONTRIB_put -eq $TRUE ]; then say "
+######## Mod Put ############
+#!!!Please notice that it can be a big security hole to activate them
+#without securing the web server.!!!
+#
+#<Location /pub>
+#EnablePut On   
+#AuthType Basic 
+#AuthName Web publishing
+#AuthUserFile /www/etc/passwd
+#AuthGroupFile /www/etc/group
+#<Limit PUT>
+#require valid-user
+#</Limit>
+#</Location>
+#
+######## Mod Put ############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+
+contribtest $INSTALL_CONTRIB_qs2ssi mod_qs2ssi
+if [ $INSTALL_CONTRIB_qs2ssi -eq $TRUE ]; then say "
+######### Mod QS-2-SSI ###########
+# http://melanoma.bf.rmit.edu.au/werj/apache-modules/
+# 
+#Pass query string variables to CGI/SSI scripts.
+#eg. ?Content=&Size=10  is the same as inserting
+#             <! --#set var=\"QAContent\" value=\"1\" -->
+#             <! --#set var=\"QASize\" value=\"10\" -->  
+#at the start of a server side include document.
+######### Mod QS-2-SSI ###########
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_random mod_random
+if [ $INSTALL_CONTRIB_random -eq $TRUE ]; then say "
+########### Mod Random ###########
+# Random URL Locator
+#http://www.tangent.org/mod_random/
+#
+#In your PHP, perl, java servlet or SSI script you
+#will need to look for the environmental
+#variable \"RANDOM_QUOTE\" to retrieve the text
+#
+#<Location /geekythings>
+#       SetHandler random
+#       RandomURL http://www.slashdot.org/
+#       RandomURL http://www.tangent.org/ 
+#       RandomURL http://www.freshmeat.net/
+#       RandomURL http://www.linux.org/
+#       RandomFile /usr/local/apache/conf/random.conf
+#</Location>
+#
+#For using the random quote feature you would
+#do the following:
+#<VirtualHost www.sample.com>
+#       RandomQuote On
+#       RandomQuoteFile /usr/local/apache/conf/randomquotes.txt
+#       RandomQuoteTXT \"<P>Three blind mice give this site a raiting of two.</P>\"
+#</virtualhost>
+#
+#
+########### Mod Random ###########
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_session mod_session
+if [ $INSTALL_CONTRIB_session -eq $TRUE ]; then say "
+############ Mod Session #############
+# ftp://hachiman.vidya.com/pub/apache/
+# 
+# See the source code for more info.
+# 
+#       <Location /Some/place/>
+#       
+#       SessionCookieName       mysession
+#       SessionCookiePath       /Some/Place/
+#       SessionCookieDomain     .mydomain.com
+#       SessionCookieExpire     8400
+#       
+#       SessionUrlSidName       sid
+#       SessionUrlExpire        8400
+#       
+#       SessionTop              http://www.mydomain.com/Some/Place/
+#       SessionValidEntry       /Some/Place/ /Some/Place/index.html /Some/Place/else/ /cgi-bin/neat-script
+#       
+#       SessionExemptLocations  /Some/Place/images/.*
+#       SessionExemptTypes      image/.* audio/.* proxy_handler
+#       
+#       SessionFilter           /cgi-bin/session_php_filter
+#       SessionFilterTypes      text/html text/html3 application/x-httpd-php text/phtml
+#       
+#       </Location>
+#       
+#       BrowserMatchNoCase      infoseek/.*     nosessioncontrol
+#       BrowserMatchNoCase      .*spider.*      nosessioncontrol
+#       BrowserMatchNoCase      .*spyder.*      nosessioncontrol
+#       BrowserMatchNoCase      .*bot.*         nosessioncontrol
+#       BrowserMatchNoCase      .*harvest.*     nosessioncontrol
+#       BrowserMatchNoCase      .*crawler.*     nosessioncontrol
+#       BrowserMatchNoCase      .*yahoo.*       nosessioncontrol
+#       
+############ Mod Session #############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+
+contribtest $INSTALL_CONTRIB_ticket mod_ticket
+if [ $INSTALL_CONTRIB_ticket -eq $TRUE ]; then say "
+########### Mod Ticket ###############
+# See the source code (mod_ticket.c) for info
+########### Mod Ticket ###############
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+contribtest $INSTALL_CONTRIB_urlcount mod_urlcount
+if [ $INSTALL_CONTRIB_urlcount -eq $TRUE ]; then say "
+############# Mod URL Count ###########
+# Config file directives:
+# 
+#     CounterType           \`txt\' or \`dbm\'
+#     CounterAutoAdd        \`on\' or \`off\': Automatically add missing URL\'s
+#     CounterFile           Path to ASCII or DBM file.
+#     
+# The following pertain to a per server (or virtual server) configuration:
+# 
+#     ServerCounterType     \`txt\' or \`dbm\'
+#     ServerCounterAutoAdd  \`on\' or \`off\': Automatically add missing URL\'s
+#     ServerCounterFile     path to ASCII or DBM file.
+############# Mod URL Count ###########
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist; fi
+
+
+notice $MENUTRUE "Apache Contrib modules setup.$n"
+
+

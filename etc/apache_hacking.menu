@@ -1,0 +1,86 @@
+CONTINUE2=$FALSE
+CHOICE2=
+    while [ $CONTINUE2 -eq $FALSE ]
+    do
+        clear 
+        banner
+comp_menu_item 1 "$APACHE_HACK" "** Enable apache hacks **\n"
+comp_menu_item product "$TRUE" "HTTPD product: '$APACHE_PRODUCT'\n"
+comp_menu_item vendor  "$TRUE" "HTTPD vendor:  '$APACHE_VENDOR'\n"
+comp_menu_item version "$TRUE" "HTTPD version: '$APACHE_VERSION'\n"
+comp_menu_item support "$TRUE" "HTTPD support: '$APACHE_SUPPORT'\n"
+echo
+echo -e "\t\t *************** BETA *****************"
+echo -e "\t\t NOT RECOMMENDED FOR PRODUCTION SYSTEMS"
+echo -e "\t\t *************** BETA *****************"
+echo
+echo -e "   go)     Back to main menu..."
+echo -e "   99)     Descriptions"
+        echo_line
+        echo -e "Choice [?] \c"
+        read CHOICE2
+        case "$CHOICE2" in
+
+	1)
+	 test_choice APACHE_HACK $APACHE_HACK
+	 APACHE_HACK=$var
+	 ;;
+
+	[Vv][Ee][Rr][Ss][Ii][Oo][Nn])
+        echo
+        echo -e "Enter the version you would like [$APACHE_VERSION]: \c"
+        read APACHE_VERSION2
+        if [ -z "$APACHE_VERSION2" ]; then
+                echo "No version specified, defaulting to $APACHE_VERSION."
+        else    
+                APACHE_VERSION="$APACHE_VERSION2"
+        fi
+	;;
+
+	[Vv][Ee][En][Dd][Oo][Rr])
+        echo
+        echo -e "Enter the vendor you would like [$APACHE_VENDOR]: \c"
+        read APACHE_VENDOR2
+        if [ -z "$APACHE_VENDOR2" ]; then
+                echo "No vendor specified, defaulting to $APACHE_VENDOR."
+        else    
+                APACHE_VENDOR="$APACHE_VENDOR2"
+        fi
+	;;
+
+	[Pp][Rr][Oo][Dd][Uu][Cc][Tt])
+        echo
+        echo -e "Enter the product you would like [$APACHE_PRODUCT]: \c"
+        read APACHE_PRODUCT2
+        if [ -z "$APACHE_PRODUCT2" ]; then
+                echo "No product specified, defaulting to $APACHE_PRODUCT."
+        else    
+                APACHE_PRODUCT="$APACHE_PRODUCT2"
+        fi
+	;;
+
+	[Ss][Uu][Pp][Pp][Oo][Rr][Tt])
+        echo
+        echo -e "Enter the support site [$APACHE_SUPPORT]: \c"
+        read APACHE_SUPPORT2
+        if [ -z "$APACHE_SUPPORT2" ]; then
+                echo "No support site specified, defaulting to $APACHE_SUPPORT."
+        else    
+                APACHE_SUPPORT="$APACHE_SUPPORT2"
+        fi
+	;;
+
+	    99)
+                print_descriptions
+                ;;
+            go)   
+                CONTINUE2=$TRUE
+                ;;
+            q)
+                CONTINUE2=$TRUE
+                ;;
+            *)
+                echo "Invalid Selection..."
+                HitAnyKey
+        esac
+    done

@@ -1,0 +1,68 @@
+if [ $INSTALL_DSO -eq $TRUE ];then
+ APACHECFG="$APACHECFG--enable-shared=max $r"
+ notice "$MENUTRUE" " --Setting up all mods as DSO's\n"
+fi
+
+
+if [ $INSTALL_APACHE_SO -eq $TRUE ];then
+ APACHECFG="$APACHECFG--enable-module=so $r"
+ notice "$MENUTRUE" " --Added module mod_so\n"
+fi
+
+apachemod() {
+ if [ $1 -eq $TRUE ];then
+  APACHECFG="$APACHECFG--enable-module=$2 $r"
+  notice "$MENUTRUE" " --Enabled  module mod_$2\n"
+ else
+  APACHECFG="$APACHECFG--disable-module=$2 $r"
+  notice "$MENUFALSE" " --Disabled module mod_$2\n"
+ fi
+}
+
+apachemod $INSTALL_APACHE_ACCESS access
+apachemod $INSTALL_APACHE_AUTH_DB auth_db
+apachemod $INSTALL_APACHE_DIGEST digest
+apachemod $INSTALL_APACHE_IMAP imap
+apachemod $INSTALL_APACHE_MIME mime
+apachemod $INSTALL_APACHE_SETENVIF setenvif
+apachemod $INSTALL_APACHE_USERTRACK usertrack
+apachemod $INSTALL_APACHE_AUTH auth
+apachemod $INSTALL_APACHE_CERN_META cern_meta
+apachemod $INSTALL_APACHE_EXPIRES expires
+apachemod $INSTALL_APACHE_LOG_CONFIG log_config
+apachemod $INSTALL_APACHE_PROXY proxy
+apachemod $INSTALL_APACHE_VHOST_ALIAS vhost_alias
+
+if [ $INSTALL_APACHE_VHOST_ALIAS -eq $TRUE ];then
+echo "
+#********** Mod_vhost_alias *************
+# http://httpd.apache.org/docs/vhosts/mass.html
+#********** Mod_vhost_alias *************
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+fi
+
+
+apachemod $INSTALL_APACHE_AUTH_ANON auth_anon
+apachemod $INSTALL_APACHE_CGI cgi
+apachemod $INSTALL_APACHE_HEADERS headers
+apachemod $INSTALL_APACHE_LOG_REFERER log_referer
+apachemod $INSTALL_APACHE_REWRITE rewrite
+apachemod $INSTALL_APACHE_USERDIR userdir
+apachemod $INSTALL_APACHE_ASIS asis
+apachemod $INSTALL_APACHE_AUTOINDEX autoindex
+apachemod $INSTALL_APACHE_EXAMPLE example
+apachemod $INSTALL_APACHE_LOG_AGENT log_agent
+apachemod $INSTALL_APACHE_NEGOTIATION negotiation
+apachemod $INSTALL_APACHE_STATUS status
+apachemod $INSTALL_APACHE_ACTIONS actions
+apachemod $INSTALL_APACHE_AUTH_DBM auth_dbm
+apachemod $INSTALL_APACHE_DIR dir
+apachemod $INSTALL_APACHE_INCLUDE include
+apachemod $INSTALL_APACHE_MIME_MAGIC mime_magic
+apachemod $INSTALL_APACHE_UNIQUE_ID unique_id
+apachemod $INSTALL_APACHE_ALIAS alias
+apachemod $INSTALL_APACHE_AUTH_DIGEST auth_digest
+apachemod $INSTALL_APACHE_ENV env
+apachemod $INSTALL_APACHE_INFO info
+apachemod $INSTALL_APACHE_MMAP_STATIC mmap_static
+apachemod $INSTALL_APACHE_SPELING speling

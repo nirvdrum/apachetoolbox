@@ -1,0 +1,76 @@
+ #***************************************************************************
+ # Title       : Apache Toolbox
+ # File        : Apachetoolbox-install-1.5.xx.tar.gz
+ # Author      : Bryan Andrews <bryan@apachetoolbox.com>
+ # Date        : 05 June 2003
+ # Version     : 1.5.66
+ #
+ # Description :
+ #   Configures Apache with a variety of options.
+ #
+ #**************************************************************************
+ #
+ # Software distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND,
+ # either express or implied. This software is not affiliated with the
+ # Apache Software Foundation (ASF).
+ #
+ #**************************************************************************
+ # Copyright (c)2002,2003 Bryan Andrews. All rights reserved.
+ #
+ # Bryan Andrews
+ # bryan@apachetoolbox.com
+ # http://www.apachetoolbox.com/
+ #
+ # Thanks goes out to navi for helping alpha/beta test! And to Bishop also
+ #  for answering some stupid questions and pointing me to mod_bandwidth and
+ #  adding code to mod_auth_sys.c. Thanks to Mickey for pointing out the
+ #  broken mod_layout function. Thanks to Brian Aker for the help with
+ #  mod_layout and a lot more. Thanks to Eric Thelin for suggesting I
+ #  should make the script remember the last settings, good idea! Thanks
+ #  also to Nick Rosenberg for contributing --enable-exif to php and some
+ #  bug fixes. Thanks to Ben for making the installwatch patch for redhat7.
+ #  Thanks also goes out to Kevin for all the help and support in and outside
+ #  of the support forum. Thanks to Bruno Kerouanton 
+ #  <bruno.kerouanton@intexxia.com> for sending in patches!
+ #
+ #**************************************************************************
+
+-h or --help for command line options.
+
+
+
+Run "./install.sh --update" to automatically download and update to the latest
+version of the Apachetoolbox. It's only a small (about 60k) download.
+
+Run "./install.sh --clean" to clean out the src/ directory.  This will force
+ApacheToolbox to recompile everything, but not to download everything again.
+
+After you've selected the mods you want and have a 'etc/config.cache' file,
+you can re-run the same setup without any prompts by running 
+'./install.sh --fast' .
+
+******************************************************************************
+Solaris/BSD users, the script interpreter of install.sh is BASH (/bin/bash).
+ Bash should be used, YMMV if you change it to /bin/sh.  The next major release
+ (2.x) will be in perl.  If your willing to help port it please get a hold of me.
+******************************************************************************
+
+Frontpage 2002 Extentions require precompiled binaries.  So only linux, freebsd, 
+solaris (sparc and x86) are supported.  The binaries are about 10megs compressed
+and only the linux tarball will be added to the script+sources tarball.
+
+
+
+
+http://www.apachetoolbox.com for support and updates.
+email <bryan@apachetoolbox.com> with patches and module submissions.
+
+
+
+
+-- note about errors in httpd.conf after an upgrade... ---
+When Apache is installed over an existing installation, your httpd.conf file
+is /NOT/ overwritten.  This is working the way the Apache developers designed it.
+If you removed/add modules you will probably 'break' your httpd.conf file and 
+have to manually edit it.  Run 'apachectl configtest' to troubleshoot httpd.conf
+files.

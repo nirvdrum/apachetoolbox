@@ -1,0 +1,10 @@
+test -d /usr/interbase && 		INTERBASEPATH="/usr/interbase"
+test -d /usr/local/interbase && 	INTERBASEPATH="/usr/local/interbase"
+test -d $LOCAL_PATH/interbase && 	INTERBASEPATH="$LOCAL_PATH/interbase"
+
+
+if [ $INTERBASEPATH ];then
+
+ CONFIGPHP="$CONFIGPHP --with-interbase=\"${INTERBASEPATH}\" $r"
+ notice "$MENUTRUE" "  -Interbase detected, support compiled into PHP\n"
+fi

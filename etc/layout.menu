@@ -1,0 +1,109 @@
+item() {
+ echo -e "[\c"
+ if [ "$2" = "$APACHELAYOUT" ]
+ then
+  echo -e "$MENUTRUE\c"
+ else
+  echo -e "$MENUFALSE\c"
+ fi
+ echo -e "] $1) $2 layout";
+}
+
+
+CONTINUE3=$FALSE
+CHOICE3=
+    while [ $CONTINUE3 -eq $FALSE ]
+    do
+        clear 
+        banner
+
+item 1 "Apache"
+item 2 "GNU"
+item 3 "BinaryDistribution"
+item 4 "Mac OS X Server"
+item 5 "Darwin"
+item 6 "RedHat"
+item 7 "opt"
+item 8 "beos"
+item 9 "SuSE"
+item 10 "BSDI"
+item 11 "Solaris"
+item 12 "OpenBSD"
+
+echo
+echo -e "   off)   Turn off layout and use prefix..."
+#echo -e "   show)   Show current layout..."
+echo -e "   go)     Back to main menu..."
+echo -e "   99)     Descriptions"
+        echo_line
+        echo -n "Choice [?] "
+        read CHOICE3
+        case "$CHOICE3" in
+
+
+	[sS][hH][oO][wW])
+		# NOT WORKING AT ALL
+	 notice "$MENUTRUE" " Configuring apache with $APACHELAYOUT layout..."
+	 $root/apache_$APACHE/configure --with-layout=$APACHELAYOUT &>/dev/null
+	 echo " [DONE]"
+	 notice "$MENUTRUE" " Displaying apache with $APACHELAYOUT layout...\n"
+	 $root/apache_$APACHE/configure --show-layout
+	 HitAnyKay
+	 ;;
+
+	1)
+	 APACHELAYOUT="Apache"
+	 ;;
+	2)
+	 APACHELAYOUT="GNU"
+	 ;;
+	3)
+	 APACHELAYOUT="BinaryDistribution"
+	 ;;
+	4)
+	 APACHELAYOUT="Mac OS X Server"
+	 ;;
+	5)
+	 APACHELAYOUT="Darwin"
+	 ;;
+	6)
+	 APACHELAYOUT="RedHat"
+	 ;;
+	7)
+	 APACHELAYOUT="opt"
+	 ;;
+	8)
+	 APACHELAYOUT="beos"
+	 ;;
+	9)
+	 APACHELAYOUT="SuSE"
+	 ;;
+	10)
+	 APACHELAYOUT="BSDI"
+	 ;;
+	11)
+	 APACHELAYOUT="Solaris"
+	 ;;
+	12)
+	 APACHELAYOUT="OpenBSD"
+	 ;;
+
+
+	    [oO][fF][fF])
+		APACHELAYOUT=$FALSE
+                ;;
+	    99)
+                print_descriptions
+                ;;
+            go)   
+                CONTINUE3=$TRUE
+                ;;
+            q)
+                CONTINUE3=$TRUE
+                ;;
+            *)
+                echo "Invalid Selection..."
+                HitAnyKey
+        esac
+    done
+

@@ -1,0 +1,20 @@
+#	Test for LDAP headers to add ldap support into PHP
+
+
+ INSTALL_PHP_LDAP=$FALSE
+ test -f /usr/local/include/ldap.h && INSTALL_PHP_LDAP=$TRUE
+ test -f $LOCAL_PATH/include/ldap.h && INSTALL_PHP_LDAP=$TRUE
+ test -f /usr/include/ldap.h && INSTALL_PHP_LDAP=$TRUE
+
+ if [ ! -f /usr/local/include/sasl.h ] &&
+    [ ! -f $LOCAL_PATH/include/sasl.h ] &&
+    [ ! -f /usr/include/sasl.h ]; then $INSTALL_PHP_LDAP = $FALSE; fi
+
+#This line needs to go!
+$INSTALL_PHP_LDAP = $FALSE
+
+ if [ $INSTALL_PHP_LDAP -eq $TRUE ]
+ then
+  CONFIGPHP="$CONFIGPHP --with-ldap $r"
+  notice "$MENUTRUE" "  -LDAP detected and compiled into PHP $PHP\n"
+ fi

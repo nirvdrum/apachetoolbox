@@ -1,0 +1,72 @@
+notice "$MENUTRUE" "Getting Mod_Auth_LDAP source ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/ldap/mod_auth_ldap.c" ] ; then
+cd $root/src
+check_source "mod_auth_ldap.tar.gz" "http://www.muquit.com/muquit/software/mod_auth_ldap/mod_auth_ldap.tar.gz"
+
+ explode mod_auth_ldap.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Auth_LDAP...\n"
+echo "
+
+####################### Mod_Auth_LDAP ############################
+#<Directory "/usr/local/apache/htdocs/foo">
+#Options Indexes FollowSymLinks
+#AllowOverride None
+#order allow,deny
+#allow from all
+#AuthName "RCS Staff only"
+#AuthType Basic
+#LDAP_Server ldap.fccc.edu
+#LDAP_Port 389
+#Base_DN "o=Fox Chase Cancer Center,c=US"
+#UID_Attr uid
+#require valid-user
+# or
+#require user muquit foo bar doe
+# or
+#require roomnumber "C119 Center Building"
+# or
+#require group cn=rcs,ou=Groups
+#</Directory>
+####################### Mod_Auth_LDAP ############################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Auth_LDAP\n"
+ $MV -f modauthldap $root/apache_$APACHE/src/modules/ldap
+ notice "$MENUTRUE" " Copied Mod_Auth_LDAP into the apache source\n"
+else
+ notice "$MENUTRUE" "Mod_Auth_LDAP already setup\n"
+fi
+cd $root
+
+
+
+
+if [ ! -f "$LOCAL_PATH/lib/libldap.a" ] && [ ! -f "/usr/local/lib/libldap.a" ] && [ ! -f "/usr/lib/libldap.a" ]; then
+notice "$MENUTRUE" "Setting up OpenLDAP...\n"
+cd $root/src
+check_source "openldap-${OPENLDAP}.tgz" "ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-${OPENLDAP}.tgz"
+
+explode openldap-${OPENLDAP}.tgz
+cd openldap-$OPENLDAP
+notice "$MENUTRUE" " Configuring OpenLDAP...\n"
+./configure > $logdir/openldap-configure.log   
+notice "$MENUTRUE" " Configured OpenLDAP...\n"
+notice "$MENUTRUE" " Compiling dependants for OpenLDAP...\n"
+$MAKE depend > $logdir/openldap-dependants-compile.log
+testcheck $? openldap-dependants-compile.log
+notice "$MENUTRUE" " Dependants compiled for OpenLDAP...\n"
+notice "$MENUTRUE" " Compiling OpenLDAP...\n"
+$MAKE > $logdir/openldap-compile.log
+testcheck $? openldap-compile.log
+notice "$MENUTRUE" " Compiled OpenLDAP...\n"  
+notice "$MENUTRUE" " Installing OpenLDAP...\n"
+inst openldap
+notice "$MENUTRUE" " Installed OpenLDAP...\n"
+cd ..
+else
+ notice "$MENUTRUE" "OpenLDAP found on the system.\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --activate-module=src/modules/ldap/mod_auth_ldap.c $r"

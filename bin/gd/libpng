@@ -1,0 +1,45 @@
+notice "$MENUTRUE" " Detecting PNG library..."
+
+for i in / /usr /usr/local $LOCAL_PATH; do
+	test -f $i/lib/libpng.a && export LIBPNG_DIR=$i
+done
+
+
+
+if [ -z $LIBPNG_DIR ];then
+ cd $root/src
+ echo " [$FAILED]"
+ check_source "libpng-$LIBPNG.tar.gz" "http://www.libpng.org/pub/png/src/libpng-$LIBPNG.tar.gz"
+                 
+ explode libpng-$LIBPNG.tar.gz
+ notice "$MENUTRUE" " Untared PNG library...\n"
+ test -d "$root/src/libpng" && rm -rf "$root/src/libpng"
+ $MV -f libpng-$LIBPNG libpng
+ cd libpng
+
+ #thanks goes out to ggiunta for pointing this out!
+ if [ $OS = SunOS ]; then
+	cp -f scripts/makefile.solaris Makefile
+ else
+	cp -f scripts/makefile.std Makefile
+ fi
+
+ notice "$MENUTRUE" "  Compiling PNG library..."
+ $MAKE  prefix="$LOCAL_PATH" > $logdir/libpng-compile.log
+ testcheck $? libpng-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  Installing PNG library..."
+ $INSTALL -d "$LOCAL_PATH/include"
+ $INSTALL -d "$LOCAL_PATH/include/libpng"
+ $INSTALL -d "$LOCAL_PATH/lib"
+ $MAKE install  prefix="$LOCAL_PATH" &> $logdir/libpng-install.log
+ testcheck $? libpng-install.log
+ echo " [$DONE]"
+
+ cd $root/src
+ notice "$MENUTRUE" " PNG library setup!\n"
+ export LIBPNG_DIR="$LOCAL_PATH";
+else
+	echo " [$FOUND @ $LIBPNG_DIR]"
+fi

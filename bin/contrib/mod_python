@@ -1,0 +1,128 @@
+cd $root/src
+
+notice "$MENUTRUE" "Getting Mod_Python source ready...\n"
+
+#default is rebuild python because everything else compiles it with threads support
+BUILDPYTHON=$TRUE
+
+
+ test -x /usr/local/bin/python && PYTHONEXEC="/usr/local/bin/python"
+ test -x /usr/bin/python && PYTHONEXEC="/usr/bin/python"
+ test -x /bin/python && PYTHONEXEC="/bin/python"
+ test -x $LOCAL_PATH/bin/python && PYTHONEXEC="$LOCAL_PATH/bin/python"
+ if [ -x $root/src/Python-${PYTHON}/python ];then PYTHONPATH="=$root/src/Python-$PYTHON"; PYTHONEXEC="$root/src/Python-${PYTHON}/python"; fi
+
+
+if [ ! -n $PYTHONEXEC ]; then
+ PYTHONTHREADSTEST=`$PYTHONEXEC -c "import sys; print \"thread\" in sys.builtin_module_names"`
+
+ if [ $PYTHONTHREADSTEST -eq $FALSE ]; then
+  BUILDPYTHON=$FALSE
+  notice "$MENUFALSE" " Python detected without threads support!$n"
+ else
+  notice "$MENUFALSE" " Python detected but with threads support.  Building python source for mod_python.$n"
+ fi
+
+else
+ notice "$MENUFALSE" " Python not detected, building source for mod_python without threads support...$n"
+fi
+
+
+
+if [ $BUILDPYTHON -eq $TRUE ];then
+ if [ ! -x $root/src/Python-${PYTHON}/python ]; then
+  check_source "Python-${PYTHON}.tgz" "http://www.python.org/ftp/python/${PYTHON}/Python-${PYTHON}.tgz"
+  explode "Python-${PYTHON}.tgz"
+  cd Python-${PYTHON}
+
+  notice "$MENUTRUE" "  Python - configuring without threads support..."
+  ./configure --prefix="$LOCAL_PATH" --without-threads > $logdir/python-configure.log 
+  testcheck $? python-configure.log
+  echo " [$DONE]"
+
+  notice "$MENUTRUE" "  Python - compiling..."
+  $MAKE > $logdir/python-compile.log 2>&1
+  testcheck $? python-compile.log
+  echo " [$DONE]"
+
+  notice "$MENUTRUE" "  Python - creating lib/python2.1 dir..."
+  $INSTALL -d $LOCAL_PATH/lib/python2.1 > $logdir/python-dir.log
+  testcheck $? python-dir.log
+  echo " [$DONE]"
+
+  notice "$MENUTRUE" "  Python - installing..."
+  inst python
+  testcheck $? python-install.log
+  echo " [$DONE]"
+
+  notice "$MENUTRUE" "  Python - copying compileall.py..."
+  $CP -f Lib/compileall.py $LOCAL_PATH/lib/python2.1/compileall.py > $logdir/python-lib.log
+  testcheck $? python-lib.log
+  echo " [$DONE]"
+
+  notice "$MENUTRUE" "  Python - exporting new \$PATH..."
+  PYTHONPATH="=$root/src/Python-$PYTHON"
+  export PATH="$PATH:$LOCAL_PATH/bin"
+  export alias python='$LOCAL_PATH/bin/python'
+  echo " [$DONE]"
+
+  cd ..
+ fi
+fi
+
+
+
+
+if [ ! -f "$root/apache_$APACHE/src/modules/python/libpython.a" ] ; then
+check_source "mod_python-$MODPYTHON.tgz" "http://www.modpython.org/dist/mod_python-$MODPYTHON.tgz"
+
+ explode mod_python-$MODPYTHON.tgz
+ notice "$MENUTRUE" " Untared Mod_Python...\n"
+ cd mod_python-$MODPYTHON
+
+if [ $BUILDPYTHON -eq $TRUE ];then
+ notice "$MENUTRUE" " Mod_Python - patching Makefile.in..."
+echo -ne "--- Makefile.in~        Wed Jun 19 10:59:10 2002
++++ Makefile.in Wed Jun 19 10:59:22 2002
+@@ -119,7 +119,7 @@
+\tdo \\
+\t\t\$(INSTALL) \$\$f \$(PY_STD_LIB)/site-packages/mod_python; \\
+\tdone
+-\tpython \$(PY_STD_LIB)/compileall.py \$(PY_STD_LIB)/site-packages/mod_python
++\t$LOCAL_PATH/bin/python \$(PY_STD_LIB)/compileall.py \$(PY_STD_LIB)/site-packages/mod_python
+
+ clean:
+\tcd src && \$(MAKE) clean" | patch -p0 &> $logdir/mod_python-makefile.in-patch.log
+ testcheck $? mod_python-makefile.in-patch.log
+ echo " [$DONE]"
+fi
+
+ notice "$MENUTRUE" " Mod_Python - configuring..."
+ ./configure --with-apache="$root/apache_$APACHE" --with-python${PYTHONPATH} &> $logdir/mod_python-configure.log
+ testcheck $? mod_python-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " Mod_Python - compiling..."
+ $MAKE &> $logdir/mod_python-compile.log
+ testcheck $? mod_python-compile.log
+ echo " [$DONE]"
+
+ inst mod_python
+ notice "$MENUTRUE" " Copied Mod_Python.\n"
+ 
+echo "
+ 
+################## Mod_Python ######################
+# http://www.modpython.org/
+#AddHandler python-program .py
+#PythonHandler mptest
+####################################################
+  
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Python\n"
+else
+ notice "$MENUTRUE" "Mod_Python already setup\n"
+fi 
+cd $root
+
+APACHECFG="$APACHECFG --activate-module=src/modules/python/libpython.a $r"

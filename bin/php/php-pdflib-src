@@ -1,0 +1,61 @@
+cd $root/src
+
+notice "$MENUTRUE" "Setting up PDFlib..."
+
+	for i in / /usr /usr/local /opt $LOCAL_PATH; do
+		test -f $i/lib/libpdf.a && export LIBPDF_DIR="$i";
+		test -f $i/lib/libtiff.a && export LIBTIFF_DIR="$i";
+		test -f $i/lib/libjpeg.a && export LIBJPEG_DIR="$i";
+		test -f $i/lib/libz.so && export ZLIB_DIR="$i";
+	done
+
+	echo
+	test -z $LIBTIFF_DIR && echo; . $root/bin/gd/libtiff
+	test -z $LIBJPEG_DIR && echo; . $root/bin/gd/libjpeg
+
+# Patch by Dominique MASSONIE <massonie@lia.univ-avignon.fr>
+# current dir (i.e. $root/src) get lost when both
+# 'libtiff' & 'libjpeg' scripts go through "cd $root"
+cd $root/src
+
+if [ -d $LIBPDF_DIR ];then
+ check_source "pdflib-${PDFLIB}.tar.gz" "http://www.pdflib.com/pdflib/download/pdflib-${PDFLIB}.tar.gz"
+
+ notice "$MENUTRUE" " PDFlib uncompressing...\n"
+ explode pdflib-${PDFLIB}.tar.gz
+ notice "$MENUTRUE" " PDFlib uncompressed.\n"
+
+ cd pdflib-${PDFLIB}
+ notice "$MENUTRUE" " PDFlib configuring..."
+ ./configure --prefix="$LOCAL_PATH" &> $logdir/pdflib-configure.log
+ testcheck $? pdflib-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " PDFlib compiling..."
+ $MAKE &> $logdir/pdflib-compile.log
+ testcheck $? pdflib-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " PDFlib installing..."
+ inst pdf
+ echo " [$DONE]"
+
+ export LIBPDF_DIR="$LOCAL_PATH";
+fi
+
+
+
+
+
+if [ ! -z $LIBPDF_DIR ] && [ ! -z $LIBTIFF_DIR ] && [ ! -z $LIBJPEG_DIR ] && [ ! -z $ZLIB_DIR ]; then
+
+ CONFIGPHP="$CONFIGPHP --with-pdflib=\"$LIBPDF_DIR\" $r--with-tiff-dir=\"$LIBTIFF_DIR\" $r--with-jpeg-dir=\"$LIBJPEG_DIR\" $r--with-zlib-dir=\"$ZLIB_DIR\" $r"
+
+else 
+
+ notice "$MENUFALSE" " PDFlib failed! Couldn't find libtiff and/or libjpeg and/or zlib anywhere.\n\n"
+
+ echo -en "LIBTIFF_DIR=$LIBTIFF_DIR\nLIBJPEG_DIR=$LIBJPEG_DIR\nZLIB_DIR=$ZLIB_DIR\n"
+ exit 1
+
+fi

@@ -1,0 +1,20 @@
+#	Look for postgres SQL headers to add support in PHP
+#	for postgres.
+
+
+ INSTALL_PHP_POSTGRES=$FALSE
+ test -f /usr/include/libpq-fe.h && INSTALL_PHP_POSTGRES=$TRUE
+ test -f /usr/include/pgsql/libpq-fe.h && INSTALL_PHP_POSTGRES=$TRUE
+ test -f /usr/local/include/libpq-fe.h && INSTALL_PHP_POSTGRES=$TRUE
+ test -f /usr/local/include/pgsql/libpq-fe.h && INSTALL_PHP_POSTGRES=$TRUE
+ # provided by Osty
+ test -f /usr/local/pgsql/include/libpq-fe.h && INSTALL_PHP_POSTGRES=$TRUE
+ # provided by SuperZero
+ test -f /usr/local/postgresql/include/libpq-fe.h && INSTALL_PHP_POSTGRES=$TRUE
+ test -f $LOCAL_PATH/include/libpq-fe.h && (INSTALL_PHP_POSTGRES=$TRUE ; POSTGRES_PATH="=$LOCAL_PATH")
+
+ if [ $INSTALL_PHP_POSTGRES -eq $TRUE ];then
+  CONFIGPHP="$CONFIGPHP --with-pgsql${POSTGRES_PATH} $r"
+  notice "$MENUTRUE" "  -Postgres SQL detected and compiled into PHP $PHP\n"
+ fi
+

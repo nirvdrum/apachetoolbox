@@ -1,0 +1,43 @@
+notice "$MENUTRUE" " Detecting Freetype ${FREETYPE}..."
+
+for i in / /usr /usr/local $LOCAL_PATH;do
+	test -f $i/include/freetype2/freetype/freetype.h && export LIBFREETYPE2_DIR="$i"
+done
+
+if [ -z $LIBFREETYPE2_DIR ];then
+
+ cd $root/src
+ echo " [$FAILED]"
+ check_source "freetype-${FREETYPE}.tar.gz" "http://telia.dl.sourceforge.net/freetype/freetype-${FREETYPE}.tar.gz"
+
+ test -d "$root/src/freetype-${FREETYPE}" && rm -rf "$root/src/freetype-${FREETYPE}"
+ explode freetype-${FREETYPE}.tar.gz
+ notice "$MENUTRUE" "  Freetype uncompressed\n"
+
+ notice "$MENUTRUE" "  Freetype configuring..."
+ cd freetype-${FREETYPE}
+ $MAKE setup CFG="--prefix=$LOCAL_PATH" &> $logdir/freetype-configure.log
+ testcheck $? freetype-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  Freetype compiling..."
+ $MAKE &> $logdir/freetype-compile.log
+ testcheck $? freetype-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  Freetype installing..."
+ $MAKE install &> $logdir/freetype-install.log
+ if [ ! -f $LOCAL_PATH/include/freetype2/freetype/freetype.h ]; then
+  echo ""
+  notice "$MENUFALSE" "  Freetype installation failed!\n"
+  exit 1
+ else
+  echo " [$DONE]"
+ fi
+
+ export LIBFREETYPE2_DIR="$LOCAL_PATH";
+ notice "$MENUTRUE" " Freetype setup!\n"
+ cd $root
+else
+	echo " [$FOUND @ $LIBFREETYPE2_DIR]"
+fi

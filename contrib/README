@@ -1,0 +1,10 @@
+buildrpm.sh by Stuart Donaldson <stu@asyn.com>
+
+Instructions
+------------
+Copy the "buildrpm.sh" file to the same location as "install.sh" for
+ApacheToolbox.  This is usually "..", so `cp buildrpm.sh ..` should
+work.  Once copied, run `./buildrpm.sh` for more help.
+
+-------------------------------------------------------------------------------
+

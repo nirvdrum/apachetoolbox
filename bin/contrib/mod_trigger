@@ -1,0 +1,34 @@
+notice "$MENUTRUE" "Getting Mod_Trigger source ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_trigger.c" ] ; then
+cd $root/src
+check_source "mod_trigger-$MODTRIGGER.tar.gz" "http://www.tangent.org/mod_trigger/mod_trigger-$MODTRIGGER.tar.gz"
+ 
+ explode mod_trigger-$MODTRIGGER.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Trigger...\n"
+
+echo "
+############## Mod Trigger ####################
+#TriggerEngine On
+#TriggerMime text/plain /usr/local/sbin/log.pl
+#TriggerMime * /log.cgi
+#TriggerAgent "*" /log.cgi
+#TriggerAgent "M*" /log.cgi
+#TriggerAgent "*linux*" /log.cgi
+#TriggerLog On
+
+#This would turn mod_trigger on and
+#force all text/html documents through
+#the eecummings.cgi.
+
+#You will find a faq at http://www.tangent.org/mod_trigger/
+################################################
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Trigger\n"
+else
+ notice "$MENUTRUE" "Mod_Trigger already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_trigger-$MODTRIGGER/mod_trigger.c $r"

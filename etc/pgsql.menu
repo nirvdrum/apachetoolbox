@@ -1,0 +1,186 @@
+CONTINUE4=$FALSE
+CHOICE4=
+    while [ $CONTINUE4 -eq $FALSE ]
+    do
+        clear 
+        banner
+
+comp_menu_item 1 "$INSTALL_PGSQL" "Enable PostgreSQL v$POSTGRESQL [BETA]\n"
+echo
+comp_menu_item path "$FALSE" "PgSQL installation path: $PGSQLPREFIX\n"
+comp_menu_item conf "$FALSE" "PgSQL config path: $PGSQLCONFIGDIR\n"
+comp_menu_item lib "$FALSE" "PgSQL lib path: $PGSQLLIBDIR\n"
+comp_menu_item man "$FALSE" "PgSQL man path: $PGSQLMAN\n"
+comp_menu_item port "$FALSE" "PgSQL default port: $PGSQLTCPPORT\n"
+echo
+comp_menu_item user "$FALSE" "PgSQL daemon user: $PGSQLUSER\n"
+comp_menu_item shell "$FALSE" "PgSQL user shell: $PGSQLSHELL\n"
+comp_menu_item desc "$FALSE" "PgSQL user description: \"$PGSQLUSERDESC\"\n"
+echo
+comp_menu_item 2 "$PGSQLPERL" "Perl Support"; TAB;TAB;TAB; comp_menu_item 3 "$PGSQLPYTHON" "Python Support\n";
+comp_menu_item 4 "$PGSQLJAVA" "Java Support"; TAB;TAB;TAB; comp_menu_item 5 "$PGSQLTCL" "TCL Support\n";
+comp_menu_item 6 "$PGSQLOPENSSL" "OpenSSL Support"; TAB;TAB;TAB; comp_menu_item 7 "$PGSQLODBC" "ODBC Support\n";
+comp_menu_item 8 "$PGSQLUNICODE" "Unicode Conversion Support"; TAB; comp_menu_item 9 "$PGSQLMULTIBYTE" "Multibyte Support\n";
+comp_menu_item 10 "$PGSQLRECODE" "Recode Support"; TAB;TAB;TAB; comp_menu_item 11 "$PGSQLLOCALE" "Locale Support\n";
+comp_menu_item 12 "$PGSQLSYSLOG" "Syslog Support\n";
+
+echo -e "   go)     Back to main menu..."
+echo -e "   99)     Descriptions"
+        echo_line
+        echo -e "Choice [?] \c"
+        read CHOICE4
+        case "$CHOICE4" in
+
+	[pP][aA][tT][hH])
+        echo
+        echo -e "Enter the installation path of PgSQL now [$PGSQLPREFIX]: \c"
+        read PGSQLPREFIX2
+        if [ -z "$PGSQLPREFIX2" ]; then
+                echo "No path specified, defaulting to $PGSQLPREFIX."
+        else    
+                PGSQLPREFIX="$PGSQLPREFIX2"
+		PGSQLLIBDIR="$PGSQLPREFIX2/lib"
+		PGSQLMAN="$PGSQLPREFIX2/man"
+		PGSQLCONFIGDIR="$PGSQLPREFIX2/etc"
+        fi
+	;;
+	[Dd][Ee][Ss][Cc])
+        echo
+        echo -e "Enter the description for the PgSQL user now [$PGSQLUSERDESC]: \c"
+        read PGSQLUSERDESC2
+        if [ -z "$PGSQLUSERDESC2" ]; then
+                echo "No description specified, defaulting to $PGSQLUSERDESC."
+        else    
+                PGSQLUSERDESC="$PGSQLUSERDESC2"
+        fi;;
+	[Ss][Hh][Ee][Ll][Ll])
+        echo
+        echo -e "Enter the default shell for the PgSQL user now [$PGSQLSHELL]: \c"
+        read PGSQLSHELL2
+        if [ -z "$PGSQLSHELL2" ]; then
+                echo "No shell specified, defaulting to $PGSQLSHELL."
+        else    
+                PGSQLSHELL="$PGSQLSHELL2"
+        fi;;
+	[Uu][Ss][Ee][Rr])
+        echo
+        echo -e "Enter the default user for PgSQL now [$PGSQLUSER]: \c"
+        read PGSQLUSER2
+        if [ -z "$PGSQLUSER2" ]; then
+                echo "No user specified, defaulting to $PGSQLUSER."
+        else    
+                PGSQLUSER="$PGSQLUSER2"
+        fi;;
+	[Ss][Oo][Cc][Kk])
+        echo
+        echo -e "Enter the default unix socket path of PgSQL now [$PGSQLUNIXSOCKET]: \c"
+        read PGSQLUNIXSOCKET2
+        if [ -z "$PGSQLUNIXSOCKET2" ]; then
+                echo "No unix socket path specified, defaulting to $PGSQLUNIXSOCKET."
+        else
+                PGSQLUNIXSOCKET="$PGSQLUNIXSOCKET2"
+        fi;;
+	[Pp][Oo][Rr][Tt])
+        echo
+        echo -e "Enter the default port of PgSQL now [$PGSQLTCPPORT]: \c"
+        read PGSQLTCPPORT2
+        if [ -z "$PGSQLTCPPORT2" ]; then
+                echo "No port specified, defaulting to $PGSQLTCPPORT."
+        else    
+                PGSQLTCPPORT="$PGSQLTCPPORT2"
+        fi;;
+	[Mm][Aa][Nn])
+        echo
+        echo -e "Enter the man path of PgSQL now [$PGSQLMAN]: \c"
+        read PGSQLMAN2
+        if [ -z "$PGSQLMAN2" ]; then
+                echo "No path specified, defaulting to $PGSQLMAN."
+        else    
+                PGSQLMAN="$PGSQLMAN2"
+        fi;;
+	[Ll][Ii][Bb])
+        echo
+        echo -e "Enter the lib path of PgSQL now [$PGSQLLIBDIR]: \c"
+        read PGSQLLIBDIR2
+        if [ -z "$PGSQLLIBDIR2" ]; then
+                echo "No path specified, defaulting to $PGSQLLIBDIR."
+        else    
+                PGSQLLIBDIR="$PGSQLLIBDIR2"
+        fi
+	;;
+	[Cc][Oo][Nn][Ff])
+        echo
+        echo -e "Enter the config path of PgSQL now [$PGSQLCONFIGDIR]: \c"
+        read PGSQLCONFIGDIR2
+        if [ -z "$PGSQLCONFIGDIR2" ]; then
+                echo "No path specified, defaulting to $PGSQLCONFIGDIR."
+        else    
+                PGSQLCONFIGDIR="$PGSQLCONFIGDIR2"
+        fi
+	;;
+
+
+	1)
+	 test_choice INSTALL_PGSQL $INSTALL_PGSQL
+	 INSTALL_PGSQL=$var
+	 ;;
+	6)
+	 test_choice PGSQLOPENSSL $PGSQLOPENSSL
+	 PGSQLOPENSSL=$var
+	 ;;
+	7)
+	 test_choice PGSQLODBC $PGSQLODBC
+	 PGSQLODBC=$var
+	 ;;
+	2)
+	 test_choice PGSQLPERL $PGSQLPERL
+	 PGSQLPERL=$var
+	 ;;
+	3)
+	 test_choice PGSQLPYTHON $PGSQLPYTHON
+	 PGSQLPYTHON=$var
+	 ;;
+	4)
+	 test_choice PGSQLJAVA $PGSQLJAVA
+	 PGSQLJAVA=$var
+	 ;;
+	5)
+	 test_choice PGSQLTCL $PGSQLTCL
+	 PGSQLTCL=$var
+	 ;;
+	8)
+	 test_choice PGSQLUNICODE $PGSQLUNICODE
+	 PGSQLUNICODE=$var
+	 ;;
+	9)
+	 test_choice PGSQLMULTIBYTE $PGSQLMULTIBYTE
+	 PGSQLMULTIBYTE=$var
+	 ;;
+	10)
+	 test_choice PGSQLRECODE $PGSQLRECODE
+	 PGSQLRECODE=$var
+	 ;;
+	11)
+	 test_choice PGSQLLOCALE $PGSQLLOCALE
+	 PGSQLLOCALE=$var
+	 ;;
+	12)
+	 test_choice PGSQLSYSLOG $PGSQLSYSLOG
+	 PGSQLSYSLOG=$var
+	 ;;
+
+	    99)
+                print_descriptions
+                ;;
+            go)   
+                CONTINUE4=$TRUE
+                ;;
+            q)
+                CONTINUE4=$TRUE
+                ;;
+            *)
+                echo "Invalid Selection..."
+                HitAnyKey
+        esac
+    done
+

@@ -1,0 +1,19 @@
+notice "$MENUTRUE" "***Hacking Apache version/product info..."
+
+echo "
+437,439c437,439
+< #define SERVER_BASEVENDOR   \"Apache Group\"
+< #define SERVER_BASEPRODUCT  \"Apache\"
+< #define SERVER_BASEREVISION \"$APACHE\"
+---
+> #define SERVER_BASEVENDOR   \"$APACHE_VENDOR\"
+> #define SERVER_BASEPRODUCT  \"$APACHE_PRODUCT\"
+> #define SERVER_BASEREVISION \"$APACHE_VERSION\"
+464c464
+< #define SERVER_SUPPORT \"http://www.apache.org/\"
+---
+> #define SERVER_SUPPORT \"$APACHE_SUPPORT\"
+" | patch -p0 $root/apache_$APACHE/src/include/httpd.h > $logdir/apache_hack.log
+
+testcheck $? apache_hack.log
+echo " [$DONE]"

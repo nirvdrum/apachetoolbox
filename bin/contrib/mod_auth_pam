@@ -1,0 +1,44 @@
+notice "$MENUTRUE" "Getting Mod_Auth_PAM source ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_auth_pam.c" ] ; then
+ cd $root/src
+
+ notice "$MENUTRUE" "  Mod_Auth_PAM: checking for PAM headers . . ."
+ test -f /usr/include/security/pam_appl.h && PAMINCDIR=/usr/include/security
+ test -f $LOCAL_PATH/include/security/pam_appl.h && PAMINCDIR=$LOCAL_PATH/include/security
+ if [ ! -z $PAMINCDIR ]; then echo " [DONE]"; else echo " [FAILED]"; exit; fi
+
+ notice "$MENUTRUE" "  Mod_Auth_PAM: checking for PAM libraries . . ."
+ test -f /lib/libpam.a && PAMLIBDIR=/lib
+ test -f /usr/lib/libpam.a && PAMLIBDIR=/usr/lib
+ if [ ! -z $PAMLIBDIR ]; then echo " [DONE]"; else echo " [FAILED]"; exit; fi 
+
+ check_source "mod_auth_pam.tar.gz" "http://pam.sourceforge.net/mod_auth_pam/dist/mod_auth_pam.tar.gz"
+ explode mod_auth_pam.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Auth_PAM...\n"
+
+ $CP -f mod_auth_pam-$MODAUTHPAM/mod_auth_pam.c $root/apache_$APACHE/src/modules/extra/mod_auth_pam.c
+else
+ notice "$MENUTRUE" "Mod_Auth_PAM already setup\n"
+fi
+
+ notice "$MENUTRUE" "  Copying default httpd PAM file to /etc/pam.d.  This file must be edited . . ."
+
+ if [ -f /etc/pam.d/httpd.default ];then
+  $MV -f /etc/pam.d/httpd.default /etc/pam.d/httpd.default~
+  echo -e "(old file backed up)\c"
+ else
+  localcopy ""mod_auth_pam-httpd.default-copy.log "$CP $root/src/mod_auth_pam-$MODAUTHPAM/samples/httpd /etc/pam.d/httpd.default"
+ fi
+
+if [ -f /etc/pam.d/httpd.default ];then
+ echo " [DONE]"
+else
+ echo " [FAILED]"
+ exit 1
+fi
+
+cd $root
+
+APACHELIBS="$APACHELIBS -lpam -ldl"
+APACHECFG="$APACHECFG --activate-module=src/modules/extra/mod_auth_pam.o $r"

@@ -1,0 +1,53 @@
+notice "$MENUTRUE" " libxml2: Checking for an existing zlib installation..."
+
+test -f /usr/local/include/zlib.h && LIBZ_DIR=/usr/local/include
+test -f $LOCAL_PATH/include/zlib.h && LIBZ_DIR=$LOCAL_PATH
+test -f /usr/include/zlib.h && LIBZ_DIR=/usr
+
+if [ ! $LIBZ_DIR ];then
+ echo "\n"
+. $root/bin/gd/libz
+
+else
+ echo " [$DONE]"
+fi
+
+notice "$MENUTRUE" " libxml2: Checking for an existing installation..."
+
+test -f /usr/local/lib/libxml2.so && LIBXML2PATH=/usr/local
+test -f $LOCAL_PATH/lib/libxml2.so && LIBXML2PATH=$LOCAL_PATH
+test -f /usr/lib/libxml2.so && LIBXML2PATH=/usr
+ 
+
+if [ ! $LIBXML2PATH ];then
+ echo " [$FAILED] -installing..."
+
+ cd $root/src
+ check_source "libxml2-${LIBXML2}.tar.gz" "ftp://ftp.gnome.org/pub/GNOME/sources/libxml2/2.4/libxml2-${LIBXML2}.tar.gz"
+ explode libxml2-${LIBXML2}.tar.gz
+ cd libxml2-${LIBXML2}
+
+ notice "$MENUTRUE" "  LibXML2: configuring..."
+ ./configure --prefix="$LOCAL_PATH" &> $logdir/libxml2-configure.log
+ 
+ testcheck $? libxml2-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  LibXML2: compiling..."
+ $MAKE &> $logdir/libxml2-compile.log
+ testcheck $? libxml2-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  LibXML2: installing..."
+ inst libxml2-install.log
+ testcheck $? libxml2-isntall.log
+ LIBXML2PATH=$LOCAL_PATH
+ echo " [$DONE]"
+else
+ #found an existing installation
+ echo " [$DONE]"
+fi
+
+cd $root
+CONFIGPHP="$CONFIGPHP --with-dom=${LIBXML2PATH} $r --with-zlib-dir=${LIBZ_DIR} $r"
+notice "$MENUTRUE" "  -dom (libxml2) v${LIBXML2} compiled into PHP\n"

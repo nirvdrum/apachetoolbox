@@ -1,0 +1,178 @@
+CONTINUE2=$FALSE
+CHOICE2=
+    while [ $CONTINUE2 -eq $FALSE ]
+    do
+        clear 
+        banner
+
+comp_menu_item 1 "$INSTALL_MYSQL" "Enable MySQL v$MYSQL\n"
+echo
+comp_menu_item path "$FALSE" "MySQL installation path: $MYSQLPREFIX\n"
+comp_menu_item conf "$FALSE" "MySQL config path: $MYSQLCONFIGDIR\n"
+comp_menu_item lib "$FALSE" "MySQL lib path: $MYSQLLIBDIR\n"
+comp_menu_item man "$FALSE" "MySQL man path: $MYSQLMAN\n"
+comp_menu_item info "$FALSE" "MySQL info path: $MYSQLINFO\n"
+comp_menu_item port "$FALSE" "MySQL default port: $MYSQLTCPPORT\n"
+comp_menu_item sock "$FALSE" "MySQL unix socket path: $MYSQLUNIXSOCKET\n"
+echo
+comp_menu_item user "$FALSE" "MySQL daemon user: $MYSQLUSER\n"
+comp_menu_item shell "$FALSE" "MySQL user shell: $MYSQLSHELL\n"
+comp_menu_item desc "$FALSE" "MySQL user description: \"$MYSQLUSERDESC\"\n"
+echo
+comp_menu_item 2 "$MYSQLTCPWRAPPERS" "MySQL TCP Wrappers support\n"
+comp_menu_item 3 "$MYSQLBERKELEYDB" "MySQL with Berkeley-db support\n"
+comp_menu_item 4 "$MYSQLINNOBASEDB" "MySQL with Innobase-db support\n"
+comp_menu_item 5 "$MYSQLGEMINIDB" "MySQL with Gemini-db support\n"
+comp_menu_item 6 "$MYSQLRAID" "MySQL with RAID support\n"
+
+echo -e "   go)     Back to main menu..."
+echo -e "   99)     Descriptions"
+        echo_line
+        echo -e "Choice [?] \c"
+        read CHOICE3
+        case "$CHOICE3" in
+
+	[pP][aA][tT][hH])
+        echo
+        echo -e "Enter the installation path of MySQL now [$MYSQLPREFIX]: \c"
+        read MYSQLPREFIX2
+        if [ -z "$MYSQLPREFIX2" ]; then
+                echo "No path specified, defaulting to $MYSQLPREFIX."
+        else    
+                MYSQLPREFIX="$MYSQLPREFIX2"
+		MYSQLLIBDIR="$MYSQLPREFIX2/lib"
+		MYSQLMAN="$MYSQLPREFIX2/man"
+		MYSQLINFO="$MYSQLPREFIX2/info"		
+        fi
+	;;
+	[Dd][Ee][Ss][Cc])
+        echo
+        echo -e "Enter the description for the MySQL user now [$MYSQLUSERDESC]: \c"
+        read MYSQLUSERDESC2
+        if [ -z "$MYSQLUSERDESC2" ]; then
+                echo "No description specified, defaulting to $MYSQLUSERDESC."
+        else    
+                MYSQLUSERDESC="$MYSQLUSERDESC2"
+        fi;;
+	[Ss][Hh][Ee][Ll][Ll])
+        echo
+        echo -e "Enter the default shell for the MySQL user now [$MYSQLSHELL]: \c"
+        read MYSQLSHELL2
+        if [ -z "$MYSQLSHELL2" ]; then
+                echo "No shell specified, defaulting to $MYSQLSHELL."
+        else    
+                MYSQLSHELL="$MYSQLSHELL2"
+        fi;;
+	[Uu][Ss][Ee][Rr])
+        echo
+        echo -e "Enter the default user for MySQL now [$MYSQLUSER]: \c"
+        read MYSQLUSER2
+        if [ -z "$MYSQLUSER2" ]; then
+                echo "No user specified, defaulting to $MYSQLUSER."
+        else    
+                MYSQLUSER="$MYSQLUSER2"
+        fi;;
+	[Ss][Oo][Cc][Kk])
+        echo
+        echo -e "Enter the default unix socket path of MySQL now [$MYSQLUNIXSOCKET]: \c"
+        read MYSQLUNIXSOCKET2
+        if [ -z "$MYSQLUNIXSOCKET2" ]; then
+                echo "No unix socket path specified, defaulting to $MYSQLUNIXSOCKET."
+        else    
+                MYSQLUNIXSOCKET="$MYSQLUNIXSOCKET2"
+        fi;;
+	[Pp][Oo][Rr][Tt])
+        echo
+        echo -e "Enter the default port of MySQL now [$MYSQLTCPPORT]: \c"
+        read MYSQLTCPPORT2
+        if [ -z "$MYSQLTCPPORT2" ]; then
+                echo "No port specified, defaulting to $MYSQLTCPPORT."
+        else    
+                MYSQLTCPPORT="$MYSQLTCPPORT2"
+        fi;;
+	[Ii][Nn][Ff][Oo])
+        echo
+        echo -e "Enter the info path of MySQL now [$MYSQLINFO]: \c"
+        read MYSQLINFO2
+        if [ -z "$MYSQLINFO2" ]; then
+                echo "No path specified, defaulting to $MYSQLINFO."
+        else    
+                MYSQLINFO="$MYSQLINFO2"
+        fi;;
+	[Mm][Aa][Nn])
+        echo
+        echo -e "Enter the man path of MySQL now [$MYSQLMAN]: \c"
+        read MYSQLMAN2
+        if [ -z "$MYSQLMAN2" ]; then
+                echo "No path specified, defaulting to $MYSQLMAN."
+        else    
+                MYSQLMAN="$MYSQLMAN2"
+        fi;;
+	[Ll][Ii][Bb])
+        echo
+        echo -e "Enter the lib path of MySQL now [$MYSQLLIBDIR]: \c"
+        read MYSQLLIBDIR2
+        if [ -z "$MYSQLLIBDIR2" ]; then
+                echo "No path specified, defaulting to $MYSQLLIBDIR."
+        else    
+                MYSQLLIBDIR="$MYSQLLIBDIR2"
+        fi
+	;;
+	[Cc][Oo][Nn][Ff])
+        echo
+        echo -e "Enter the config path of MySQL now [$MYSQLCONFIGDIR]: \c"
+        read MYSQLCONFIGDIR2
+        if [ -z "$MYSQLCONFIGDIR2" ]; then
+                echo "No path specified, defaulting to $MYSQLCONFIGDIR."
+        else    
+                MYSQLCONFIGDIR="$MYSQLCONFIGDIR2"
+        fi
+	;;
+
+
+	1)
+	 test_choice INSTALL_MYSQL $INSTALL_MYSQL
+	 INSTALL_MYSQL=$var
+	 ;;
+	2)
+	if [ -f /lib/libwrap.a ] || [ -f /usr/lib/libwrap.a ] || [ -f /usr/local/lib/libwrap.a ] || [ -f $LOCAL_PATH/lib/libwrap.a ] || [ -f /opt/sfw/lib/libwrap.a ] || [ -f /opt/lib/libwrap.a ]; then
+	 test_choice MYSQLTCPWRAPPERS $MYSQLTCPWRAPPERS
+	 MYSQLTCPWRAPPERS=$var
+	else
+	 notice $FALSE "TCP Wrappers not found on your system, aborting.\n"
+	 MYSQLTCPWRAPPERS=$FALSE
+	fi
+	 ;;
+	3)
+	 test_choice MYSQLBERKELEYDB $MYSQLBERKELEYDB
+	 MYSQLBERKELEYDB=$var
+	 ;;
+	4)
+	 test_choice MYSQLINNOBASEDB $MYSQLINNOBASEDB 
+	 MYSQLINNOBASEDB=$var
+	 ;;
+	5)
+	 test_choice MYSQLGEMINIDB $MYSQLGEMINIDB
+	 MYSQLGEMINIDB=$var
+	 ;;
+	6)
+	 test_choice MYSQLRAID $MYSQLRAID
+	 MYSQLRAID=$var
+	 ;;
+
+
+	    99)
+                print_descriptions
+                ;;
+            go)   
+                CONTINUE2=$TRUE
+                ;;
+            q)
+                CONTINUE2=$TRUE
+                ;;
+            *)
+                echo "Invalid Selection..."
+                HitAnyKey
+        esac
+    done
+

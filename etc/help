@@ -1,0 +1,251 @@
+*********************
+ Apache Toolbox Help
+*********************
+
+  mod_allowdev .......... Disallow requests for files on particular devices
+  mod_auth_cookie ....... Authenticate via cookies; on-the-fly
+  mod_auth_cookie_file .. Authenticate via cookies; with .htpasswd-like file
+  mod_auth_external ..... Authenticate via external program
+  mod_auth_inst ......... Authenticate via instant passwords for dummy users
+  mod_auth_system ....... Authenticate via system passwd file
+  mod_eaccess ........... Extended Access Control
+  mod_cgisock ........... CGI/1.1 over Socket Handling
+  mod_urlcount .......... Automatic URL access counter via TXT and DBM file
+  mod_disallow_id ....... Disallow requests for files owned by particular UserIDs
+  mod_peephole .......... Peepholing filesystem information about documents
+  mod_put ............... Handler for HTTP/1.1 PUT and DELETE method
+  mod_qs2ssi ............ Parse query string to CGI/SSI variables
+  mod_session ........... Session management and tracking via identifiers
+  mod_cvs ............... CVS on-the-fly checkout mechanism
+  mod_macro ............. Macros for the configuration files (needs mod_perl!)
+  mod_random ............ Random URL Locating
+  mod_ip_forwarding ..... IP client address/name forwarding between proxies
+  mod_ticket .......,.... Session Ticket Handling
+  mod_monitor ........... Trivial module for monitoring resources
+  mod_relocate .......... ModRelocate was designed to replace generic
+			  clickthrough CGIs. It has the advantage that it
+			  works as a virtual document and that it will
+			  pass along additional URI arguments to the remote URL.
+  GD .................... A library used to create images.
+  MySQL ................. MySQL is an SQL (Structured Query Language) database 
+			  server. It is a client/server implementation that
+			  consists of a server daemon (mysqld) and many
+		          different client programs/libraries.
+  PHP ................... PHP is a widely-used Open Source general-purpose
+			  scripting language that is especially suited for Web
+			  development and can be embedded into HTML.
+  Mod_SSL ............... mod_ssl provides provides strong cryptography
+			  for the Apache 1.3 webserver via the Secure
+			  Sockets Layer (SSL v2/v3) and Transport Layer
+			  Security (TLS v1).
+  OpenSSL (referenced) .. The OpenSSL Project is a collaborative effort to
+			  develop a robust, commercial-grade, fully
+			  featured, and Open Source toolkit implementing
+			  the Secure Sockets Layer (SSL v2/v3) and
+			  Transport Layer Security (TLS v1) as well as a
+			  full-strength general-purpose cryptography library.
+  MM (referenced) ....... The MM library is a 2-layer abstraction library
+			  which simplifies the usage of shared memory
+			  between related processed under Unix platforms.
+  Mod Throttle .......... (http://www.snert.com/Software/mod_throttle/) Virtual
+			  server throttling for Apache 1.3.x
+  WebDAV ................ (http://www.webdav.org/) WebDAV stands for
+			  "Web-based Distributed Authoring and
+			  Versioning". It is a set of extensions to the
+			  HTTP protocol which allows users to
+			  collaboratively edit and manage files on remote
+			  web servers. EG: Microsoft WebFolders
+  Mod FastCGI ........... (http://www.jtan.com/doc/apache/mod/mod_fastcgi.html)
+			  FastCGI is a high-performance alternative to
+			  CGI. FastCGI gets its speed by having the Web
+			  server keep the application processes running
+			  between requests. So, unlike CGI, you do not
+			  have the overhead of starting up a new process
+			  and doing application initialization (e.g.
+			  connecting to a database) each time somebody
+			  requests a document. The processes start up with
+			  the Web server and keep on running.
+  Mod AuthNDS ........... (http://www.users.drew.edu/~pwilson/mod_auth_nds/)
+			  NDS authentication module for the Apache web
+			  server *requires ncpfs 2.2.0.17+* *requires
+			  kernel IPX support*
+  Mod Layout ............ (http://www.tangent.org/mod_layout/) mod_layout
+			  add a Footer and Header directive to Apache to
+			  allow you to create a custom look and feel that
+			  is enforced throughout a website. This makes it
+			  easy to do portal sites with banners and footers.
+  Mod GZIP .............. (www.remotecommunications.com/apache/mod_gzip)
+			  mod_gzip does not require ANY software to be
+			  installed on the client side. mod_gzip is a
+			  standard Apache Web Server module which acts as
+			  an Internet Content Accelerator. Its function in
+			  life is to become an integral 'part' of any
+			  existing Apache Web Server and see that the
+			  content being delivered to YOU, the end-user, is
+			  as small and as optimized as possible.
+  Mod DynaVHost ......... (http://funkcity.com/0101/) An Apache module to
+			  do Dynamic Virtual Hosting. You just need to
+			  create the directory for your new name based
+			  VirtualHost and the module will do the rest
+  Mod Roaming ........... (http://www.klomp.org/mod_roaming/) With
+			  mod_roaming you can use your Apache webserver as
+			  a Netscape Roaming Access server. This allows
+			  you to store your Netscape Communicator 4.5
+			  preferences, bookmarks, address books, cookies
+			  etc. on the server so that can access the server.
+  Mod Access Ref ........ (http://accessreferer.sourceforge.net/) It is a
+			  module for the Apache HTTP Server that provides
+			  access control based on "Referer" HTTP header
+			  content.
+  Mod AuthSYS ........... (http://kw2.knightweb.com/~hsf/sources/mod_auth_sys/)
+			  This module allows you use your system access
+			  files (passwd and group) for www authentication.
+  Mod Bandwidth ......... Provide bandwidth usage limitation either on the
+		          whole server or one a per connection basis based
+		  	  on the size of files, directory location or
+			  remote domain/IP.
+  Mod_Perl .............. (http://perl.apache.org/) With mod_perl it is
+			  possible to write Apache modules entirely in
+			  Perl. In addition, the persistent interpreter
+			  embedded in the server avoids the overhead of
+			  starting an external interpreter and the penalty
+		  	  of Perl start-up time.
+  Mod_Auth_LDAP ......... (http://www.muquit.com/muquit/software/mod_au
+			  th_ldap/mod_auth_ldap.html) *requires OpenLDAP*
+			  This module can be used for http basic
+			  authentication using the user data stored in a
+			  Lightweight Directory Access Protocol (LDAP) server.
+  Mod_DTCL .............. (http://tcl.apache.org/index.ttml) Tcl is an
+			  open source, cross-platform scripting language
+			  created by John K. Ousterhout at the University
+			  of California at Berkeley in 1988.
+  Mod_Python ............ (http://www.modpython.org/) Mod_python is an
+			  Apache module that embeds the Python interpreter
+			  within the server. With mod_python you can write
+			  web-based applications in Python that will run
+			  many times faster than traditional CGI and will
+			  have access to advanced features such as ability
+			  to retain database connections and other data
+			  between hits and access to Apache internals.
+  Mod_Backhand .......... mod_backhand is project that allows seamless
+			  redirection of HTTP requests from one web server to
+			  another. This redirection can be used to target
+			  machines with under-utilized resources, thus providing
+			  fine-grained, per-request load balancing of web requests. 
+			  A common misconception. mod_backhand may allow you
+			  to better utilize your resources, but if your bottleneck
+			  lies in your bandwidth, you will not be able to push
+			  more information.
+  mod_watch ............. watch and collect the bytes in & out per virtual 
+			  host and per file owner, similar to some 
+			  information collected by routers, switches, and 
+			  network interfaces. This module was designed for 
+			  use with MRTG, which will make nice graphical 
+			  representations of the data. 
+  mod_trigger ........... The point of mod_trigger is to give you hooks 
+			  into each Apache request to launch triggers if 
+			  certain actions occur. You specify the actions 
+			  through directives that mod_trigger adds to the 
+			  webserver.
+  mod_filter ............ This module was designed to allow you to filter 
+			  outgoing content from your webserver. This works 
+			  with PHP, Jserv, Mod_perl, standard CGI's, and 
+			  probably even your custom handlers.
+  mod_index_rss ......... This module provides RSS output for directories.
+			  Sites that publish mainly static content to
+			  directories (whether images, html...) can use it
+			  to have dynamic lists of their content. 
+  mod_mp3 ............... This turns apache into your basic RIAA hating, but every
+			  college student loving mp3 streaming server. It can play
+			  from a list of files, either straight through or
+			  randomly. It can also be used to cache mp3's into memory
+			  and have the server operate entirely from memory.
+*********************
+ Default Apache Mods
+*********************
+
+  mod_access ............ This module provides access control based on
+			  client hostname, IP address, or other
+			  characteristics of the client request
+  mod_actions ........... This module provides for executing CGI scripts
+			  based on media type or request method.
+  mod_alias ............. This module provides for mapping different parts
+			  of the host filesystem in the document tree, and
+			  for URL redirection.
+  mod_asis .............. This module provides for sending files which
+			  contain their own HTTP headers
+  mod_auth .............. This module provides for user authentication
+			  using text files.
+  mod_auth_anon ......... This module allows "anonymous" user access to
+			  authenticated areas.
+  mod_auth_db ........... This module provides for user authentication
+			  using Berkeley DB files.
+  mod_auth_dbm .......... This module provides for user authentication
+			  using DBM files.
+  mod_auth_digest ....... This module provides for user authentication
+			  using MD5 Digest Authentication.
+  mod_autoindex ......... This module provides for automatic directory
+			  indexing.
+  mod_cern_meta ......... This module provides for CERN httpd metafile
+			  semantics.
+  mod_cgi ............... This module provides for execution of CGI scripts.
+  mod_digest ............ This module provides for user authentication
+			  using MD5 Digest Authentication.
+  mod_dir ............... This module provides for "trailing slash"
+			  redirects and serving directory index files.
+  mod_env ............... This module provides for modifying the
+			  environment which is passed to CGI scripts and
+			  SSI pages.
+  mod_example ........... This module illustrates many of the aspects of
+			  the Apache 1.2 API and, when used, demonstrates
+			  the manner in which module callbacks are
+			  triggered by the server.
+  mod_expires ........... This module provides for the generation of
+			  Expires HTTP headers according to user-specified
+			  criteria.
+  mod_headers ........... This module provides for the customization of
+			  HTTP response headers.
+  mod_imap .............. This module provides for server-side imagemap
+			  processing.
+  mod_include ........... This module provides for documents with Server
+			  Side Includes (SSI).
+  mod_info .............. This module provides a comprehensive overview of
+			  the server configuration including all installed
+			  modules and directives in the configuration files.
+  mod_log_agent ......... This module provides for logging of the client
+			  user agents.
+  mod_log_config ........ This module provides for logging of the requests
+			  made to the server, using the Common Log Format
+			  or a user-specified format.
+  mod_log_referer ....... This module provides for logging of the
+			  documents which reference documents on the server.
+  mod_mime .............. This module provides for determining the types
+			  of files from the filename and for association
+			  of handlers with files.
+  mod_mime_magic ........ This module provides for determining the MIME
+			  type of a file by looking at a few bytes of its
+			  contents.
+  mod_mmap_static ....... This module provides mmap()ing of a statically
+			  configured list of frequently requested but not
+			  changed files.
+  mod_negotiation ....... This module provides for content negotiation.
+  module mod_proxy ...... This module provides for an HTTP 1.0 caching
+			  proxy server.
+  mod_rewrite ........... This module provides a rule-based rewriting
+			  engine to rewrite requested URLs on the fly.
+  mod_setenvif .......... This module provides the ability to set
+			  environment variables based upon attributes of
+			  the request.
+  mod_speling ........... This module attempts to correct misspellings of
+			  URLs that users might have entered, by ignoring
+			  capitalization and by allowing up to one
+			  misspelling.
+  mod_status ............ This module provides information on server
+			  activity and performance.
+  mod_userdir ........... This module provides for user-specific directories.
+  mod_unique_id ......... This module provides an environment variable
+			  with a unique identifier for each request.
+  mod_usertrack ......... This module uses cookies to provide for a
+			  clickstream log of user activity on a site.
+  mod_vhost_alias ....... This module provides support for dynamically
+			  configured mass virtual hosting.

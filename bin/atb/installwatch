@@ -1,0 +1,39 @@
+if [ "$installwatch" -eq "$TRUE" ]; then
+
+notice "$MENUTRUE" "Testing for local copy of installwatch $INSTALLWATCH...\n"
+
+if [ ! -f "$root/bin/atb/installwatch.sh" ]; then #looking for installwatch in $root/bin
+ notice "$MENUTRUE" " Installwatch being setup at $root/bin...\n"
+ cd $root/src
+ check_source "installwatch-$INSTALLWATCH.tgz" "http://www.apachetoolbox.com/data/cvs/src/installwatch-$INSTALLWATCH.tgz"
+ explode installwatch-$INSTALLWATCH.tgz
+ notice "$MENUTRUE" " Installwatch untared...\n"
+ cd installwatch-$INSTALLWATCH
+ $MAKE &> $logdir/installwatch-compile.log
+
+ if [ ! -f installwatch.so ]; then
+  notice "$MENUFALSE" " Installwatch shared lib NOT compiled!\n"
+  notice "$MENUFALSE" "  Continuing on without RPM Building support.\n"
+  export MAKERPM=$FALSE
+  export installwatch=$FALSE
+ else
+  notice "$MENUTRUE" " Installwatch shared lib compiled...\n"
+  $SED -e "s|#PREFIX#|$root/bin|" < installwatch > installwatch-test.sh
+  $SED -e "s|LIBDIR=\$PREFIX/lib|LIBDIR=\$PREFIX|" < installwatch-test.sh > installwatch2-test.sh
+  notice "$MENUTRUE" " Installwatch paths changed...\n"
+  $MV -f installwatch2-test.sh $root/bin/atb/installwatch.sh
+  notice "$MENUTRUE" " Installwatch tmp file moved...\n"
+  $CP installwatch.so $root/bin
+  notice "$MENUTRUE" " Installwatch .so copied...\n"
+  chmod 755 $root/bin/atb/installwatch.sh
+  notice "$MENUTRUE" "Installwatch script setup!...\n"
+ fi
+
+else #installwatch was already found in $root/bin
+ notice "$MENUTRUE" "Installwatch script found!\n"
+fi
+
+
+
+fi
+cd $root

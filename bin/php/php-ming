@@ -1,0 +1,52 @@
+#http://www.opaque.net/ming
+
+
+if [ $AUTOCONF ];then
+
+
+notice "$MENUTRUE" " MING: Checking for an existing installation..."
+if [ ! -f $LOCAL_PATH/lib/libming.so ];then
+ echo
+ cd $root/src
+ check_source "ming-${MING}.tgz" "http://www.opaque.net/ming/ming-${MING}.tgz"
+ explode ming-${MING}.tgz
+
+ cd $root/src/ming-${MING}
+ notice "$MENUTRUE" "  MING: compiling ming shared libs..."
+ $MAKE &> $logdir/ming-compile.log
+ testcheck $? ming-compile.log
+ echo " [$DONE]"
+
+
+ # changing the installation path of ming to $LOCAL_PATH
+ $CP Makefile Makefile~
+ $SED -e "s|PREFIX = /usr|PREFIX = $LOCAL_PATH|" < Makefile~ > Makefile
+
+ notice "$MENUTRUE" "  MING: installed shared libs..."
+ $MAKE install &> $logdir/ming-install.log
+ testcheck $? ming-install.log
+ echo " [$DONE]"
+ 
+
+
+ $MKDIR $root/src/php-$PHP/ext/ming
+ $CP -Rf $root/src/ming-${MING}/php_ext/* $root/src/php-$PHP/ext/ming
+
+ cd $root/src/php-$PHP
+ notice "$MENUTRUE" "  MING: rebuilding PHP with ming support..."
+ ./buildconf &> $logdir/php-ming-buildconf.log
+ testcheck $? php-ming-buildconf.log
+ echo " [$DONE]"
+
+else
+ echo " [$DONE]"
+fi
+
+CONFIGPHP="$CONFIGPHP --with-ming=\"$LOCAL_PATH\" $r"
+notice "$MENUTRUE" "  -MING v${MING} setup for use with PHP\n"
+
+
+else
+	notice $MENUFALSE " -autoconf required for ming support!\n"
+fi
+

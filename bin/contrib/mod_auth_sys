@@ -1,0 +1,65 @@
+notice "$MENUTRUE" "Getting Mod_AuthSYS source ready...\n"
+
+if [ ! -f "$root/mod_auth_sys.c" ] ; then
+cd $root/src
+check_source "mod_auth_sys.c" "http://www.apachetoolbox.com/data/cvs/src/mod_auth_sys.c"
+check_source "checkPasswd.c" "http://www.apachetoolbox.com/data/cvs/src/checkPasswd.c"
+
+if [ ! -x /usr/bin/checkPasswd ];then
+ if [ "$installwatch" -eq "$TRUE" ]; then
+  $root/bin/atb/installwatch.sh -o $logdir/mod_auth_sys.iw gcc -lcrypt $root/src/checkPasswd.c -o /usr/bin/checkPasswd &> /dev/null
+ else
+  $GCC -lcrypt $root/src/checkPasswd.c -o /usr/bin/checkPasswd
+ fi
+fi
+
+
+if [ -x /usr/bin/checkPasswd ];then
+ notice "$MENUTRUE" " checkPasswd compiled and copied fine...\n"
+if [ "$installwatch" -eq "$TRUE" ]; then
+ $root/bin/atb/installwatch.sh -o $logdir/mod_auth_sys2.iw "chmod 4775 /usr/bin/checkPasswd" &> /dev/null         
+else
+ chmod 4775 /usr/bin/checkPasswd
+fi
+ notice "$MENUTRUE" " checkPasswd set to suid...\n"
+else
+ notice "$MENUTRUE" " checkPasswd didn't compile, required for Mod_AuthSYS\n"
+ echo Exiting
+ HitAnyKey
+ exit
+fi   
+
+echo "
+
+################## Mod_AuthSYS ######################
+#This module allows you use your system access files (passwd and group) 
+#for www authentication.  The following directives have been added which
+#you can put in a <Directory> or .htaccess:
+#
+#AuthSystem On|Off
+#   Use system files for authentication.  Default is Off
+#AuthSystemAuthorative On|Off  
+#AuthSystemAuthoritative On|Off
+#   If On, the system files are considered authorative, control will not  
+#   be passed to other access control modules.  Off allows you to use this
+#   with other access modules, to allow access for users defined
+#   in a .htpasswd file as well as other users on the system.
+#   To enable this functionality, this module should be included after
+#   mod_auth in your configuration file.  Default is On.
+################## Mod_AuthSYS ######################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_AuthSYS\n"
+
+echo "
+
+EXTRA_CFLAGS=-DSHADOW='\"/usr/bin/checkPasswd\"'
+" >> $root/apache_$APACHE/src/Configuration
+ notice "$MENUTRUE" " Updated src/Configuration for Mod_AuthSYS\n"
+ 
+else
+ notice "$MENUTRUE" "Mod_AuthSYS already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_auth_sys.c $r"

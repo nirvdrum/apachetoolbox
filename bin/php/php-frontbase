@@ -1,0 +1,17 @@
+
+ INSTALL_PHP_FRONTBASE=$FALSE
+
+    for i in /Local/Library /usr /usr/local /opt /Library $LOCAL_PATH; do
+      if test -f $i/FrontBase/include/FBCAccess/FBCAccess.h; then
+        FRONTBASE_DIR="$i/FrontBase"
+	INSTALL_PHP_FRONTBASE=$TRUE
+        break
+      fi
+    done
+
+
+ if [ $INSTALL_PHP_FRONTBASE -eq $TRUE ];then
+  CONFIGPHP="$CONFIGPHP --with-fbsql=${FRONTBASE_DIR} $r"
+  notice "$MENUTRUE" "  -FrontBase SQL92 detected and compiled into PHP $PHP\n"
+ fi
+

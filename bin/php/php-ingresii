@@ -1,0 +1,8 @@
+test -d /II/ingres &&	INGRESIIPATH="/II/ingres"
+
+
+if [ $INGRESIIPATH ];then
+
+ CONFIGPHP="$CONFIGPHP --with-ingres=\"${INGRESIIPATH}\" $r"
+ notice "$MENUTRUE" "  -Ingres II detected, support compiled into PHP\n"
+fi

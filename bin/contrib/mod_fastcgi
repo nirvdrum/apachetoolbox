@@ -1,0 +1,25 @@
+notice "$MENUTRUE" "Setting up Mod_FastCGI...\n"   
+if [ ! -d apache_$APACHE/src/modules/fastcgi ];then
+cd $root/src
+check_source "mod_fastcgi-$MODFASTCGI.tar.gz" "http://www.fastcgi.com/dist/mod_fastcgi-$MODFASTCGI.tar.gz"
+ 
+ explode mod_fastcgi-$MODFASTCGI.tar.gz
+ notice "$MENUTRUE" " Untared Mod_FastCGI...\n"
+ $MV -f $root/src/mod_fastcgi-$MODFASTCGI $root/apache_$APACHE/src/modules/fastcgi
+ notice "$MENUTRUE" " Moved Mod_FastCGI dir to apache source...\n"
+echo "
+
+######### MOD FastCGI #########
+#http://www.fastcgi.com/
+#FastCgiSuexec /usr/local/apache/bin/suexec
+#FastCgiServer /usr/local/apache/sbin/testing.cgi -priority 5
+#FastCgiServer /usr/local/apache/sbin/stuff.pl -priority 5
+######### MOD FastCGI #########
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Apache httpd.conf-dist setup for Mod_FastCGI...\n"
+ notice "$MENUTRUE" "Mod_FastCGI setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --activate-module=src/modules/fastcgi/libfastcgi.a $r"

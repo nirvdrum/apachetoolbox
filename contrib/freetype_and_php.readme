@@ -1,0 +1,13 @@
+<?php 
+$im = imagecreate (400, 30); 
+$black = ImageColorAllocate ($im, 0, 0, 0); 
+$white = ImageColorAllocate ($im, 255, 255, 255); 
+ImageTTFText ($im, 20, 0, 10, 20, $white, "/tmp/arial.ttf", 
+            "Testing... ATB"); 
+ImageJpeg ($im); 
+ImageDestroy ($im); 
+?> 
+
+
+point /tmp/arial.ttf to the right location and it should creat
+a black box with white TT arial font text.  tested with ATB v1.5.33

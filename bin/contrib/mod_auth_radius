@@ -1,0 +1,36 @@
+notice "$MENUTRUE" "Setting up Mod_AuthRadius...\n"
+
+if [ ! -f $root/apache_$APACHE/src/modules/extra/mod_auth_radius.c ];then
+cd $root/src
+check_source "mod_auth_radius.c" "http://www.apachetoolbox.com/data/cvs/src/mod_auth_radius.c"
+echo "
+
+############# Mod Auth_Radius ###############
+# http://www.freeradius.org/mod_auth_radius/
+#<IfModule mod_auth_radius.c>
+# AddRadiusAuth server[:port] <shared-secret> [ timeout ]
+#AddRadiusAuth localhost:1645 testing123 5
+# AddRadiusCookieValid <minutes-for-which-cookie-is-valid>
+#AddRadiusCookieValid 5
+#</IfModule>
+#
+#<Location /secret/>
+#AuthType Basic
+#AuthName "RADIUS authentication for localhost"
+#AuthAuthoritative off
+#AuthRadiusAuthoritative on
+#AuthRadiusCookieValid 5
+#AuthRadiusActive On
+#require valid-user
+#</Location>
+#############################################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Apache httpd.conf-dist setup for Mod_AuthRadius...\n"
+ notice "$MENUTRUE" "Mod_AuthRadius setup\n"
+else
+ notice "$MENUTRUE" "Mod_AuthRadius already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_auth_radius.c $r"

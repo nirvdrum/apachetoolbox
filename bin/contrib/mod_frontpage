@@ -1,0 +1,87 @@
+notice "$MENUTRUE" "Checking MS Frontpage 2002 binaries..."
+
+if [ ! $fpsrc ]; then
+ echo " [FAILED]"
+ notice "$MENUFALSE" "System OS not compatible with any Frontpage precompiled binaries.\n"
+
+
+else
+
+
+
+if [ ! -d /usr/local/frontpage/version5.0 ] || [ ! -f $root/src/fp-patch-apache_1.3.22.Z ];then
+ cd $root/src
+ echo
+ check_source "${fpsrc}" "http://apachetoolbox.com/data/frontpage-mirror/${fpsrc}"
+ check_source "fp-patch-apache_1.3.22.Z" "ftp://ftp.rtr.com/pub/fp-patch-apache_1.3.22.Z"
+
+ explode "${fpsrc}"
+
+ notice "$MENUTRUE" " Copying files over..."
+ localcopy "fp-binaries-copy" "$MV -f $root/src/frontpage /usr/local"
+ testcheck $? fp-binaries-copy
+ echo " [$DONE]"
+ 
+ notice "$MENUTRUE" " Setting default permissions in $LOCAL_PATH/frontpage ..."
+ /usr/local/frontpage/version5.0/set_default_perms.sh "/usr/local/frontpage/version5.0"
+ echo " [$DONE]"
+
+else 
+ echo " [$DONE]"
+fi
+
+
+
+notice "$MENUTRUE" "Checking MS Frontpage 2002 apache module..."
+if [ ! -f "$root/apache_$APACHE/mod_frontpage.c" ]; then
+ echo
+ cd $root/apache_$APACHE
+ $CP -f $root/src/fp-patch-apache_1.3.22.Z $root/apache_$APACHE
+
+
+ if [ ! -f fp-patch-apache_1.3.22.Z ]; then
+  notice "$MENUFALSE" " Failed to copy the Frontpage patch to $root/apache_$APACHE!"
+  exit 1
+ else
+
+  $GUNZIP fp-patch-apache_1.3.22.Z
+  notice "$MENUTRUE" " Patching apache with the frontpage patch..."
+  $PATCH -p1 < fp-patch-apache_1.3.22 > $logdir/fp-apache-patch.log
+  testcheck $? fp-apache-patch.log
+  echo " [$DONE]"
+
+ fi
+
+echo "
+# Frontpage Support
+#####################
+# http://www.rtr.com/fpsupport/faq2002.htm 
+#
+# Here are some quick steps to setting up a vhost with frontpage 2002 support...
+#  1) setup the vhost, make sure its working correctly!
+#  2) run /usr/local/frontpage/version5.0/bin/owsadm.exe to setup the vhost
+#   2a) the documentation sucks.. heres an example that worked for me...
+#       \"./owsadm.exe -o install -servconf $LOCAL_PATH/apache/conf/httpd.conf -xuser unix_system_user -xgroup unix_system_group -u admin_account_on_webfolder -p 80 -m vhost-domain.tld\"
+#   2b) you must now copy /usr/local/frontpage/version5.0/vti_bin/ to your vhost webroot
+#   2c) you will also have to manually chmod all the .exe files under /vti_bin/ to 6755
+#  3) you will probably have to manually add these lines into the frontpage vhosts <VirtualHost> directive...
+#     \"scriptalias /_vti_bin/_vti_adm/ /vhome/vhost-domain.tld/_vti_bin/_vti_adm/\"
+#     \"scriptalias /_vti_bin/_vti_aut/ /vhome/vhost-domain.tld/_vti_bin/_vti_aut/\"
+#     \"scriptalias /_vti_bin/ /vhome/vhost-domain.tld/_vti_bin/\"
+#   3a) you will also HAVE to add "AllowOverride All" to your vhosts, this is required by frontpage
+#  4) test it and make sure you can login to it as a webfolder
+#
+######################
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+
+  notice "$MENUTRUE" "Frontpage 2002 apache module ready!\n"
+else
+ echo " [$DONE]"
+fi
+cd $root
+
+
+APACHECFG="$APACHECFG --add-module=mod_frontpage.c"
+
+
+fi

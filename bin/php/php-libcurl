@@ -1,0 +1,58 @@
+notice "$MENUTRUE" " LibCURL: Checking for an existing installation..."
+
+test -f /usr/lib/libcurl.so && LIBCURLPATH=/usr
+test -f /usr/local/lib/libcurl.so && LIBCURLPATH=/usr/local
+test -f $LOCAL_PATH/lib/libcurl.so && LIBCURLPATH=$LOCAL_PATH
+ 
+if [ $LIBCURLPATH ]; then
+	curl_version_full=`$LIBCURLPATH/bin/curl-config --version`
+	curl_version=`echo ${curl_version_full} | sed -e 's/libcurl //' | awk 'BEGIN { FS = "."; } { printf "%d", ($1 * 1000 + $2) * 1000 + $3;}'`
+
+	if [ ! "$curl_version" -ge 7009000 ]; then
+		unset LIBCURLPATH;
+		FOUNDOLD="$TRUE";
+		echo " [$FAILED] -found old version..."
+	fi
+fi
+
+
+if [ ! $LIBCURLPATH ];then
+
+ test -z $FOUNDOLD && echo " [$FAILED] -installing..."
+
+#check to make sure openssl is installed, if not install it
+. $root/bin/ssl/openssl
+
+ cd $root/src
+ check_source "curl-${LIBCURL}.tar.gz" "http://curl.haxx.se/download/curl-${LIBCURL}.tar.gz"
+ explode curl-${LIBCURL}.tar.gz
+ cd curl-${LIBCURL}
+
+ notice "$MENUTRUE" "  LibCURL: configuring..."
+ if [ $OS = "FreeBSD" ]; then
+  ./configure --prefix="$LOCAL_PATH" --disable-ipv6 &> $logdir/libcurl-configure.log
+ else
+  ./configure --prefix="$LOCAL_PATH" --disable-ipv6 --with-ssl=$OPENSSL_DIR &> $logdir/libcurl-configure.log
+ fi
+ testcheck $? libcurl-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  LibCURL: compiling..."
+ $MAKE &> $logdir/libcurl-compile.log
+ testcheck $? libcurl-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  LibCURL: installing..."
+ inst libcurl-install.log
+ testcheck $? libcurl-isntall.log
+ LIBCURLPATH=$LOCAL_PATH
+ echo " [$DONE]"
+else
+ #found an existing installation
+ echo " [$DONE]"
+fi
+
+
+cd $root
+CONFIGPHP="$CONFIGPHP --with-curl=${LIBCURLPATH} $r"
+notice "$MENUTRUE" "  -cURL v${LIBCURL} compiled into PHP\n"

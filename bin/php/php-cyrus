@@ -1,0 +1,29 @@
+# php-cyrus written by Kevin J. Menard, Jr. <kmenard@wpi.edu>, July 10, 2002
+
+notice "$MENUTRUE" "PHP Cyrus: Searching for Cyrus IMAPd development files..."
+
+if [ ! -f /usr/local/include/cyrus/imclient.h ] && 
+   [ ! -f $LOCAL_PATH/include/cyrus/imclient.h ] && 
+   [ ! -f /usr/include/cyrus/imclient.h ];
+then
+ echo " [$FAILED]"; 
+ exit;
+
+elif [ ! -f /usr/local/include/sasl/sasl.h ] &&
+     [ ! -f $LOCAL_PATH/include/sasl/sasl.h ] && 
+     [ ! -f /usr/include/sasl/sasl.h ];
+then
+ echo " [$DONE]";
+ notice "$MENUTRUE" "PHP Cyrus: Searching for Cyrus SASL development files..."
+ echo " [$FAILED]";
+ exit;
+
+else
+ # Kind of hackish.  Easiest way to print out this message correctly.  Really,
+ # there is no checking going on here, but the user need not know that :)
+ notice "$MENUTRUE" "PHP Cyrus: Searching for Cyrus SASL development files..."
+ echo " [$DONE]";
+ CONFIGPHP="$CONFIGPHP --with-cyrus $r"
+ notice "$MENUTRUE" "PHP Cyrus: Cyrus IMAPd support ready.\n"
+
+fi

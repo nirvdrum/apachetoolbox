@@ -1,0 +1,28 @@
+notice "$MENUTRUE" "Getting Mod_Backhand source ready...\n"
+
+if [ ! -d "$root/apache_$APACHE/src/modules/backhand" ] ; then
+ cd $root/src
+ check_source "mod_backhand-$MODBACKHAND.tar.gz" "http://www.apachetoolbox.com/data/cvs/src/mod_backhand-$MODBACKHAND.tar.gz"
+ explode mod_backhand-$MODBACKHAND.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Backhand...\n"
+ cd mod_backhand-$MODBACKHAND
+ ./precompile "$root/apache_$APACHE" &> $logdir/mod_backhand-precompile.log
+ testcheck $? mod_backhand-precompile.log
+
+ if [ ! -d "$root/apache_$APACHE/src/modules/backhand" ] ; then
+  notice "$MENUTRUE" " Mod_Backhand setup failed!\n"
+  exit
+ else
+  notice "$MENUTRUE" "Mod_Backhand setup!\n"
+ fi
+
+else
+ notice "$MENUTRUE" "Mod_Backhand already setup\n"
+fi
+
+
+
+APACHECFG="$APACHECFG --enable-module=backhand $r"
+
+cd $root
+

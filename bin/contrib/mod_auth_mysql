@@ -1,0 +1,138 @@
+#created by "Kevin J. Menard, Jr." <kmenard@WPI.EDU> with help and testing by Bryan <bryan@apachetoolbox.com>
+
+notice "$MENUTRUE" " Getting Mod_Auth_MySQL ready...\n"
+
+if [ ! -d $root/apache_$APACHE/src/modules/auth_mysql ];then
+cd $root/src
+
+ notice "$MENUTRUE" "  Mod_Auth_MySQL: checking for mysql headers..."
+  test -f /usr/local/mysql/include/mysql/mysql.h && MYSQLDIR=/usr/local/mysql
+  test -f /usr/local/include/mysql/mysql.h && MYSQLDIR=/usr/local
+  test -f $LOCAL_PATH/mysql/include/mysql/mysql.h && MYSQLDIR=$LOCAL_PATH/mysql
+  test -f $LOCAL_PATH/include/mysql/mysql.h && MYSQLDIR=$LOCAL_PATH
+  test -f /usr/include/mysql/mysql.h && MYSQLDIR=/usr
+ if [ $MYSQLDIR ]; then echo " [DONE]"; else echo " [FAILED]"; exit; fi
+
+ notice "$MENUTRUE" "  Mod_Auth_MySQL: checking for mysql includes..."
+  test -d /usr/local/include/mysql && MYSQLINCLUDE=/usr/local/include/mysql
+  test -d /usr/local/mysql/include/mysql && MYSQLINCLUDE=/usr/local/mysql/include/mysql
+  test -d $LOCAL_PATH/include/mysql && MYSQLINCLUDE=$LOCAL_PATH/include/mysql
+  test -d $LOCAL_PATH/mysql/include/mysql && MYSQLINCLUDE=$LOCAL_PATH/mysql/include/mysql
+  test -d /usr/include/mysql && MYSQLINCLUDE=/usr/include/mysql
+ if [ $MYSQLINCLUDE ]; then echo " [DONE]"; else echo " [FAILED]"; exit; fi
+
+ notice "$MENUTRUE" "  Mod_Auth_MySQL: checking for mysql libraries..."
+  test -d /usr/local/lib/mysql && MYSQLLIB=/usr/local/lib/mysql
+  test -d /usr/local/mysql/lib/mysql && MYSQLLIB=/usr/local/mysql/lib/mysql
+  test -d $LOCAL_PATH/lib/mysql && MYSQLLIB=$LOCAL_PATH/lib/mysql
+  test -d $LOCAL_PATH/mysql/lib/mysql && MYSQLLIB=$LOCAL_PATH/mysql/lib/mysql
+  test -d /usr/lib/mysql && MYSQLLIB=/usr/lib/mysql
+ if [ $MYSQLLIB ]; then echo " [DONE]"; else echo " [FAILED]"; exit; fi
+
+
+
+notice "$MENUTRUE" "  Mod_Auth_MySQL: checking for mysql libs in /etc/ld.so.conf..."
+if [ -f /etc/ld.so.conf ]; then
+ for i in `cat /etc/ld.so.conf`; do
+  if [ "$i" = "$MYSQLLIB" ]; then
+   SOMYSQLLIB=1
+  fi
+ done
+
+ if [ ! $SOMYSQLLIB ]; then
+  echo " [FAILED] -added"
+  echo $MYSQLLIB >> /etc/ld.so.conf
+   test -x /sbin/ldconfig && LDCONFIG=/sbin/ldconfig
+   test -x /usr/sbin/ldconfig && LDCONFIG=/usr/sbin/ldconfig
+   test -x /usr/local/sbin/ldconfig && LDCONFIG=/usr/local/sbin/ldconfig
+   test -x $LOCAL_PATH/sbin/ldconfig && LDCONFIG=$LOCAL_PATH/sbin/ldconfig
+  if [ $LDCONFIG ];then
+   notice "$MENUTRUE" "  Mod_Auth_MySQL: updating shared libs with \"$LDCONFIG\"..."
+   $LDCONFIG
+   echo " [DONE]"
+  else
+   notice "$MENUFALSE" "  Mod_Auth_MySQL: failed to find ldconfig to update /etc/ld.so.conf!\n"
+   exit 1
+  fi
+ else
+  echo " [DONE]"
+ fi
+
+else
+ echo " [FAILED] to find /etc/ld.so.conf"
+ exit 1
+fi
+
+
+
+
+
+
+ check_source "mod_auth_mysql-$MODAUTHMYSQL.tar.gz" "http://www.mysql.com/Downloads/Contrib/mod_auth_mysql-$MODAUTHMYSQL.tar.gz"
+ explode mod_auth_mysql-$MODAUTHMYSQL.tar.gz
+ cd mod_auth_mysql-$MODAUTHMYSQL
+
+ notice "$MENUTRUE" "  Mod_Auth_MySQL: detecting mysql header location..."
+
+ #set this if you have problems autodetecting it
+ #MYSQLDIR=/path/to/mysql/prefix/
+
+ if [ -z $MYSQLDIR ];then
+  echo " [FAILED]"
+  notice "$MENUFALSE" "  -Couldn't locate mysql.h!\n";
+  exit
+ else
+  echo " [DONE]"
+ fi
+
+ notice "$MENUTRUE" "  Mod_Auth_MySQL: Configuring..."
+ ./configure --with-mysql=$MYSQLDIR --with-apache=$root/apache_$APACHE &> $logdir/mod_auth_mysql-configure.log
+ testcheck $? mod_auth_mysql-configure.log
+ echo " [DONE]"
+
+notice "$MENUTRUE" "  Mod_Auth_MySQL: Patching the makefile template..."
+# Fix the Makefile
+echo '
+69c69
+<  $(INCDIR)/alloc.h $(INCDIR)/buff.h \
+---
+>  $(INCDIR)/ap_alloc.h $(INCDIR)/buff.h \' | patch -p0 apMakefile.tmpl >/dev/null
+echo " [DONE]"
+
+
+ notice "$MENUTRUE" "  Mod_Auth_MySQL: Compiling..."
+ make &> $logdir/mod_auth_mysql-compile.log
+ testcheck $? mod_auth_mysql-compile.log
+ echo " [DONE]"
+
+ notice "$MENUTRUE" "  Mod_Auth_MySQL: Adding search paths to apache's Configuration..."
+
+if [ ! -z $MYSQLINCLUDE ] || [ ! -z $MYSQLLIB ]; then
+
+cd $root/apache_$APACHE/src
+echo "
+54,56c54,56
+< EXTRA_CFLAGS=
+< EXTRA_LDFLAGS=
+< EXTRA_LIBS=
+---
+> EXTRA_CFLAGS=-I$MYSQLINCLUDE -I$MYSQLLIB
+> EXTRA_LDFLAGS=-L$MYSQLLIB
+> EXTRA_LIBS=-lmysqlclient" | patch -p0 Configuration >/dev/null
+echo " [DONE]"
+
+else
+ echo " [FAILED]" 
+ notice "$MENUFALSE" "  Failed to detect existing mysql include and lib directories!\n"
+ exit
+fi
+
+
+ notice "$MENUTRUE" " Mod_Auth_MySQL setup!\n"
+else
+ notice "$MENUTRUE" " Mod_Auth_MySQL already setup!\n"
+fi
+
+APACHELIBS="$APACHELIBS -lz"
+APACHECFG="$APACHECFG --activate-module=src/modules/auth_mysql/libauth_mysql.a $r"
+cd $root

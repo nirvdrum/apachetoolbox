@@ -1,0 +1,586 @@
+v1.5.66		05/05/03
+		Updated PHP, MySQL, mod_ssl, fixed bug in apache's ipv6
+		ATB module. Fixed bug with GD support in php4. imap 
+		module bug fix and update.
+
+v1.5.65		04/29/03
+		Lots of updates and bug fixes.  Added mod_dos_evasive
+		(thanks to Matt Dickinson for the patch) and mod_jk.
+		Added a number of new PHP options, including GMP (thanks 
+		to Matt again), XML DOM and XSLT (thanks to roadrunner 
+		for those patches), binary PDFlib support (thanks to 
+		Greg Kopp for the patch), Cyrus IMAP Admin, and PHP's 
+		new built-in GD support.
+
+v1.5.64		01/06/03
+		Updated mod_ssl, PHP.
+
+v1.5.63		10/07/02
+		Updated mod_ssl for apache v1.3.27. Updated libpng. Fixed
+		bug with the wrong default version of apache.
+
+v1.5.62		10/04/02
+		Updated apache to v1.3.27
+
+v1.5.61		09/17/02
+		Updated mod_ssl, MySQL, mod_frontpage with RTR's new patch.
+
+v1.5.60		09/13/02
+		Updated php and openssl. Fixed a bug in bin/openssl
+
+v1.5.59		07/22/02
+		PDFLib patch sent in by Dominique Massonie. Updated PHP
+		to v4.2.2.
+
+		06/24/02
+		Remote update script changed on the server, it uses
+		wget now instead of lynx.
+
+v1.5.58		06/21/02
+		Kevin- removed the SGI patch option. Updated snmp.
+		Added --enable-inline-optimization, --enable-memory-limit
+		to the default PHP configure options.
+
+		Bryan- fixed the default download location for ucd-snmp
+
+                06/20/02
+                small bug fixes with the following new versions of
+                software: mhash, t1libs, mod_watch, python, mod_python,
+                libmcrypt, libcurl, and pdflib.
+
+                06/19/02
+                Updated mod_ssl, libpng, mysql, postgresql, php, pdflib,
+                unixodbc, openssl, mod_mp3, mod_layout, mod_perl,
+                mcrypt, mod_fastcgi, mod_python, mod_backhand, libcurl,
+                python, mhash, freetype2, t1lib, openldap, tcl, and bison.
+
+v1.5.57		06/18/02
+		Updated apache to 1.3.26
+
+v1.5.56		04/23/02
+		Updated PHP to v4.2.0, and mod_ssl to 2.8.8.
+
+v1.5.55		04/04/02
+		Updated to apache v1.3.24.
+
+v1.5.54		02/27/02
+		PHP v4.1.2 update.
+
+v1.5.53		02/24/02
+		Bugfix with pgsql. Updated mysql.
+
+		02/22/02
+		Fixed the bug with mod_frontpage and mod_ssl.
+		Thanks goes out to Jean-Marc Roth for sending
+		in the patch!
+
+v1.5.52		02/05/02
+		Openssl bugfix and update.  Added support for
+		postgresql, still in beta. updated mod_layout.
+
+v1.5.51		02/04/02
+		Updated Apache, mod_ssl, and MySQL to their
+		latest versions.  Fixed a bug in mod_frontpage.
+		the frontpage binaries ~must~ be copied to
+		/usr/local, so you much have root access on the
+		system to install them.  There is still a bug
+		when you use both mod_frontpage and mod_ssl 
+		together.  It's a problem with the patch, not
+		the modules.
+
+v1.5.50		01/07/02
+		Updated to PHP 4.1.1.
+
+v1.5.49		12/20/01
+		SSL support was always built into PHP if openssl
+		was detected before, I added the option to install
+		openssl if you want ssl support in PHP but openssl
+		isn't already installed.  root isn't required.
+
+		12/17/01
+		libpng bugfix in Solaris. Bugfix in the external
+		resource locator. backrev'ed libcurl to 7.9.1
+		because .2 is incompatible with FreeBSD. Updated
+		mod_layout.  GD section is now more modular and
+		streamlined. Bug fix with mod_ssl when openssl
+		was installed as a user in an odd location.
+		Updated the webdav module to the latest version.
+		Updated unixODBC to the lastest version. Updated
+		freetype2 to the latest version. Updated libtiff.
+
+v1.5.48		12/14/01
+		mod_python update. Added gettext support to PHP4
+		as requested. small bugfix with mod_frontpage.
+
+v1.5.47		12/13/01
+		Deleted my devel config.cache file from the distro,
+		forgot to delete it! Small bug fix with the GD
+		module.
+
+v1.5.46		12/12/01
+		Added patches sent in by Bruno Kerouanton
+		<bruno.kerouanton@intexxia.com>. He added support
+		for Oracle 8i in PHP. He also fixed a small bug
+		in the OpenSSL ATB module.  He also added code
+		so root ~can not~ run the remote update (-u) for
+		security reasons.  Huge thanks!
+		I updated ATB for PHPH 4.1.0 support.
+
+v1.5.45		11/28/01
+		Huge changes to the ATB mysql module. combined the
+		etc/versions.conf file with the default.conf file.
+		Updated the httpd.conf directives for mod_gzip.
+
+		11/27/01
+		Updated mod_mp3, mysql to their latest stable versions.
+		Made a patch for the frontpage 2002 apache patch so
+		it'll work with apache v1.3.22. Thanks to hexen for
+		pointing me in the right direction! Updated APC to
+		the latest version also. fixed a little bug in the
+		mod_mp3 ATB module. Changed the way files are
+		checked for corruption, now only if the MD5 checksum
+		doesn't exist it'll use gunzip -t to test for
+		corruption.
+
+v1.5.44		10/29/01
+		Updated the version of mysql, fixed the mysql download
+		location as well. thanks to Nico Foltinek for sending
+		me a nice email about the bugs :) Tru64 should be 
+		detected from etc/external.conf as well, untested.
+
+v1.5.43		10/24/01
+		small bug with install.sh using the notice() function,
+		the bug didn't cause any problems with compiling or 
+		installing.
+
+v1.5.42		10/21/01
+		Code cleanup, added comments. help menu temp fix.
+
+		10/20/01
+		Bug fixes and code cleanup.  wget installation supports
+		the global installation path now.
+
+		10/19/01
+		Added support to hack the reported version, product,
+		support site, and vendor name of apache before it's
+		compiled.  Anyone wanna run "IIS version 6beta" on
+		"Palm OS3"? Screw with netcraft :) mod_ssl finally
+		came out for apache v1.3.22. updated ATB for it.
+		I'm currently at SANS[.org] in San Diago hacking
+		away on ATB from their wireless lan! Excellent.
+		Added color support, run ./install.sh -nc or 
+		./install.sh --nocolor to disable all color.
+		
+v1.5.41		10/12/01
+		Added support for CYGWIN under NT5, updated support for 
+		Apache v1.3.22. ./install.sh -c no longer deletes the
+		config.cache file that saved your preferences.
+
+v1.5.40		09/19/01
+		UnixWare now detected. Bug fixes in the php-imap and apc
+		ATB modules, thanks goes out to Stephen Lawrence for the
+		feedback!
+
+v1.5.39		09/18/01
+		Bugfixes with t1libs and logging in the GD module. Added a
+		symlink to the freetype2 headers from the GD source, some 
+		systems needed it to compile GD.
+
+  --		09/11/01
+		My thoughts go out to the innocent people murdered today in
+		New York.
+
+v1.5.38		08/22/01
+		More bugfixes with PHP+PDFlibs. The PDFlibs require zlib, 
+		libjpeg, and libtiff support to be added to PHP or it wont
+		work.  Removed the tcp_wrappers support in MySQL, it was
+		causing too many problems for Redhat 7.x users.  You can
+		manually add it back in by simply editing the bin/mysql ATB
+		module.
+
+v1.5.37		08/21/01
+		Fixed a bug with PHP+bcmath. Updated APC and MING to the latest
+		versions. Ming is now compiled into PHP's source instead of
+		using the binary shared object via php.ini.  FrontBase SQL
+		support added to PHP.  As long as it's installed ATB should
+		be able to find it. Look at the bin/php-frontbase source
+		for the installation paths that are probed. Added HP-UX to
+		the OS detection system. Removed the shared line from PHP+PDF, 
+		I also updated libpdf to 4.0.1, consider the ATB module a beta!
+
+v1.5.36		08/20/01
+		Bug fixes for bin/gd because of the new $LOCAL_PATH patch sent
+		in by John Johnson <jjohn@mail.sirinet.net>. Thanks! I took out
+		the arial TTF for the freetype PHP code example, I felt it
+		was a waste of 200k.
+
+
+v1.5.35		08/14/01
+		Updated mod_layout. Included fixes provided by
+		s.cramatte@shanghai.fr for imap. Added a patch provided by
+		bonis@bonis.de to change the global installation prefix of
+		/usr/local. Updated APC and MySQL.
+
+v1.5.34		07/23/01
+		Updated mod_layout, mod_mp3, and the version of curl that comes
+		with the script+source tarball.
+
+		07/12/01
+		Updated LibCurl
+
+v1.5.33		07/11/01
+		Updated PHP3 to 3.0.18. this is a stable release with GD 2.0
+		support.
+
+v1.5.33[beta]	07/09/01
+		I'm happy with the new GD setup finally. Fixed an issue with
+		the T1 libs and missing LaTeX.  Freetype fonts are now finally
+		working in PHP with the GD v2!
+
+		07/06/01
+		Updated to GD 2.0.1 for truecolor and freetype support. Still
+		debugging and playing around.
+
+v1.5.32		06/27/01
+		Added support for BCMath functions in PHP. PHP will now automatically
+		try to autodetect openssl and configure support for it. Added
+		TrueType1 support to GD. updated the -c [--clean] switch to delete
+		the installwatch binaries, logs, and config.cache as well. 
+		Updated freetype to the latest version.
+
+		06/26/01
+		Added the following (autodetection) to PHP: Ingres II, InterBase,
+		Velocis, and mnGoSearch support. Also added System V semaphore and
+		System V shared memory support for PHP.
+
+v1.5.31		06/25/01
+		Updated PHP to v4.0.6, updated mod_layout and added a bugfix for it.
+		Updated APC, mod_backhand, mod_mp3. Gave the GD section a big make
+		over, I've verified that JPG, PNG, WBMP, and ZLIB support work via
+		the phpinfo() function. mod_mp3 is still beta, I personally couldn't
+		get it to compile myself. I also added a --clean [-c] switch to
+		install.sh by request.  This will clean up the src/ directory and
+		force ApacheToolbox to recompile everything, but it wont delete
+		any of the source'es you've already downloaded.
+
+v1.5.30		06/12/01
+		Changed the script interpreter to bash from sh.  Solaris and
+		the BSD's where just having too many problems with it and had
+		to switch to bash anyways. Updated APC to v1.0.10. This probably
+		wont effect 99% of all Linux users, BSD/Solaris users need the bash
+		binary in /bin, or just edit install.sh and point it to where ever
+		you keep bash (/usr/local/bin ?). `fine / -name bash` should find
+		it. Fixed the help (item 99) bug to.
+
+v1.5.29		06/05/01
+		Ming support has been added. Disabled IPv6, it isn't updated
+		for Apache v1.3.20 yet.
+
+		06/04/01
+		Little bugfix in the PHP menu, thanks Kevin!  Added cURL support
+		to PHP. Updated wget to v1.7. Adding Ming support.
+
+v1.5.28		06/04/01
+		Updated mod_mp3 to v0.19, it is still in beta, IMMV. 
+		More work on Jakarta.  The new servletapi just doesn't seem to
+		want to compile the JavaDoc section, so i just removed it to
+		get on with jakarta. Added more doc's to the default httpd.conf
+		about mod_jserv.  Time to release it!
+
+		06/02/01
+		Added full support for Frontpage 2002 extensions.  Apache module
+		patch as well as the required binaries at /usr/local/frontpage.
+		This means the script+sources tarball just got 10megs larger, damn.
+		Updated mysql to 3.23.38. I also changed the apache mirror to one
+		that gets updated.
+
+		06/01/01
+		Updated jakarta-tomcat and jakarta-ant. bux fixes to.  working up
+		updating mod_frontpage for FrontPage 2002 support.
+
+		05/30/01
+		Updated openldap to v2.0.11. Fixed the download path for j2sdk.
+
+		05/29/01
+		added the WGETOPTIONS in etc/defaults.conf by request. More
+		testing, mostly on FreeBSD42. Updated JAXP to v1.1 and
+		Jakarta-Ant to v1.3 .
+
+		05/24/01
+		Finally broke down and went through all my code, line by line
+		, and updated the echo statements that weren't working with
+		sh in Solaris or BSD.  No more need to change #!/bin/sh to
+		#!/bin/bash, or update sh.  It's safe to assume I probably
+		missed a couple, so expect more releases with bug fixes.
+
+		05/23/01
+		Added patches sent in by Kevin J. Menard, Jr. <kmenard@WPI.EDU>
+		for mod_auth_pam and mod_auth_kerb. I'd also like to thank
+		him for all the help he's given others on the support forum!
+		Thanks!! Updated mod_layout, it works great once again.
+
+v1.5.27		05/20/01
+		Updated apache and mod_ssl. the mod_frontpage hack still works.
+
+		05/19/01
+		Added the current path and /opt/sfw/bin when searching for
+		common programs like lynx and wget. Added $detection=$FALSE
+		in etc/defaults.conf so that, by default, the OS isn't detected.
+		Changed the php+imap mod to look for SunOS instead of Solaris to
+		compile it with the correct type. Playing with apache 1.3.20.
+
+v1.5.26		05/18/01
+		Bug fix with the extra INCLUDES introduced in v1.5.25.
+
+v1.5.25		05/17/01
+		removed the --enable-assembler switch in mysql.  it was
+		causing problems on openbsd. added a search for
+		/usr/bin/openssl because the openssl MDK rpm wasn't being
+		found. Added support for Apache's layout option. It's in
+		the apache submenu.
+
+		05/16/01
+		Fixed a bug in bin/save-settings. Added a little note and
+		example about CPAN when the perl module requirements for
+		mod_perl are not ment. Added a note about the required
+		frontpage binaries for mod_frontpage. Added some fixes for
+		unixODBC when X wasn't on the system.  Removed mod_mp3, 0.16
+		(beta) isn't working well at the moment. Fixed a bug with
+		freetype and only compiling under linux.
+
+v1.5.24		05/08/01
+		Freetype bug with BSD (gmake) fixed. Mod_Layout, mod_ssl, and
+		libmcrypt where updated.  Arch detected with 'uname -m' for the
+		mysql install instead of `arch` now.  Fixed a bug with disabling
+		default apache mods in the menu.  I added the contrib directory 
+		to the tarball for the buildrpm program.
+
+v1.5.23		05/01/01
+		Huge bug in one of my functions that was cause huge problems.
+		Other then the bugfix there was no other changes.
+
+v1.5.22		05/01/01
+		Updated PHP to v4.0.5. Also updated the APC source, I really
+		wish they put the version number in the tarball like
+		everyone else. :) Made a little change to bin/gd, 
+		--with-jpeg-dir (in the PHP configuration) now points
+		to the jpeg source dir in src/.
+
+		04/20/01
+		Fixed the bug with the standard apache mods. now if
+		they aren't selected they get --disable-mod like they
+		should.
+
+		04/17/01
+		fixed a bug with mod_dir in the apache menu, thanks to
+		Greg Cope for letting me know and sending in a patch!
+
+v1.5.21		04/11/01
+		updated openssl to 0.9.6a. Some bug fixes with the way
+		mod_frontpage was setup, thanks goes to al from the support
+		forum for pointing it out. I'm actually commenting my code
+		now.  I'm going through all existing code and adding comments
+		to help encourage patch submission. huge amounts of code
+		cleanup, and I'm finding little bugs here and there to.
+		nothing too serious.. yet :)
+
+		04/09/01
+		Added support for mod_mp3.
+
+v1.5.20		04/06/01
+		Added support for mod_index_rss, and mod_random. Also added
+		support for php+unixODBC by request. fixed a few little bugs
+		and typo's. modssl is now downloaded via http instead of ftp.
+
+		04/05/01
+		added mod_auth_samba support.  it needs pam_smb_auth so I added
+		a check for that in to, it'll set it up if you don't have it
+		installed. tested on redhat62+debian.
+
+v1.5.19		04/03/01
+		Kevin J. Menard, Jr. sent in a new mod_auth_mysql module for
+		atb! It works great after a few changes. I'll be adding it to
+		1.5.19 for sure.  I prefer to just use php for mysql auth but
+		its another module in the list :)
+
+		04/02/01
+		more updates and testing for the new mysql install. found and
+		killed some bugs
+
+		03/30/01
+		updated mod_ssl to v2.8.2.  huge changes to the mysql install.
+		Many thanks to Greg Cope <gjjc@rubberplant.freeserve.co.uk>
+		for sending in hacks to add mysql user/group support as well
+		as a ton of optimizations for the x86 platform. Still testing
+		most of them. updated mysql to v3.23.36 also.
+
+v1.5.18		03/26/01
+		added support to automatically detect if openssl is installed
+		and then test it for at least v0.9.6 for php.  right now
+		it doesn't test for headers and assumes you installed them.
+		they're in the -devel rpm packages. if you installed from
+		source you don't need to worry about this. Also added support
+		for mod_filter.
+
+v1.5.17		03/25/01
+		added (-f, --fast) switch to install.sh.  not finished with
+		mod_dns
+
+		03/24/01
+		added mod_trigger, and mod_watch. playing with mod_dns.
+
+v1.5.16		03/24/01
+		updated mod_gzip and did some work on libmcrypt. Added another
+		path to look for postgresql.
+
+		03/21/01
+		Reenabled mod_frontpage. Aparently the 1.3.17 version works
+		ok with apache 1.3.19.
+
+		03/16/01
+		updated apc source on the site.
+
+v1.5.15		03/12/01
+		removed the autodetect for php+snmp, it was causing too many
+		problems. I'll redo it later and add it again when i find the 
+		time.
+
+v1.5.14		03/09/01
+		updated installwatch to 0.5.6, added support for mod_backhand.
+		Changed the layout of my CHANGE log. Also added another search
+		path for php+postgres.
+
+v1.5.13a	03/07/01
+		forgot to re-enable mod_perl just like i did with mod_ssl.  I
+		need a vacation at this point. I repacked it but I didn't
+		change the version number because the freshmeat post hasn't
+		even gone through yet.
+
+1.5.13		03/07/01
+		forgot to enable mod_ssl in the menu! doh! fixed. 1.5.13
+		tested ok with mod_perl, php, and mod_ssl on my test boxes.
+
+		03/02/01
+		added a bunch of bug fixes sent to me by Bo Adler of
+		caltech.edu.
+
+1.5.12		03/01/01
+		updated apache to 1.3.19, updated the ipv6 patch. waiting
+		for the updated version of mod_frontpage. mod_webdav seems
+		to be broken with apache 1.3.19, I'll watch for an update to
+		mod_webdav. mod_perl has problems now also, disabled.
+
+02/26/01	Added IPv6 support for apache. added mod_pcgi2 support. small
+		bugfix in jakarta ant install (only if j2sdk is already
+		installed). renamed mod_php in the php menu, typo.
+02/23/01	added a menu for all the modules that come with apache. updated
+		the help page for info on them all as well.
+02/22/01	installwatch patched for broken redhat7 systems by Ben. little
+		bugfix in mod_dtcl. fixes for php with
+		gd+zlib+jpeg+png+freetype2. bugfix in mod_ssl if openssl
+		isn't already installed. bugfix in mod_python script.
+02/21/01	updated version of mod_frontpage
+02/20/01	small improvments to mysql install, php, mod_python, and 
+		jakarta. gd libs now support libjpeg and freetype2.
+02/19/01	mod_python now 100% automated. automatic checks for
+		configuration/compilation errors.  tarballs are checked
+		for corruption.
+02/13/01	updated mysql, wget, libpng and gd libs to the latest versions.
+02/12/01	some little bug fixes with using the GD RPM and php's
+		--enable-gd-imgstrttf switch.  updated mod_gzip, mod_gzip
+		is a very cool mod! fixed a bug with ssl and DSO. fixed
+		some syntax bug in bin/mysql. fixed a bug with shared=max
+		and enable=so. more intelligent checking for perl modules
+		required by mod_perl. updated php+imap to use the
+		imap-2000c libs. fixed a bug with mod_perl and ssl.
+02/10/01	1.5.0 released.  major bug fixes.  RPM's will be used if
+		available for GD, openssl, postgres, mysql.  php will
+		automatically configure snmp, ldap, postgres, and mysql if
+		the needed libs (from source or rpm's) are installed
+02/08/01	updated mod_perl to v1.25. Changed the way APC handles cache
+		by default. see the php.ini file for details. added
+		mod_frontpage again, now that it's out for apache 1.3.17.
+02/07/01	mod_auth_sys bug fix, added "--passive-ftp" to wget.
+01/31/01	bug fixes for installwatch
+01/30/01	bug fixes. added APC for php caching. updated apache to
+		1.3.17 and mod_ssl to 2.8.0
+01/27/01	fixed the download paths for mysql (thanks to Thomas Uebermeier)
+		and the included the correct mhash lib in the larger tarball.
+01/23/01	huge bug fixes, i missed a lot when i changed the structure
+		around so much.  also updated mhash and mod_throttle to
+		the latest versions. Also added complete support for the
+		apache groups Jakarta project. Huge addition.
+01/21/01	some small bug fixes and additions contributed by Nick
+		Rosenberg, thanks!
+01/20/01	completely restructred the script. Added support to create 
+		RPM's. I consider it a beta but its working.
+01/17/01	better support for mysql install in debian/solaris. Thanks to
+		Nick Rosenberg for the code!
+01/16/01	added support for PHP v4.0.4pl1
+01/09/01	added a switch to compile everything as a DSO
+12/21/00	updated php4 to v4.0.4.  Removed the -all switch. php 4.0.4 now
+		works with mod_perl. Zend Optimizer temporarily removed
+		until a version for php4.0.4 is released.
+12/04/00	added mod_allowdev, mod_auth_cookie, mod_auth_cookie_file,
+		mod_auth_external, mod_auth_inst, mod_auth_system,
+		mod_eaccess, mod_bandwidth, mod_cgisock, mod_urlcount,
+		mod_disallow_id, mod_peephole, mod_put, mod_qs2ssi,
+		mod_session, mod_cvs, mod_macro, mod_random,
+		mod_ip_forwarding, mod_ticket, mod_monitor. Redid the RPM
+		check, 10x faster now.
+12/02/00	fixed a bug in mod_layout
+11/30/00	removed GD and ZLIB rpm's from the list of RPM's to check for.
+		with the "--with-gd=/usr/local" switch for php you can
+		have the GD/zlib rpm's. also changed the zlib
+		configuration for shared lib support. Updated mod_fastcgi
+		with a new version. added mod_python support. bug fixes
+11/29/00	bug fixes. added support for sh/csh/ksh shells. OS detection.  
+		your options are saved in a file and read next time you
+		load the script now. tested in freebsd, linux, solaris
+		now. yes I know I'm missing #4 in the menu, leaving room
+		to grow :) when downloading with wget you can choose "all"
+		to just download everything without prompting.
+11/26/00	fixed a bug with the mod_jserv install
+11/25/00	added 2 mirrors for the script
+11/22/00	typo when copying the init script for mysql
+11/20/00	fixed a typo with the mod_throttle URL. added support for php
+		v3.0.17 as requested. added more logging features. added
+		mod_jserv.
+11/17/00	added support for mod_layout v2.8.2. added installwatch for
+		logging. added support for mod_tcl. removed the mysql
+		source tarball.
+11/06/00	fixed mod_layout. It was never broken i just wasn't doing it
+		right. I forgot to RTFM, doh! Fixed a little bug with
+		mod_throttle and mod_bandwidth in the main menu.
+11/05/00	added mod_auth_radius and mod_auth_pop3 support. added mhash and
+		mcrypt support in PHP. removed mod_layout from the script,
+		v2.8 seems to be broken! added mod_frontpage support. made
+		the go.sh scripts much better looking.
+11/04/00	added a --with-calendar and --enable-track-vars to the default
+		php configure.
+11/03/00	added support for php+postgres support. better support on 25x80
+		displays. added an option to change the default
+		installation path for apache.
+11/02/00	updated mod_gzip to version 1.3.14.5
+11/01/00	fixed a bug with the mod_roaming install
+10/30/00 	updated mod_gzip to version 1.3.14.4, supposed to support php
+		compression now.
+10/29/00 	Added mod_perl support. Added mod_auth_ldap support. added
+		openldap for mod_auth_ldap. 
+10/27/00 	less the 24 hours sense i posted this on freshmeat.net and I've
+		gotten over 1000 downloads. added support for mod_roaming.
+		testing mod_auth_sys. major graphical changes. added a
+		mirror site for downloads at www.awpti.org/~io/ added the
+		"-all" switch to turn everything on and a catch for all
+		other switches to point to a syntax help menu. added
+		mod_accessref support added more intelligent checking for
+		IPX support for the mod_auth_nds module. added
+		mod_auth_sys support. added mod_bandwidth support.
+10/26/00	playing with mod_authnds support, added mod_gzip support, bug
+		fixes. added mod_dynavhost support. added a check to make
+		sure PHP compiled properly. added a description menu with
+		URLs. added a function to check for existing MySQL installs.
+10/25/00	Added the menu, big reorganization!
+10/24/00	Added support for ZendOptimizer for PHP4.0.3pl1.
+10/23/00	Updated to support apache 1.3.14 and openssl 0.9.6, and mod_ssl
+		2.7.1. Minor bug fixes.

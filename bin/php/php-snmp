@@ -1,0 +1,52 @@
+#	add SNMP support into PHP
+
+
+notice "$MENUTRUE" "Getting ready to setup PHP+SNMP support...\n"
+notice "$MENUTRUE" " SNMP: testing for UCD SNMP installion..."
+
+if [ ! -d $LOCAL_PATH/snmp ];then
+ echo " [$FAILED] -installing..."
+ notice "$MENUTRUE" " SNMP: testing for TCP_WRAPPERS support..."
+ if [ -f /lib/libwrap.a ] || [ -f /usr/lib/libwrap.a ] || [ -f /usr/local/lib/libwrap.a ]; then
+  CONFIGSNMP="--with-libwrap"
+  echo " [$DONE]"
+ else
+  echo " [$FAILED]"
+ fi
+
+ . $root/bin/ssl/openssl
+
+ cd $root/src
+ check_source "ucd-snmp-$SNMP.tar.gz" "http://telia.dl.sourceforge.net/sourceforge/net-snmp/ucd-snmp-$SNMP.tar.gz"
+ explode ucd-snmp-$SNMP.tar.gz
+ cd ucd-snmp-$SNMP
+
+ notice "$MENUTRUE" " SNMP: configuring..."
+ ./configure --prefix="$LOCAL_PATH/snmp" --with-defaults --with-openssl=$OPENSSL_DIR $CONFIGSNMP > $logdir/snmp-configure.log
+ testcheck $? $logdir/snmp-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " SNMP: applying hack for PHP..."
+ $MV -f config.h config.h~
+ $SED -e "s|/\* #define NO_ZEROLENGTH_COMMUNITY 1 \*/|#define NO_ZEROLENGTH_COMMUNITY 1|" < config.h~ > config.h
+ rm -rf config.h~
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " SNMP: compiling..."
+ $MAKE &> $logdir/snmp-compile.log
+ testcheck $? $logdir/snmp-compile.log
+ echo " [$DONE]"
+
+
+ notice "$MENUTRUE" " SNMP: installing at $LOCAL_PATH/snmp..."
+ inst snmp
+ echo " [$DONE]"
+
+else
+ echo " [$DONE]"
+fi
+
+notice "$MENUTRUE" "PHP+SNMP support setup!\n"
+
+
+CONFIGPHP="$CONFIGPHP --with-snmp=$LOCAL_PATH/snmp $r"

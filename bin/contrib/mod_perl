@@ -1,0 +1,38 @@
+notice "$MENUTRUE" "Getting Mod_Perl source ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/perl/libperl.a" ] ; then
+cd $root/src
+check_source "mod_perl-$MODPERL.tar.gz" "http://perl.apache.org/dist/mod_perl-$MODPERL.tar.gz"
+
+ explode mod_perl-$MODPERL.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Perl...\n"
+ cd mod_perl-$MODPERL
+
+ if [ $INSTALL_SSL -eq $TRUE ];then
+  echo "perl Makefile.PL APACHE_PREFIX="$APACHE_PATH" APACHE_SRC="$root/apache_$APACHE/src" SSL_BASE=$SSLBASE APACI_ARGS='--enable-module=rewrite' DO_HTTPD=1 USE_APACI=1 EVERYTHING=1" > $root/src/mod_perl-$MODPERL/go.sh
+#  echo "perl Makefile.PL APACHE_PREFIX="$APACHE_PATH" APACHE_SRC="$root/apache_$APACHE/src" SSL_BASE=$SSLBASE APACI_ARGS='--enable-module=ssl,--enable-module=rewrite' DO_HTTPD=1 USE_APACI=1 EVERYTHING=1" > $root/src/mod_perl-$MODPERL/go.sh
+ else
+  echo "perl Makefile.PL APACHE_PREFIX="$APACHE_PATH" APACHE_SRC="$root/apache_$APACHE/src" DO_HTTPD=1 USE_APACI=1 EVERYTHING=1" > $root/src/mod_perl-$MODPERL/go.sh
+ fi
+
+     #echo "perl Makefile.PL APACHE_PREFIX="$APACHE_PATH" APACHE_SRC="$root/apache_$APACHE/src" $modperlcrap DO_HTTPD=1 USE_APACI=1 EVERYTHING=1" > $root/src/mod_perl-$MODPERL/go.sh
+
+ notice "$MENUTRUE" " Created configuration script for Mod_Perl...\n"
+ chmod a+x go.sh
+ notice "$MENUTRUE" " Configuring Mod_Perl...\n"
+ ./go.sh > $logdir/mod_perl-configure.log
+ testcheck $? mod_perl-configure.log
+ notice "$MENUTRUE" " Configured Mod_Perl...\n"
+ notice "$MENUTRUE" " Compiling Mod_Perl...\n"
+ $MAKE > $logdir/mod_perl-compile.log 2>&1
+ testcheck $? mod_perl-compile.log
+ notice "$MENUTRUE" " Compiled Mod_Perl...\n"
+ notice "$MENUTRUE" " Installing Mod_Perl into apache source...\n"
+ inst mod_perl
+ notice "$MENUTRUE" " Installed Mod_Perl...\n"
+else
+ notice "$MENUTRUE" "Mod_Perl already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --activate-module=src/modules/perl/libperl.a $r"

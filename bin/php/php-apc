@@ -1,0 +1,38 @@
+cd $root/src
+notice "$MENUTRUE" "Setting up Alternative PHP Cache (APC)...\n"
+
+if [ ! -d $root/src/php-$PHP/ext/apc ] ; then
+  
+  check_source "apc-$APC.tar.gz" "http://apc.communityconnect.com/sources/apc-$APC.tar.gz"
+
+explode apc-$APC.tar.gz
+
+  notice "$MENUTRUE" " Untared APC...\n"
+  $MV -f $root/src/apc $root/src/php-$PHP/ext/apc
+  notice "$MENUTRUE" " Copied APC into php source tree...\n"
+  cd $root/src/php-$PHP
+  $AUTOCONF &> $logdir/apc-php-autoconf.log
+
+echo "
+### APC ###
+#http://apc.communityconnect.com/faq.html
+apc.mode = on ; for switching off the APC
+
+apc.mode = shm ; for using SHM support OR
+;apc.mode = mmap ; for using MMAP support
+
+#at a slight cost in efficiency, APC will automatically update the 
+#cache whenever files are modified. Note that this works only with 
+#the shm implementation. 
+;apc.check_mtime = 1 ; uncomment this to enable the above feature
+
+" >> $root/src/php-$PHP/php.ini-dist
+
+  notice "$MENUTRUE" "APC setup\n"
+
+else
+ notice "$MENUTRUE" "APC already installed\n"
+fi
+
+cd $root
+CONFIGPHP="$CONFIGPHP --enable-apc $r"

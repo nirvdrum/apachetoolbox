@@ -1,0 +1,39 @@
+notice "$MENUTRUE" " Detecting zlib library..."
+
+for i in / /usr /usr/local $LOCAL_PATH; do
+        test -f $i/include/zlib.h && export LIBZ_DIR=$i
+done
+
+
+if [ -z $LIBZ_DIR ]; then
+
+ echo " [$FAILED]"
+ cd $root/src
+ check_source "zlib.tar.gz" "http://ftp.info-zip.org/pub/infozip/zlib/zlib.tar.gz"
+
+ explode zlib.tar.gz
+ notice "$MENUTRUE" "  Untared zlib library...\n"
+ test -d "$root/src/zlib" && rm -rf $root/src/zlib
+ $MV -f zlib-?.?.? zlib
+ cd zlib 
+
+ notice "$MENUTRUE" "  Configuring zlib library..."  
+ ./configure --prefix="$LOCAL_PATH" --shared > $logdir/zlib-configure.log
+ testcheck $? zlib-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  Compiling zlib library..."
+ $MAKE > $logdir/zlib-compile.log
+ testcheck $? zlib-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" "  Installing zlib library..."
+ inst zlib
+ echo " [$DONE]"
+ cd $root
+
+ notice "$MENUTRUE" " Zlib library setup\n"
+ export LIBZ_DIR="$LOCAL_PATH";
+else
+	echo " [$FOUND @ $LIBZ_DIR]"
+fi

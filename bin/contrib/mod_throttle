@@ -1,0 +1,41 @@
+notice "$MENUTRUE" "Setting up Mod_Throttle...\n"
+if [ ! -f apache_$APACHE/src/modules/mod_throttle.c ];then
+
+cd $root/src
+check_source "mod_throttle$THROTTLE.tgz" "http://www.snert.com/Software/mod_throttle/mod_throttle$THROTTLE.tgz"
+
+ explode mod_throttle$THROTTLE.tgz
+ notice "$MENUTRUE" " Untared Mod_Throttle...\n"
+ if [ -d $root/src/mod_throttle ];then rm -rf $root/src/mod_throttle;fi
+  $LN mod_throttle-?.?.? mod_throttle
+  notice "$MENUTRUE" " Linked Mod_Throttle dir...\n"
+#  $MV -f "$root/src/mod_throttle/modules/throttle" "$root/apache_$APACHE/src/modules/"
+#  notice "$MENUTRUE" " Copied Mod_Throttle...\n"
+echo "
+######## Mod_Throttle #########
+#http://www.snert.com/Software/mod_throttle/
+# -=Place \"ThrottleBps 0\" in all your VirtualHost directives to monitor vhosts=-
+#LoadModule throttle_module libexec/mod_throttle.so
+#AddModule mod_throttle.c
+
+ThrottleSlack 300
+ThrottleIndicator yellow 75
+ThrottleMaxDelay 5
+ThrottleContentType text/html
+# Enable status display handler.
+<Location /throttle>
+        SetHandler throttle-info
+        Order deny,allow
+        Deny from all   
+        Allow from 127.0.0.1
+</Location>
+######## Mod_Throttle #########
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Apache httpd.conf-dist updated for Mod_Throttle...\n"
+ notice "$MENUTRUE" "Mod_Throttle setup\n"
+else
+ notice "$MENUTRUE" "Mod_Throttle already installed in Apaches source\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_throttle/mod_throttle.c $r"

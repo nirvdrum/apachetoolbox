@@ -1,0 +1,38 @@
+notice "$MENUTRUE" "Getting Mod_Filter source ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_filter.c" ] ; then
+cd $root/src
+check_source "mod_filter-${MODFILTER}.tar.gz" "http://www.tangent.org/mod_filter/mod_filter-${MODFILTER}.tar.gz"
+ 
+ explode mod_filter-${MODFILTER}.tar.gz
+ notice "$MENUTRUE" " Untared Mod_Filter...\n"
+
+echo "10c10
+< #include \"alloc.h\"
+---
+> /* hack by Bryan for Apachetoolbox    #include \"alloc.h\" */" |patch -p0 $root/src/mod_filter-${MODFILTER}/mod_filter.c
+
+ notice "$MENUTRUE" " Patched Mod_Filter for static compilation...\n"
+
+echo "
+
+############### Mod Filter #################
+#http://tangent.org/mod_filter/
+#------------
+#FilterEngine On
+#Filter text/html /eecummings.cgi  
+#Filter perl-script SSIFILTER
+#------------        
+#This would turn mod_filter on and
+#force all text/html documents through
+#the eecummings.cgi.
+###########################################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Filter\n"
+else
+ notice "$MENUTRUE" "Mod_Filter already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_filter-${MODFILTER}/mod_filter.c $r"

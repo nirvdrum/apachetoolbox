@@ -1,0 +1,39 @@
+test -f /usr/lib/libgmp.a && LIBGMPDIR=/usr
+test -f /usr/local/lib/libgmp.a && LIBGMPDIR=/usr/local
+test -f $LOCAL_PATH/lib/libgmp.a && LIBGMPDIR=$LOCAL_PATH
+
+if [ -z "$LIBGMPDIR" ];then
+LIBGMPDIR=$LOCAL_PATH
+cd $root/src
+notice "$MENUTRUE" "Getting GMP Source ready...\n"
+check_source "gmp-$GMP.tar.gz" "ftp://ftp.gnu.org/gnu/gmp/gmp-$GMP.tar.gz"
+explode gmp-$GMP.tar.gz
+notice "$MENUTRUE" " Untared GMP Source...\n"
+cd gmp-$GMP
+
+notice "$MENUTRUE" " GMP -configuring..."
+#as per http://www.swox.com/gmp/manual/Installing-GMP.html#Installing%20GMP
+./configure &> $logdir/GMP-configure.log 2>&1
+testcheck $? GMP-configure.log
+echo " [$DONE]"
+
+notice "$MENUTRUE" " GMP -compiling..."
+$MAKE &> $logdir/GMP-compile.log 2>&1
+testcheck $? GMP-compile.log
+echo " [$DONE]"
+
+notice "$MENUTRUE" " GMP -installing..."
+make install &> $logdir/GMP-install.log 2>&1
+testcheck $? GMP-compile.log
+echo " [$DONE]"
+
+make clean > $logdir/GMP-clean.log
+cd ..
+notice "$MENUTRUE" "GMP installed\n"
+
+else
+notice "$MENUTRUE" "GMP already installed!\n"
+fi
+cd $root
+
+CONFIGPHP="$CONFIGPHP --with-gmp $r"

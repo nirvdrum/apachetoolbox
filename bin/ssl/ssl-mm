@@ -1,0 +1,22 @@
+notice "$MENUTRUE" "Setting up the MM library...\n"
+if [ ! -d $root/src/mm-$MM ] ;then
+cd $root/src
+
+check_source "mm-$MM.tar.gz" "ftp://ftp.ossp.org/pkg/lib/mm/mm-$MM.tar.gz"
+   
+ explode mm-$MM.tar.gz
+ notice "$MENUTRUE" " Untared the MM library...\n"
+ cd mm-$MM
+ ./configure --disable-shared > $logdir/mm-configure.log
+ testcheck $? mm-configure.log
+ notice "$MENUTRUE" " Configured the MM library...\n"
+ $MAKE > $logdir/mm-compile.log
+ testcheck $? mm-compile.log
+ notice "$MENUTRUE" " Compiled the MM library...\n"
+ cd ..
+ notice "$MENUTRUE" "MM library setup\n"
+else
+ notice "$MENUTRUE" "MM library already compiled\n"
+fi
+
+export EAPI_MM=$root/src/mm-$MM

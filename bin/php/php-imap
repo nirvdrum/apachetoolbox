@@ -1,0 +1,84 @@
+bkup() {
+if [ -f $1 ]; then
+ mv -f $1 $1~
+fi
+}
+
+cd $root/src
+notice "$MENUTRUE" "Setting up IMAP Source for PHP...\n"
+
+. $root/bin/ssl/openssl
+
+if [ ! -f $LOCAL_PATH/lib/libc-client.a ]
+# && [ ! -f /usr/lib/c-client.a ] # support to use the Devel RPM, but it doesn't work!!
+then
+
+ check_source "imap-${IMAPv}.tar.Z" "ftp://ftp.cac.washington.edu/imap/imap-${IMAPv}.tar.Z"
+ explode imap-${IMAPv}.tar.Z
+  notice "$MENUTRUE" " Untared IMAP Source for PHP...\n"
+
+ notice "$MENUTRUE" " Compiling IMAP Source for PHP..."
+
+cd $root/src/imap-${IMAPv}
+
+case $OS in
+ FreeBSD)
+  $MAKE SSLDIR="$OPENSSL_DIR" bsf &> $logdir/imap-compile.log
+  testcheck $? imap-compile.log
+  ;;
+ NetBSD)
+  $MAKE SSLDIR="$OPENSSL_DIR" neb &> $logdir/imap-compile.log
+  testcheck $? imap-compile.log
+  ;;
+ OpenBSD)
+  $MAKE SSLDIR="$OPENSSL_DIR" bso &> $logdir/imap-compile.log
+  testcheck $? imap-compile.log
+  ;;
+ SunOS)
+  $MAKE SSLDIR="$OPENSSL_DIR" gso &> $logdir/imap-compile.log
+  testcheck $? imap-compile.log
+  ;;
+ MacOSX)
+  #future use
+  $MAKE SSLDIR="$OPENSSL_DIR" osx &> $logdir/imap-compile.log
+  testcheck $? imap-compile.log
+  ;;
+ *)
+  #assume linux
+  $MAKE SSLDIR="$OPENSSL_DIR" slx &> $logdir/imap-compile.log
+  testcheck $? imap-compile.log
+  ;;
+esac
+
+  echo " [$DONE]"
+
+ cd c-client
+ if [ ! -f c-client.a ]; then echo "IMAP compile failed!"; exit 1; fi
+
+ $INSTALL -d "$LOCAL_PATH/lib"
+ bkup "$LOCAL_PATH/lib/libc-client.a"
+ localcopy "imap-lib" "$CP -f c-client.a $LOCAL_PATH/lib/libc-client.a"
+ if [ ! -f $LOCAL_PATH/lib/libc-client.a ]; then notice "$MENUFALSE" " Failed to copy imap lib to $LOCAL_PATH/lib!\n"; exit 1; fi
+
+ $INSTALL -d "$LOCAL_PATH/include"
+ bkup "$LOCAL_PATH/include/rfc822.h"
+ bkup "$LOCAL_PATH/include/mail.h"
+ bkup "$LOCAL_PATH/include/linkage.h"
+ localcopy "imap-headers" "$CP -f rfc822.h mail.h linkage.h $LOCAL_PATH/include"
+
+if [ ! -f $LOCAL_PATH/include/rfc822.h ] || [ ! -f $LOCAL_PATH/include/mail.h ] || [ ! -f $LOCAL_PATH/include/linkage.h ]
+then
+ notice "$MENUFALSE" " Failed to copy imap headers to $LOCAL_PATH/include!"
+ exit 1
+fi
+
+
+ notice "$MENUTRUE" " Copied IMAP Source for PHP...\n"
+ cd ../..
+ notice "$MENUTRUE" "IMAP Source for PHP setup.\n"
+else
+ notice "$MENUTRUE" "IMAP Source found at $LOCAL_PATH/lib/libc-client.a, using that.\n"
+fi
+cd $root
+
+CONFIGPHP="$CONFIGPHP --with-imap=$LOCAL_PATH $r --with-imap-ssl=$OPENSSL_DIR $r"

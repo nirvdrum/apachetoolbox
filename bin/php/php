@@ -1,0 +1,141 @@
+PHPROOT=`echo $PHP|cut -d "." -f 1`
+
+#	checking for bison and flex before we get started on php
+
+. $root/bin/atb/bison
+. $root/bin/atb/flex
+
+ notice "$MENUTRUE" "Setting up PHP $PHP...\n"
+ cd $root/src
+
+ 
+#	If it isn't already uncompressed check for the tarball and uncompress it
+
+ if [ ! -d $root/src/php-$PHP ];then
+	#found the hidden dir from http://us2.php.net/source.php?url=/do_download.php
+  check_source "php-$PHP.tar.gz" "http://www.php.net/distributions/php-${PHP}.tar.gz"
+  notice "$MENUTRUE" " PHP: uncompressing tarball...\n"
+  explode php-$PHP.tar.gz
+ fi
+
+#	check for PHP more options to add to PHP
+
+. $root/bin/php/php-gdlibs
+test $INSTALL_PHP_IMAP -eq $TRUE && . $root/bin/php/php-imap
+test $INSTALL_PHP_MHASH -eq $TRUE && . $root/bin/php/php-mhash
+test $INSTALL_PHP_MCRYPT -eq $TRUE && . $root/bin/php/php-mcrypt
+test $INSTALL_PHP_UNIXODBC -eq $TRUE && . $root/bin/php/php-unixodbc
+test $INSTALL_PHP_PDFLIB_SRC -eq $TRUE && . $root/bin/php/php-pdflib-src
+test $INSTALL_PHP_PDFLIB_BINARY -eq $TRUE && . $root/bin/php/php-pdflib-binary
+test $INSTALL_PHP_SNMP -eq $TRUE && . $root/bin/php/php-snmp
+. $root/bin/php/php-openssl
+test $INSTALL_PHP_LIBCURL -eq $TRUE && . $root/bin/php/php-libcurl
+test $INSTALL_PHP_APC -eq $TRUE && . $root/bin/php/php-apc
+test $INSTALL_PHP_MING -eq $TRUE && . $root/bin/php/php-ming
+test $INSTALL_PHP_SYSVSEM -eq $TRUE && . $root/bin/php/php-sysvsem
+test $INSTALL_PHP_SYSVSHM -eq $TRUE && . $root/bin/php/php-sysvshm
+test $INSTALL_PHP_BCMATH -eq $TRUE && . $root/bin/php/php-bcmath
+test $INSTALL_PHP_OCI8 -eq $TRUE && . $root/bin/php/php-oci8
+test $INSTALL_PHP_GETTEXT -eq $TRUE && . $root/bin/php/php-gettext
+test $INSTALL_PHP_CYRUS -eq $TRUE && . $root/bin/php/php-cyrus
+test $INSTALL_PHP_DOM -eq $TRUE && . $root/bin/php/php-dom
+test $INSTALL_PHP_XSLT -eq $TRUE && . $root/bin/php/php-xslt
+test $INSTALL_PHP_GMP -eq $TRUE && . $root/bin/php/php-gmp
+test $INSTALL_PHP_GD -eq $TRUE && . $root/bin/php/php-gd
+. $root/bin/php/php-mysql
+. $root/bin/php/php-postgres
+. $root/bin/php/php-frontbase
+. $root/bin/php/php-ldap
+. $root/bin/php/php-interbase
+. $root/bin/php/php-ingresii
+. $root/bin/php/php-velocis
+. $root/bin/php/php-mnogosearch
+
+#	build the PHP configure script as go.sh in the php
+#	source root, and make it executable
+
+ notice "$MENUTRUE" " PHP: creating configuration script..."
+ cd $root/src/php-$PHP
+ echo -e "CPPFLAGS=-I$LOCAL_PATH/include\nLDFLAGS=-L$LOCAL_PATH/lib\n./configure --prefix=$PHP_PATH $r $CONFIGPHP" > go.sh
+ $CHMOD a+x go.sh
+ echo " [$DONE]"
+
+#	if -f or --fast wasn't used then ask if the user
+#	wants to edit the php configure script (go.sh)
+#	and provide an editor, defaulting to pico
+
+#---------------------------------------------------------------------------------------
+if [ -z $FAST ]; then
+echo_line
+IsYNLoop "Do you wish to edit the PHP configuration script?"
+        case "$?" in
+            $NO)
+                ;;
+            $YES)
+while [ -z "$EEDITOR" ]   
+do
+        echo
+        echo -e "Enter the name if the text editor you would like to\nuse to edit the PHP configureation script [pico]: \c"
+        read EEDITOR
+        if [ -z "$EEDITOR" ]; then
+                echo "No editor specified, defaulting to pico."
+                EEDITOR=pico
+        fi
+done
+echo -n "Please edit the configuration script for PHP..."
+echo 
+HitAnyKey  
+$EEDITOR go.sh
+notice "$MENUTRUE" " Script edited , continuing with configuration...\n"
+HitAnyKey  
+                ;;
+        esac
+fi
+#---------------------------------------------------------------------------------------
+
+ notice "$MENUTRUE" " PHP: Configuring..."
+ ./go.sh &> $logdir/php-configure.log
+ testcheck $? php-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " PHP: Compiling..." 
+ $MAKE &> $logdir/php-compile.log
+ testcheck $? php-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " PHP: Installing..."
+ inst php
+ echo " [$DONE]"
+
+#	add the "apc.check_mtime=1" switch into php.ini for APC
+
+if [ $INSTALL_PHP_APC -eq $TRUE ]; then
+ notice "$MENUTRUE" " PHP: Setting up APC info in php.ini..."
+ echo -e "\napc.check_mtime=1 ; http://apc.communityconnect.com/faq.html#four\n" >> "$root/src/php-$PHP/php.ini-dist\c"
+ echo " [$DONE]"
+fi
+      
+
+#	copy php into the {prefix}/lib directory and link /etc/php.ini to that
+
+ notice "$MENUTRUE" " PHP: copying php.ini to $PHP_PATH/lib..."
+ var1="$PHP_PATH/lib/php.ini"
+ if [ -f $var1 ];then $MV -f $var1 $var1~backup; fi
+ localcopy "php-ini" "$CP -f php.ini-dist $PHP_PATH/lib/php.ini"
+ if [ -f /etc/php.ini ];then $RM -rf /etc/php.ini;fi
+ localcopy "php-ini-link" "$LN $PHP_PATH/lib/php.ini /etc/php.ini"
+ cd ..
+ echo " [$DONE]"
+
+#	setup apache's httpd.conf to handle .php, .php3, .phps,
+#	and .phtml files
+
+notice "$MENUTRUE" " PHP: setting up Apache httpd.conf-dist additions..."
+echo -e "\n\n############## PHP $PHP ####################\nAddType application/x-httpd-php .php .phtml .php3\nAddType application/x-httpd-php-source .phps\n############################################\n" >> $root/apache_$APACHE/conf/httpd.conf-dist
+echo " [$DONE]"
+
+notice "$MENUTRUE" "PHP setup!\n"
+
+cd $root
+
+APACHECFG="$APACHECFG --activate-module=src/modules/php$PHPROOT/libphp$PHPROOT.a $r"

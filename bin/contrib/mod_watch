@@ -1,0 +1,43 @@
+notice "$MENUTRUE" "Getting Mod_Watch source ready...\n"
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_watch.c" ] ; then
+cd $root/src
+check_source "mod_watch${MODWATCH}.tgz" "http://www.snert.com/Software/download/mod_watch${MODWATCH}.tgz"
+ 
+ explode mod_watch${MODWATCH}.tgz
+ $MV mod_watch${MODWATCH}.tgz TEMPmod_watch${MODWATCH}.tgz
+ $MV mod_watch-* mod_watch
+ $MV TEMPmod_watch${MODWATCH}.tgz mod_watch${MODWATCH}.tgz
+ notice "$MENUTRUE" " Untared Mod_Watch...\n"
+
+echo "
+
+<IfModule mod_watch.c>
+############### Mod Watch #################
+#http://www.snert.com/Software/mod_watch/
+<Location /watch-info>
+SetHandler watch-info
+</Location>
+
+<Location /~*/watch-info>
+SetHandler watch-info
+</Location>
+
+<Location /watch-table>
+SetHandler watch-table
+</Location>
+
+#SetEnvIf Request_URI "/watch-info$" IGNORE
+#CustomLog /dev/null common env=IGNORE
+#CustomLog logs/access_log common env=!IGNORE
+###########################################
+</IfModule>
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Watch\n"
+else
+ notice "$MENUTRUE" "Mod_Watch already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_watch/mod_watch.c $r --disable-shared=watch $r"

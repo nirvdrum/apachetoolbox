@@ -1,0 +1,8 @@
+test -d $LOCAL_PATH/mnogosearch && MNOGOSEARCHPATH="$LOCAL_PATH/mnogosearch"
+
+
+if [ $MNOGOSEARCHPATH ];then
+
+ CONFIGPHP="$CONFIGPHP --with-mnogosearch=\"${MNOGOSEARCHPATH}\" $r"
+ notice "$MENUTRUE" "  -mnoGoSearch detected, support compiled into PHP\n"
+fi

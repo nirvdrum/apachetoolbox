@@ -1,0 +1,209 @@
+CONTINUE2=$FALSE
+CHOICE2=
+    while [ $CONTINUE2 -eq $FALSE ]
+    do
+        clear 
+        banner
+
+comp_menu_item path "$FALSE" "Change PHP's installation path: $PHP_PATH\n";
+comp_menu_item 1 "$INSTALL_PHP" "mod_php"; TAB;TAB;TAB; comp_menu_item 2 "$TRUE" "v$PHP\n";
+comp_menu_item 3 "$INSTALL_PHP_IMAP" "IMAP"; TAB;TAB;TAB; comp_menu_item 4 "$INSTALL_PHP_MHASH" "mhash\n";
+comp_menu_item 5 "$INSTALL_PHP_MCRYPT" "libmcrypt"; TAB;TAB; comp_menu_item 6 "$INSTALL_PHP_APC" "APC (like zendoptimizer)\n";
+comp_menu_item 7 "$INSTALL_PHP_PDFLIB" "-PDFlib-"; TAB;TAB;TAB; comp_menu_item 8 "$INSTALL_PHP_UNIXODBC" "unixODBC\n";
+comp_menu_item 9 "$INSTALL_PHP_SNMP" "SNMP Support"; TAB;TAB; comp_menu_item 10 "$INSTALL_PHP_LIBCURL" "cURL Support\n";
+comp_menu_item 11 "$INSTALL_PHP_MING" "MING Support"; TAB;TAB; comp_menu_item 12 "$INSTALL_PHP_SYSVSEM" "System V semaphore Support\n";
+comp_menu_item 13 "$INSTALL_PHP_SYSVSHM" "System V shared memory"; TAB; comp_menu_item 14 "$INSTALL_PHP_BCMATH" "BCMATH Support\n";
+comp_menu_item 15 "$INSTALL_PHP_OCI8" "Oracle 8i Support"; TAB; comp_menu_item 16 "$INSTALL_PHP_GETTEXT" "Gettext Support\n";
+comp_menu_item 17 "$INSTALL_PHP_SSL" "OpenSSL Support"; TAB; TAB; comp_menu_item 18 "$INSTALL_PHP_CYRUS" "Cyrus IMAP Admin Support\n";
+comp_menu_item 19 "$INSTALL_PHP_DOM" "DOM XML"; TAB; TAB; TAB; comp_menu_item 20 "$INSTALL_PHP_XSLT" "XSLT Support\n";
+comp_menu_item 21 "$INSTALL_PHP_GMP" "GMP"; TAB; TAB; TAB; comp_menu_item 22 "$INSTALL_PHP_GD" "GD Support\n";
+
+echo
+echo -e "   go) Back to main menu..."
+echo -e "   99) Descriptions"
+        echo_line
+        echo -e "Choice [?] \c"
+        read CHOICE2
+        case "$CHOICE2" in
+
+        [pP][aA][tT][hH])
+        echo
+        say "Enter the installation path of PHP now [$LOCAL_PATH]: "
+        read PHP_PATH2
+        if [ -z "$PHP_PATH2" ]; then
+                echo "No path specified, defaulting to $LOCAL_PATH."
+                PHP_PATH="$LOCAL_PATH"
+        else
+                PHP_PATH="$PHP_PATH2"
+        fi
+        ;; 
+
+            1)
+                test_choice INSTALL_PHP $INSTALL_PHP
+                INSTALL_PHP=$var
+                if [ $var -eq $FALSE ]
+                then
+                 INSTALL_PHP_IMAP=$FALSE
+                 INSTALL_PHP_MYSQL=$FALSE
+                 INSTALL_PHP_MHASH=$FALSE
+		 INSTALL_PHP_MCRYPT=$FALSE
+		 INSTALL_PHP_APC=$FALSE
+		 INSTALL_PHP_PDFLIB_SRC=$FALSE
+		 INSTALL_PHP_PDFLIB_BINARY=$FALSE
+		 INSTALL_PHP_UNIXODBC=$FALSE
+		 INSTALL_PHP_SNMP=$FALSE
+		 INSTALL_PHP_LIBCURL=$FALSE
+		 INSTALL_PHP_MING=$FALSE
+		 INSTALL_PHP_SYSVSEM=$FALSE
+		 INSTALL_PHP_SYSVSHM=$FALSE
+		 INSTALL_PHP_BCMATH=$FALSE
+		 INSTALL_PHP_OCI8=$FALSE
+		 INSTALL_PHP_GETTEXT=$FALSE
+		 INSTALL_PHP_CYRUS=$FALSE
+		 INSTALL_PHP_DOM=$FALSE
+		 INSTALL_PHP_XSLT=$FALSE
+		 INSTALL_PHP_SSL=$FALSE
+		 INSTALL_PHP_CYRUS=$FALSE
+		 INSTALL_PHP_DOM=$FALSE
+		 INSTALL_PHP_XSLT=$FALSE
+		 INSTALL_PHP_GMP=$FALSE
+		 INSTALL_PHP_GD=$FALSE
+                fi
+                ;;                 
+            2)
+                test_choice INSTALL_PHP_4 $INSTALL_PHP_4
+                INSTALL_PHP_4=$var
+                if [ $var -eq $TRUE ] ;then
+                        INSTALL_PHP_3=$FALSE
+                        PHP=$PHP4
+                else
+                        INSTALL_PHP_3=$TRUE
+                        PHP=$PHP3
+                        INSTALL_PHP_IMAP=$FALSE
+                        INSTALL_PHP_APC=$FALSE
+                        INSTALL_PHP_MCRYPT=$FALSE
+                        INSTALL_PHP_MHASH=$FALSE
+			INSTALL_PHP_PDFLIB=$FALSE
+			INSTALL_PHP_GD=$FALSE
+                fi
+                ;;
+	    3)
+                if [ $PHP = "$PHP4" ]
+                then
+                 test_choice INSTALL_PHP_IMAP $INSTALL_PHP_IMAP
+                 INSTALL_PHP_IMAP=$var
+                else
+                 echo For PHP4 only.
+                 HitAnyKey
+                fi
+                ;;  
+            4)
+                if [ $PHP = "$PHP4" ]
+                then
+                 test_choice INSTALL_PHP_MHASH $INSTALL_PHP_MHASH
+                 INSTALL_PHP_MHASH=$var
+                else
+                 echo For PHP4 only.
+                 HitAnyKey
+                fi
+                ;;
+            5)
+                if [ $PHP = "$PHP4" ]
+                then
+                 test_choice INSTALL_PHP_MCRYPT $INSTALL_PHP_MCRYPT 
+                 INSTALL_PHP_MCRYPT=$var
+                else
+                 echo For PHP4 only.
+                 HitAnyKey
+                fi
+                ;;
+            6) 
+                test_choice INSTALL_PHP_APC $INSTALL_PHP_APC
+                INSTALL_PHP_APC=$var
+                if [ $INSTALL_PHP_APC -eq $TRUE ] ;then PHP=$PHP4;fi
+                ;;
+            7)
+		. etc/pdf.menu
+                ;;
+            8)
+                test_choice INSTALL_PHP_UNIXODBC $INSTALL_PHP_UNIXODBC
+                INSTALL_PHP_UNIXODBC=$var
+                ;;
+            9)
+                test_choice INSTALL_PHP_SNMP $INSTALL_PHP_SNMP
+                INSTALL_PHP_SNMP=$var
+                ;;
+            10)
+                test_choice INSTALL_PHP_LIBCURL= $INSTALL_PHP_LIBCURL
+                INSTALL_PHP_LIBCURL=$var
+                ;;
+            11)
+                test_choice INSTALL_PHP_MING $INSTALL_PHP_MING
+                INSTALL_PHP_MING=$var
+                ;;
+
+            12)
+                test_choice INSTALL_PHP_SYSVSEM $INSTALL_PHP_SYSVSEM
+                INSTALL_PHP_SYSVSEM=$var
+                ;;
+            13)
+                test_choice INSTALL_PHP_SYSVSHM $INSTALL_PHP_SYSVSHM
+                INSTALL_PHP_SYSVSHM=$var
+                ;;
+            14)
+                test_choice INSTALL_PHP_BCMATH $INSTALL_PHP_BCMATH
+                INSTALL_PHP_BCMATH=$var
+                ;;
+            15)
+                if [ $PHP = "$PHP4" ]
+                then
+                 test_choice INSTALL_PHP_OCI8 $INSTALL_PHP_OCI8
+                 INSTALL_PHP_OCI8=$var
+                else
+                 echo For PHP4 only.
+                 HitAnyKey
+                fi
+                ;;
+            16)
+                test_choice INSTALL_PHP_GETTEXT $INSTALL_PHP_GETTEXT
+                INSTALL_PHP_GETTEXT=$var
+                ;;
+            17)
+                test_choice INSTALL_PHP_SSL $INSTALL_PHP_SSL
+			if [ $var -eq $TRUE ];then echo "OpenSSL support will be built into PHP if it's already found on the system no matter what.  Enabling this option will install OpenSSL, if it isn't already found on the system, under $LOCAL_PATH automatically."; HitAnyKey; fi
+                INSTALL_PHP_SSL=$var
+                ;;
+	    18)
+		test_choice INSTALL_PHP_CYRUS $INSTALL_PHP_CYRUS
+		INSTALL_PHP_CYRUS=$var
+		;;
+	    19)
+		test_choice INSTALL_PHP_DOM $INSTALL_PHP_DOM
+		INSTALL_PHP_DOM=$var
+		;;
+	    20)
+		test_choice INSTALL_PHP_XSLT $INSTALL_PHP_XSLT
+		INSTALL_PHP_XSLT=$var
+		;;
+	    21)
+		test_choice INSTALL_PHP_GMP $INSTALL_PHP_GMP
+		INSTALL_PHP_GMP=$var
+		;;
+	    22)
+		test_choice INSTALL_PHP_GD $INSTALL_PHP_GD
+		INSTALL_PHP_GD=$var
+		;;
+            99)   
+                print_descriptions
+                ;;
+            go)   
+                CONTINUE2=$TRUE
+                ;;
+            q)
+                CONTINUE2=$TRUE
+                ;;
+            *)
+                echo "Invalid Selection..."
+                HitAnyKey
+        esac
+    done

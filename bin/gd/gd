@@ -1,0 +1,61 @@
+cd $root/src
+notice "$MENUTRUE" "Getting GD lib's with zlib+PNG+JPEG+Freetype2+T1libs support ready...\n"
+
+. $root/bin/gd/libtruetype1
+. $root/bin/gd/libz
+. $root/bin/gd/libpng
+. $root/bin/gd/libjpeg
+#. $root/bin/gd/libxpm
+. $root/bin/gd/libfreetype2
+
+
+if [ $LIBTRUETYPE1_DIR ] && [ $LIBZ_DIR ] && [ $LIBPNG_DIR ] && [ $LIBJPEG_DIR ] && [ $LIBFREETYPE2_DIR ]
+then
+
+
+###############################################################################################
+
+ cd $root/src   
+ check_source "gd-${GD}.tar.gz" "http://www.boutell.com/gd/http/gd-${GD}.tar.gz"            
+
+ notice "$MENUTRUE" " Setting up GD with PNG, zlib, JPEG, Freetype2, and TrueType1 support...\n"
+ explode gd-$GD.tar.gz
+ notice "$MENUTRUE" "  Untared GD library...\n"
+ test -d "$root/src/gd" && rm -rf "$root/src/gd"
+ $MV -f gd-$GD gd
+ cd gd
+
+ notice "$MENUTRUE" "  Compiling GD library with zlib+PNG+JPEG+Freetype+T1lib support..."
+
+ #$LN -s $root/src/freetype-${FREETYPE}/include/freetype freetype
+ $LN -s ${LIBFREETYPE2_DIR}/include/freetype2/freetype freetype
+
+ export CPPFLAGS="-I$LOCAL_PATH/include -I$LIBTRUETYPE1_DIR/include -I$LIBZ_DIR/include -I$LIBPNG_DIR/include -I$LIBJPEG_DIR/include -I$LIBFREETYPE2_DIR/include"
+
+./configure --without-xpm --prefix=/usr &> $logdir/gd-configure.log
+testcheck $? gd-configure.log 
+$MAKE install &> $logdir/gd-make-install.log
+testcheck $? gd-make-install.log
+
+ echo " [$DONE]" 
+
+ cd ..
+ notice "$MENUTRUE" " GD library setup.\n"
+ export LIBGD_DIR="$LOCAL_PATH";
+
+ CONFIGPHP="$CONFIGPHP--with-gd=\"$LIBGD_DIR\" $r--with-zlib $r--enable-gd-native-tt $r--with-t1lib=\"$LIBTRUETYPE1_DIR\" $r--with-jpeg-dir=\"$LIBJPEG_DIR\" $r--with-png-dir=\"$LIBPNG_DIR\" $r--with-zlib-dir=\"$LIBZ_DIR\" $r--with-ttf $r--with-freetype-dir=\"$LIBFREETYPE2_DIR\" $r"
+
+###############################################################################################
+
+notice "$MENUTRUE" "GD library with zlib+PNG+JPEG+Freetype2+T1lib support setup!\n"
+
+
+else
+  notice "$MENUFALSE" "Missing a lib required by GD!\n"
+  echo -e  "LIBTRUETYPE1_DIR=$LIBTRUETYPE1_DIR\nLIBZ_DIR=$LIBZ_DIR\nLIBPNG_DIR=$LIBPNG_DIR\nLIBJPEG_DIR=$LIBJPEG_DIR\nLIBFREETYPE2_DIR=$LIBFREETYPE2_DIR"
+  exit 1
+fi
+
+
+
+cd $root

@@ -1,0 +1,42 @@
+notice "$MENUTRUE" "Checking for Bison $BISON..."
+
+if [ ! -x /bin/bison ] && [ ! -x /usr/bin/bison ] && [ ! -x /usr/local/bin/bison ] && [ ! -x $LOCAL_PATH/bin/bison ] && [ ! -x /opt/sfw/bin/bison ]; then
+ cd $root/src
+ echo " [$FAILED]"
+
+ check_source "bison-$BISON.tar.gz" "ftp://ftp.gnu.org/gnu/bison/bison-$BISON.tar.gz"
+ notice "$MENUTRUE" " Bison uncompressed...\n"
+ explode bison-$BISON.tar.gz
+ cd bison-$BISON
+
+ notice "$MENUTRUE" " Bison: configuring..."
+ ./configure --prefix="$LOCAL_PATH" &> $logdir/bison-configure.log
+ testcheck $? bison-configure.log
+ echo " [$DONE]"
+
+
+ notice "$MENUTRUE" " Bison: compiling..."
+ $MAKE &> $logdir/bison-compile.log
+ testcheck $? bison-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " Bison: installing..."
+ inst bison
+ cd ..; rm -rf bison-$BISON
+
+  if [ ! -x `which bison` ]; then
+   echo " [$TXT_FAILED]"
+   exit 1
+  else
+    echo " [$DONE]"
+  fi
+
+ notice "$MENUTRUE" "Bison setup!\n"
+ cd $root
+
+ CONFIGPHP="$CONFIGPHP --with-bison=\"$LOCAL_PATH\" $r"
+else
+ echo " [$DONE]"
+fi
+
+

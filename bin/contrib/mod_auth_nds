@@ -1,0 +1,14 @@
+notice "$MENUTRUE" "Getting Mod_AuthNDS source ready...\n"
+
+if [ ! -f "apache_$APACHE/src/modules/extra/mod_auth_nds.c" ] ; then
+cd $root/src
+check_source "mod_auth_nds-$MODAUTHNDS.tar.gz" "ftp://vrooom.at.drew.edu/pub/mod_auth_nds/mod_auth_nds-$MODAUTHNDS.tar.gz"
+
+ explode mod_auth_nds-$MODAUTHNDS.tar.gz
+ notice "$MENUTRUE" " Untared Mod_AuthNDS...\n"
+else
+ notice "$MENUTRUE" "Mod_AuthNDS already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_auth_nds-$MODAUTHNDS/mod_auth_nds.c $r"

@@ -1,0 +1,40 @@
+#this isn't used anymore because the true frontpage by rtr software works once again.
+
+notice "$MENUTRUE" "Getting Mod_Frontpage source ready..."
+  
+if [ ! -d "$root/apache_$APACHE/src/modules/frontpage" ] ; then
+ echo
+ cd $root/src
+ check_source "mod_frontpage-$MODFRONTPAGE.tar.gz" "http://home.edo.uni-dortmund.de/~chripo/download/mod_frontpage-$MODFRONTPAGE.tar.gz"
+ explode mod_frontpage-$MODFRONTPAGE.tar.gz   
+  notice "$MENUTRUE" " Untared Mod_Frontpage\n"
+ 
+ notice "$MENUTRUE" " Mod_Frontpage: copying patch to apache source..."
+ $CP -f $root/src/mod_frontpage-$MODFRONTPAGE/patch-$MODFRONTPAGE $root/apache_$APACHE
+ echo " [DONE]"
+
+ notice "$MENUTRUE" " Mod_frontpage: patching apache source..."
+ cd $root/apache_$APACHE
+ $PATCH -p0 < patch-$MODFRONTPAGE &> $logdir/mod_frontpage-patch.log
+ testcheck $? $logdir/mod_frontpage-patch.log
+ echo " [DONE]"
+
+echo "
+# Frontpage Support
+#####################
+# http://www.rtr.com/fpsupport/faq2000.htm 
+#
+# You have to download the right frontpage binaries
+# for your system and install them in /usr/local/frontpage .
+# Read the FAQ for installation instructions and setup
+# information.
+######################
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+
+  notice "$MENUTRUE" "Mod_frontpage: ready!\n"
+else
+ echo " [DONE]"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --activate-module=src/modules/frontpage/mod_frontpage.o $r--fpexec-uidmin=100 $r--fpexec-gidmin=100 $r--enable-shared=frontpage $r--server-uid=nobody $r--server-gid=nobody $r--fpexec-caller=nobody $r--fpexec-fpuser=root $r--fpexec-fpgroup=root $r"

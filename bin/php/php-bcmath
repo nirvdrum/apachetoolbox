@@ -1,0 +1,2 @@
+ CONFIGPHP="$CONFIGPHP --enable-bcmath $r"
+ notice "$MENUTRUE" "  -BCMath support compiled into PHP\n"

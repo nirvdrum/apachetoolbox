@@ -1,0 +1,34 @@
+notice "$MENUTRUE" "Setting up Mod_DynaVhost...\n"
+cd $root/src
+check_source "mod_dynvhost.tar.gz" "http://funkcity.com/0101/projects/dynvhost/mod_dynvhost.tar.gz"
+
+explode mod_dynvhost.tar.gz
+notice "$MENUTRUE" " Untared Mod_DynaVhost...\n"
+$CP -f $root/src/dynvhost/mod_dynvhost.c $root/apache_$APACHE/src/modules/extra/
+notice "$MENUTRUE" " Copied Mod_DynaVhost...\n"
+echo "
+
+############### Dynamic Virtual Hosting Mod ########################
+#http://funkcity.com/0101/
+#(e.g www.mydomain.com.au lives here :
+#"/usr/local/apache/htdocs/Virtuals/www.mydomain.com.au"
+# 
+#Requests will map like this :
+#
+#        www.mydomain.com/~donky                 : /usr/local/apache/htdocs/Virtuals/www.mydomain.com/Homes/donky/
+#        www.mydomain.com/                       : /usr/local/apache/htdocs/Virtuals/www.mydomain.com/
+#        www.mydomain.com/blah                   : /usr/local/apache/htdocs/Virtuals/www.mydomain.com/blah
+#        www.mydomain.com/cgi-bin/blah.cgi       : /usr/local/apache/htdocs/Virtuals/www.mydomain.com/cgi-bin/blah
+#                                                  If it exists, otherwise it will fall back to the cgi-bin
+#                                                  configured in the main apache httpd.conf config.
+#<DynamicVirtualHost "/usr/local/apache/htdocs/Virtuals/">
+#HomeDir /Homes
+#</DynamicVirtualHost>
+################ Dynamic Virtual Hosting Mod ########################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_DynaVhost...\n"
+cd $root
+notice "$MENUTRUE" "Mod_DynaVhost setup\n"
+
+APACHECFG="$APACHECFG --add-module=src/modules/extra/mod_dynvhost.c $r"

@@ -1,0 +1,28 @@
+cd $root/src
+
+check_source "jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src.tar.gz" "http://jakarta.apache.org/builds/jakarta-tomcat-4.0/release/v$JAKARTA_TOMCAT/src/jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src.tar.gz"
+ notice "$MENUTRUE" " Jakarta-Tomcat Connectors begin setup...\n"
+
+ explode jakarta-tomcat-connectors-${JAKARTA_TOMCAT}-src.tar.gz
+ notice "$MENUTRUE" "  Jakarta-Tomcat Connectors tarball uncompressed...\n"
+
+ $MV -f jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src $JAKARTA_PATH/jakarta-tomcat-connectors
+ notice "$MENUTRUE" "  Jakarta-Tomcat Connectors source copied...\n"
+
+  if [ ! -d $JAKARTA_PATH/jakarta-tomcat-connectors ]; then
+   notice "$MENUFALSE" " Jakarta-Tomcat Connectors source failed to be uncompressed!\n"
+   exit 1
+  fi
+
+cd $JAKARTA_PATH/jakarta-tomcat-connectors/jk/native
+./buildconf.sh
+./configure --with-apache=$root/apache_$APACHE
+make
+make install
+
+notice "$MENUTRUE" "Mod_JK setup!\n"
+
+$CP $JAKARTA_PATH/jakarta-tomcat-connectors/jk/conf/workers.properties $root/apache_$APACHE/conf
+APACHECFG="$APACHECFG --activate-module=src/modules/jk/libjk.a $r"
+
+cd $root

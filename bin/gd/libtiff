@@ -1,0 +1,51 @@
+ notice "$MENUTRUE" " Detecting TIFF library..."
+
+    for i in / /usr /usr/local /opt $LOCAL_PATH; do
+      if test -f $i/lib/libtiff.a; then
+        export LIBTIFF_DIR="$i"
+        break
+      fi
+    done
+
+
+if [ -z $LIBTIFF_DIR ];then
+ echo " [$FAILED]"
+
+ notice "$MENUTRUE" " LibTiff preflight check..."
+ for i in $LOCAL_PATH/man/man3 $LOCAL_PATH/lib $LOCAL_PATH/include $LOCAL_PATH/bin; do
+  $INSTALL -d $i
+ done
+ echo " [$DONE]"
+
+ INSTALL_SAVE=$INSTALL
+ unset INSTALL
+
+ cd $root/src
+ check_source "tiff-${LIBTIFF}.tar.gz" "ftp://ftp.remotesensing.org/pub/libtiff/tiff-${LIBTIFF}.tar.gz"
+ explode tiff-${LIBTIFF}.tar.gz
+ cd tiff-${LIBTIFF}
+
+ notice "$MENUTRUE" " LibTiff configuring..."
+ export DIR_MAN="$LOCAL_PATH/man"
+ ./configure --prefix="$LOCAL_PATH" --noninteractive &> $logdir/libtiff-configure.log
+ testcheck $? libtiff-configure.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " LibTiff compiling..."
+ $MAKE &> $logdir/libtiff-compile.log
+ testcheck $? libtiff-compile.log
+ echo " [$DONE]"
+
+ notice "$MENUTRUE" " LibTiff installing..."
+ inst libtiff
+ echo " [$DONE]"
+
+ export LIBTIFF_DIR="$LOCAL_PATH"
+ cd $root
+
+ export INSTALL=$INSTALL_SAVE
+ unset INSTALL2
+else
+ echo " [$FOUND @ $LIBTIFF_DIR]"
+
+fi

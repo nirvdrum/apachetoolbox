@@ -1,0 +1,36 @@
+cd $root/src
+
+OPENSSLSYSTEM=$FALSE
+notice "$MENUTRUE" " Testing for OpenSSL..."
+
+for i in / /usr /usr/local $LOCAL_PATH /opt /opt/openssl /usr/local/ssl; do
+	test -f $i/include/openssl/evp.h && export OPENSSL_DIR="$i"
+done
+
+if [ -z $OPENSSL_DIR ];then
+  echo " [$FAILED]"
+  notice "$MENUTRUE" "Setting up OpenSSL...\n"
+   test ! -d $root/src/openssl-$OPENSSL && rm -rf $root/src/openssl-$OPENSSL
+   check_source "openssl-$OPENSSL.tar.gz" "http://www.openssl.org/source/openssl-$OPENSSL.tar.gz"
+   explode openssl-$OPENSSL.tar.gz
+   notice "$MENUTRUE" " Untared OpenSSL...\n"
+   cd openssl-$OPENSSL
+   notice "$MENUTRUE" " Configuring OpenSSL...\n"
+   ./config --prefix="$LOCAL_PATH" -fPIC &> $logdir/openssl-configure.log
+   testcheck $? openssl-configure.log
+   notice "$MENUTRUE" " Configured OpenSSL.\n"
+   notice "$MENUTRUE" " Compiling OpenSSL...\n"
+   $MAKE &> $logdir/openssl-compile.log
+   testcheck $? openssl-compile.log
+   notice "$MENUTRUE" " Compiled OpenSSL.\n"
+   notice "$MENUTRUE" " Installing OpenSSL ($LOCAL_PATH/ssl)...\n"
+   inst openssl
+   testcheck $? openssl-install.log
+   notice "$MENUTRUE" " Installed OpenSSL.\n"
+   cd ..
+   notice "$MENUTRUE" "OpenSSL setup\n"
+   export OPENSSL_DIR="$LOCAL_PATH";
+else
+ echo " [$DONE]"
+ OPENSSLSYSTEM=$TRUE
+fi

@@ -1,0 +1,55 @@
+CONTINUE6=$FALSE
+CHOICE6=
+while [ $CONTINUE6 -eq $FALSE ]
+do
+clear
+banner
+
+
+comp_menu_item 1 "$INSTALL_PHP_PDFLIB_SRC" "PDFlib Source"; TAB;TAB;TAB; 
+comp_menu_item 2 "$INSTALL_PHP_PDFLIB_BINARY" "PDFlib Binary\n";
+
+
+echo
+echo -e " go) Back to main menu..."
+echo_line
+echo -e "Choice [?] \c"
+read CHOICE6
+case "$CHOICE6" in
+
+
+1)
+test_choice INSTALL_PHP_PDFLIB_SRC $INSTALL_PHP_PDFLIB_SRC
+INSTALL_PHP_PDFLIB_SRC=$var
+if [ $var -eq $FALSE ]
+then
+INSTALL_PHP_PDFLIB_SRC=$FALSE
+INSTALL_PHP_PDFLIB=$FALSE
+else
+INSTALL_PHP_PDFLIB=$TRUE
+INSTALL_PHP_PDFLIB_BINARY=$FALSE
+fi
+;;
+2)
+test_choice INSTALL_PHP_PDFLIB_BINARY $INSTALL_PHP_PDFLIB_BINARY
+INSTALL_PHP_PDFLIB_BINARY=$var
+if [ $var -eq $FALSE ]
+then
+INSTALL_PHP_PDFLIB_BINARY=$FALSE
+INSTALL_PHP_PDFLIB=$FALSE
+else
+INSTALL_PHP_PDFLIB=$TRUE
+INSTALL_PHP_PDFLIB_SRC=$FALSE
+fi
+;;
+go)
+CONTINUE6=$TRUE
+;;
+q)
+CONTINUE6=$TRUE
+;;
+*)
+echo "Invalid Selection..."
+HitAnyKey
+esac
+done

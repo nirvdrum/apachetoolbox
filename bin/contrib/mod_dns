@@ -1,0 +1,39 @@
+MODDNS=1.2
+
+notice "$MENUTRUE" "Getting Mod_DNS source ready...\n"
+
+. $root/bin/ssl/ssl-mm
+
+if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_dns.c" ] ; then
+cd $root/src
+check_source "mod_dns-$MODDNS.tar.gz" "http://oss.ezic.com/mod_dns/mod_dns-$MODDNS.tar.gz"
+ 
+ explode mod_dns-$MODDNS.tar.gz
+ notice "$MENUTRUE" " Untared Mod_DNS...\n"
+
+echo "
+############ Mod DNS ###########
+#http://oss.ezic.com/
+
+HostnameLookups         Off
+
+#<Location ...>
+  DnsLookups            On
+  DnsTimeout_ms         5500
+  DnsResendTimer_ms     1900
+#</Location>
+
+# built-in statistics page
+<Location /mod_dns/stats>
+  SetHandler    dns-stats-handler
+</Location>
+################################
+
+" >> $root/apache_$APACHE/conf/httpd.conf-dist
+ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_DNS\n"
+else
+ notice "$MENUTRUE" "Mod_DNS already setup\n"
+fi
+cd $root
+
+APACHECFG="$APACHECFG --add-module=$root/src/mod_dns/mod_dns.c $r"
