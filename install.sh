@@ -6,7 +6,7 @@
  # Apache Software Foundation (ASF).
  #
  #**************************************************************************
- # Copyright (c)2001,2002,2003 Bryan Andrews. All rights reserved.
+ # Copyright (c)2001 Bryan Andrews. All rights reserved.
  # 
  # Bryan Andrews
  # bryan@apachetoolbox.com
@@ -26,8 +26,8 @@ if [ "$1" = "--clean" ] || [ "$1" = "-c" ]; then
  	fi
  	for i in src/*; do
   		if [ -d $i ];then
-  		 echo Deleting directory $i...
-  		 rm -rf $i
+  		 echo Deleting $i...
+  		 rm -R -f $i
   		fi
  	done
  	test -d logs && rm -R -f logs
@@ -463,7 +463,7 @@ if [ -d apache_$APACHE ]; then
 
 else 
  cd $root/src
- check_source "apache_$APACHE.tar.gz" "http://ftp.epix.net/apache/httpd/apache_$APACHE.tar.gz"
+ check_source "apache_$APACHE.tar.gz" "http://www.cybernic.com/mirrors/apache/dist/httpd/apache_$APACHE.tar.gz"
  explode apache_$APACHE.tar.gz
  $MV -f $root/src/apache_$APACHE $root/apache_$APACHE >/dev/null
  $CP -f $root/apache_$APACHE/conf/httpd.conf-dist $root/apache_$APACHE/conf/httpd.conf-dist~
@@ -694,9 +694,17 @@ test $INSTALL_PHP -eq $TRUE && . $root/bin/php/php
 
 test $APACHE_HACK -eq $TRUE && . $root/bin/apache/apache_hacking
 
-#------------------------------------- Mod_JK -------- -------------------------------------------
+#------------------------------------- Mod_JK ---------------------------------------------------
 
 test $INSTALL_MODJK -eq $TRUE && . $root/bin/contrib/mod_jk
+
+#------------------------------------- Mod CVS --------------------------------------------------
+
+test $INSTALL_MODCVS -eq $TRUE && . $root/bin/contrib/mod_cvs
+
+#------------------------------------- Mod Fortress ---------------------------------------------
+
+test $INSTALL_MODFORTRESS -eq $TRUE && . $root/bin/contrib/mod_fortress
 
 #	End of apache module section, start the apache configuration section
 
