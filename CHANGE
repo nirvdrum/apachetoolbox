@@ -1,3 +1,9 @@
+v1.5.68		10/30/03
+		Updated Apache, mod_perl, mod_mp3, MySQL, libmcrypt bug,
+		mysql ATB script bug - credit to ON jOlt for emailing me
+		about the bug. Updated openssl. Added support for CYGWIN
+		under NT v5.1.
+
 v1.5.67		08/26/03
 		Lots of updates -- notably Apache httpd, PHP, MySQL, 
 		and PostgresSQL.  Lots of fixes -- notably mod_jk, mod_dtcl, 
