@@ -7,8 +7,6 @@ fi
 cd $root/src
 notice "$MENUTRUE" "Setting up IMAP Source for PHP...\n"
 
-. $root/bin/ssl/openssl
-
 if [ ! -f $LOCAL_PATH/lib/libc-client.a ]
 # && [ ! -f /usr/lib/c-client.a ] # support to use the Devel RPM, but it doesn't work!!
 then
