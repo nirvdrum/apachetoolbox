@@ -1,4 +1,4 @@
-v1.5.72		
+v1.5.72		10/06/04
 		Patched Apache to work with some third party mods (e.g., 
 		mod_dav & frontpage extensions) correctly.  Many version 
 		updates in general.  Fixed a bug with the MySQL install 
