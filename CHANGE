@@ -1,3 +1,10 @@
+v1.5.67		08/26/03
+		Lots of updates -- notably Apache httpd, PHP, MySQL, 
+		and PostgresSQL.  Lots of fixes -- notably mod_jk, mod_dtcl, 
+		and mod_roaming, and several others.  Added ability to build
+		PHP as a CGI program.  Added mod_cvs, mod_fortress, and suPHP
+		support.		
+
 v1.5.66		05/05/03
 		Updated PHP, MySQL, mod_ssl, fixed bug in apache's ipv6
 		ATB module. Fixed bug with GD support in php4. imap 
