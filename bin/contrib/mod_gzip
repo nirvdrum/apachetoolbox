@@ -1,13 +1,16 @@
-#
-#	this doesn't compile static , you have to use apxs after apache is already setup :(
-#
-
 notice "$MENUTRUE" "Setting up Mod_GZIP...\n"
+
 cd $root/src
 check_source "mod_gzip-$MODGZIP.tgz" "http://aleron.dl.sourceforge.net/sourceforge/mod-gzip/mod_gzip-$MODGZIP.tgz"
 
  explode mod_gzip-$MODGZIP.tgz
  notice "$MENUTRUE" " Untared mod_gzip...\n"
+
+ if [ -d $root/apache_$APACHE/src/modules/gzip ];
+	then rm -rf $root/apache_$APACHE/src/modules/gzip; 
+ fi
+ 
+ $MV -f $root/src/mod_gzip-$MODGZIP $root/apache_$APACHE/src/modules/gzip
 
 echo "
 
@@ -52,6 +55,6 @@ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_GZIP...\n"
 cd $root
 notice "$MENUTRUE" "Mod_GZIP setup\n"
 
-APACHECFG="$APACHECFG --add-module=$root/src/mod_gzip-$MODGZIP/mod_gzip.c $r"
+APACHECFG="$APACHECFG --activate-module=src/modules/gzip/libgzip.a $r"
 
 
