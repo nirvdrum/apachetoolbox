@@ -172,7 +172,7 @@ comp_menu_item 9 "$INSTALL_MODFRONTPAGE" "-Frontpage 2002"; TAB;TAB; comp_menu_i
 comp_menu_item 11 "$INSTALL_MODDYNVHOST" "-Mod DynaVHost"; TAB;TAB; comp_menu_item 12 "$INSTALL_MODROAMING" "-Mod Roaming$n";
 comp_menu_item 13 "$INSTALL_MODACCESSREF" "-Mod AccessRef $MODACCESSREF"; TAB; comp_menu_item 14 "$INSTALL_MODAUTHSYS" "-Mod AuthSYS$n"
 comp_menu_item 15 "$INSTALL_MODBANDWIDTH" "-Mod Bandwidth"; TAB;TAB; comp_menu_item 16 "$INSTALL_MODPERL" "-Mod Perl $MODPERL$n"
-comp_menu_item 17 "$INSTALL_MODAUTHLDAP" "-Mod Auth LDAP"; TAB;TAB; comp_menu_item 18 "$INSTALL_MODJK" "-Mod JK$n"
+comp_menu_item 17 "$INSTALL_MODAUTHLDAP" "-Mod Auth LDAP"; TAB;TAB; comp_menu_item 18 "$INSTALL_MODJK" "-Mod JK $JAKARTA_TOMCAT $n"
 comp_menu_item 19 "$INSTALL_MODAUTHRADIUS" "-Mod Auth Radius"; TAB; comp_menu_item 20 "$INSTALL_MODAUTHPOP3" "-Mod Auth POP3$n";
 comp_menu_item 21 "$INSTALL_MODLAYOUT" "-Mod Layout $MODLAYOUT"; TAB;TAB; comp_menu_item 22 "$INSTALL_MODTCL" "-Mod DTCL$n";
 
