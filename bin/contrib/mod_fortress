@@ -5,7 +5,7 @@ notice "$MENUTRUE" "Getting Mod Fortress v$MODFORTRESS ready . . .\n"
 if [ ! -f "$root/apache_$APACHE/src/modules/extra/mod_fortress.c" ]; then
 
   cd $root/src
-  check_source "mod_fortress-${MODFORTRESS}.tar.gz" "http://unc.dl.sourceforge.net/sourceforge/modfortress/mod_fortress-${MODFORTRESS}.tar.gz"
+  check_source "mod_fortress-${MODFORTRESS}.tar.gz" "http://aleron.dl.sourceforge.net/sourceforge/modfortress/mod_fortress-${MODFORTRESS}.tar.gz"
   explode mod_fortress-${MODFORTRESS}.tar.gz
   notice "$MENUTRUE" " Untar'ed Mod Fortress . . .\n"
   notice "$MENUTRUE" " Mod Fortress: Copying header files . . ."
