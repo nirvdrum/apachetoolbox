@@ -21,12 +21,15 @@ cd mod_dtcl
 $CP -f builddtcl.sh builddtcl.sh~
 $SED -e "s|TCLSH=tclsh  ######### CHANGEME ##########|TCLSH=tclsh$TCLVER|" < builddtcl.sh  > builddtcl.sh.tmp
 $MV -f builddtcl.sh.tmp builddtcl.sh
-$SED -e "s|export APACHE=\$HOME/download/apache-1.3/  ######### CHANGEME ##########|export APACHE=$root/apache_$APACHE/|" < builddtcl.sh  > builddtcl.sh.tmp   
+$SED -e "s|# APACHE=\$HOME/download/apache-1.3/  ######### CHANGEME ##########|APACHE=$root/apache_$APACHE/|" < builddtcl.sh  > builddtcl.sh.tmp   
 $MV -f builddtcl.sh.tmp builddtcl.sh
 $SED -e "s|INC=/usr/include/apache-1.3/  ######### CHANGEME ##########|INC=\$APACHE/src/include|" < builddtcl.sh  > builddtcl.sh.tmp
 $MV -f builddtcl.sh.tmp builddtcl.sh
  notice "$MENUTRUE" " Modified Mod_TCL build script...\n"
  
+ $CP $root/apache_$APACHE/src/os/unix/os.h $root/apache_$APACHE/src/include/
+ $CP $root/apache_$APACHE/src/os/unix/os-inline.c $root/apache_$APACHE/src/include/
+
  chmod a+x builddtcl.sh
  ./builddtcl.sh static &> $logdir/mod_dtcl-static-build.log
  notice "$MENUTRUE" " Compiled Mod_TCL...\n"
