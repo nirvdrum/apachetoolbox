@@ -41,6 +41,7 @@ test $INSTALL_PHP_XSLT -eq $TRUE && . $root/bin/php/php-xslt
 test $INSTALL_PHP_GMP -eq $TRUE && . $root/bin/php/php-gmp
 test $INSTALL_PHP_GD -eq $TRUE && . $root/bin/php/php-gd
 test $INSTALL_PHP_GD -eq $FALSE && . $root/bin/php/php-gdlibs
+test $INSTALL_PHP_GDTTF -eq $TRUE && . $root/bin/php/php-gdttf
 test $INSTALL_PHP_SUPHP -eq $TRUE && . $root/bin/php/php-suphp
 . $root/bin/php/php-mysql
 . $root/bin/php/php-postgres
