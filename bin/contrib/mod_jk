@@ -6,19 +6,16 @@ check_source "jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src.tar.gz" "http://jaka
  explode jakarta-tomcat-connectors-${JAKARTA_TOMCAT}-src.tar.gz
  notice "$MENUTRUE" "  Jakarta-Tomcat Connectors tarball uncompressed...\n"
 
- $MV -f jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src $JAKARTA_PATH/jakarta-tomcat-connectors
- notice "$MENUTRUE" "  Jakarta-Tomcat Connectors source copied...\n"
-
-  if [ ! -d $JAKARTA_PATH/jakarta-tomcat-connectors ]; then
+  if [ ! -d jakarta-tomcat-connectors-${JAKARTA_TOMCAT}-src ]; then
    notice "$MENUFALSE" " Jakarta-Tomcat Connectors source failed to be uncompressed!\n"
    exit 1
   fi
 
-cd $JAKARTA_PATH/jakarta-tomcat-connectors/jk/native
-./buildconf.sh
-./configure --with-apache=$root/apache_$APACHE
-make
-make install
+cd jakarta-tomcat-connectors-${JAKARTA_TOMCAT}-src/jk/native
+./buildconf.sh > $logdir/mod_jk-build.log
+./configure --with-apache=$root/apache_$APACHE > $logdir/mod_jk-configure.log
+$MAKE > $logdir/mod_jk-compile.log
+$MAKE install > $logdir/mod_jk-install.log
 
 notice "$MENUTRUE" "Mod_JK setup!\n"
 
