@@ -90,21 +90,27 @@ echo -e "   99) Descriptions"
                 test_choice INSTALL_PHP_4 $INSTALL_PHP_4
                 INSTALL_PHP_4=$var
                 if [ $var -eq $TRUE ] ;then
-                        INSTALL_PHP_3=$FALSE
                         PHP=$PHP4
                 else
-                        INSTALL_PHP_3=$TRUE
-                        PHP=$PHP3
-                        INSTALL_PHP_IMAP=$FALSE
-                        INSTALL_PHP_APC=$FALSE
-                        INSTALL_PHP_MCRYPT=$FALSE
-                        INSTALL_PHP_MHASH=$FALSE
-			INSTALL_PHP_PDFLIB=$FALSE
-			INSTALL_PHP_GD=$FALSE
+			test_choice INSTALL_PHP_5 $INSTALL_PHP_5
+			INSTALL_PHP_5=$var
+			if [ $var -eq $TRUE ] ;then
+				INSTALL_PHP_4=$TRUE
+				PHP=$PHP5
+			else
+                        	INSTALL_PHP_3=$TRUE
+                        	PHP=$PHP3
+                        	INSTALL_PHP_IMAP=$FALSE
+                        	INSTALL_PHP_APC=$FALSE
+                        	INSTALL_PHP_MCRYPT=$FALSE
+                        	INSTALL_PHP_MHASH=$FALSE
+				INSTALL_PHP_PDFLIB=$FALSE
+				INSTALL_PHP_GD=$FALSE
+			fi
                 fi
                 ;;
 	    3)
-                if [ $PHP = "$PHP4" ]
+                if [ $PHP != "$PHP3" ]
                 then
                  test_choice INSTALL_PHP_IMAP $INSTALL_PHP_IMAP
                  INSTALL_PHP_IMAP=$var
@@ -114,7 +120,7 @@ echo -e "   99) Descriptions"
                 fi
                 ;;  
             4)
-                if [ $PHP = "$PHP4" ]
+                if [ $PHP != "$PHP3" ]
                 then
                  test_choice INSTALL_PHP_MHASH $INSTALL_PHP_MHASH
                  INSTALL_PHP_MHASH=$var
@@ -124,7 +130,7 @@ echo -e "   99) Descriptions"
                 fi
                 ;;
             5)
-                if [ $PHP = "$PHP4" ]
+                if [ $PHP != "$PHP3" ]
                 then
                  test_choice INSTALL_PHP_MCRYPT $INSTALL_PHP_MCRYPT 
                  INSTALL_PHP_MCRYPT=$var
@@ -171,7 +177,7 @@ echo -e "   99) Descriptions"
                 INSTALL_PHP_BCMATH=$var
                 ;;
             15)
-                if [ $PHP = "$PHP4" ]
+                if [ $PHP != "$PHP3" ]
                 then
                  test_choice INSTALL_PHP_OCI8 $INSTALL_PHP_OCI8
                  INSTALL_PHP_OCI8=$var
