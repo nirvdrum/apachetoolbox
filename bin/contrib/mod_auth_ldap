@@ -32,7 +32,7 @@ echo "
 
 " >> $root/apache_$APACHE/conf/httpd.conf-dist
  notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_Auth_LDAP\n"
- $MV -f modauthldap $root/apache_$APACHE/src/modules/ldap
+ $MV -f mod_auth_ldap $root/apache_$APACHE/src/modules/ldap
  notice "$MENUTRUE" " Copied Mod_Auth_LDAP into the apache source\n"
 else
  notice "$MENUTRUE" "Mod_Auth_LDAP already setup\n"

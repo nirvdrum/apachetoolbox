@@ -9,7 +9,7 @@ done
 if [ -z $LIBPNG_DIR ];then
  cd $root/src
  echo " [$FAILED]"
- check_source "libpng-$LIBPNG.tar.gz" "http://www.libpng.org/pub/png/src/libpng-$LIBPNG.tar.gz"
+ check_source "libpng-$LIBPNG.tar.gz" "ftp://ftp.simplesystems.org/pub/libpng/src/libpng-$LIBPNG.tar.gz"
                  
  explode libpng-$LIBPNG.tar.gz
  notice "$MENUTRUE" " Untared PNG library...\n"
