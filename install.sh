@@ -162,6 +162,7 @@ comp_menu_item apache "$TRUE" " Apache submenu...\n"
 comp_menu_item php "$INSTALL_PHP" "    PHP submenu (v$PHP)...\n"
 comp_menu_item rpm "$MAKERPM" "    Build an RPM with your choices?\n"
 comp_menu_item page2 "$INSTALL_CONTRIB_checkbox" "  Apache Modules PAGE 2 ...\n"
+comp_menu_item page3 "$INSTALL_CONTRIB_checkbox" "  Apache Modules PAGE 3 ...\n"
 echo_line
 comp_menu_item 1 "$INSTALL_GD" "GD $GD" TAB;TAB;TAB; comp_menu_item 2 "$FALSE" "-SQL DB Menus-\n"
 comp_menu_item 3 "$INSTALL_MODPYTHON" "Mod Python $MODPYTHON" TAB;TAB;TAB; comp_menu_item 4 "$INSTALL_SSL" "Mod_SSL+OpenSSL\n"
@@ -195,6 +196,9 @@ comp_menu_item 21 "$INSTALL_MODLAYOUT" "-Mod Layout $MODLAYOUT"; TAB;TAB; comp_m
 		;;
 	    [pP][aA][gG][eE]2)
 		. etc/page2.menu
+		;;
+	    [pP][aA][gG][eE]3)
+		. etc/page3.menu
 		;;
             1)
         	test_choice INSTALL_GD $INSTALL_GD
