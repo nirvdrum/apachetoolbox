@@ -1,35 +1,49 @@
+#
+#	this doesn't compile static , you have to use apxs after apache is already setup :(
+#
+
 notice "$MENUTRUE" "Setting up Mod_GZIP...\n"
 cd $root/src
-check_source "mod_gzip.c" "http://www.apachetoolbox.com/data/cvs/src/mod_gzip.c"
+check_source "mod_gzip-$MODGZIP.tgz" "http://aleron.dl.sourceforge.net/sourceforge/mod-gzip/mod_gzip-$MODGZIP.tgz"
+
+ explode mod_gzip-$MODGZIP.tgz
+ notice "$MENUTRUE" " Untared mod_gzip...\n"
+
 echo "
 
 <IfModule mod_gzip.c>
 ################# Mod_GZIP ##################
-# http://www.remotecommunications.com/apache/mod_gzip/
-LogFormat \"%h %l %u %t \\"%r\\" %>s %b mod_gzip: %{mod_gzip_compression_ratio}npct.\" common_with_mod_gzip_info1
-LogFormat \"%h %l %u %t \\"%r\\" %>s %b mod_gzip: %{mod_gzip_result}n In:%{mod_gzip_input_size}n Out:%{mod_gzip_output_size}n:%{mod_gzip_compression_ratio}npct.\" common_with_mod_gzip_info2
-CustomLog logs/gzip.log common_with_mod_gzip_info2   
+# http://sourceforge.net/project/showfiles.php?group_id=54975
 
-mod_gzip_on                 Yes
-mod_gzip_minimum_file_size  300
-mod_gzip_maximum_file_size  0
-mod_gzip_maximum_inmem_size 100000
-mod_gzip_keep_workfiles     No
-# I suggest you make /usr/local/apache/gzip and use that instead
-mod_gzip_temp_dir           /tmp
-mod_gzip_item_include       file \.html$
-mod_gzip_item_include       file \.jsp$
-mod_gzip_item_include       file \.php$
-mod_gzip_item_include       file \.pl$
-mod_gzip_item_include       mime ^text/.*
-mod_gzip_item_include       mime ^application/x-httpd-php
-mod_gzip_item_include       mime ^httpd/unix-directory$
-mod_gzip_item_include       handler ^perl-script$
-mod_gzip_item_include       handler ^server-status$
-mod_gzip_item_include       handler ^server-info$
-mod_gzip_item_exclude       file \.css$
-mod_gzip_item_exclude       file \.js$
-mod_gzip_item_exclude       mime ^image/.*
+mod_gzip_on                   Yes
+mod_gzip_can_negotiate        Yes
+mod_gzip_static_suffix .gz
+AddEncoding gzip .gz
+mod_gzip_update_static No
+mod_gzip_command_version      '/mod_gzip_status'
+mod_gzip_keep_workfiles       No
+mod_gzip_minimum_file_size    500
+mod_gzip_maximum_file_size    500000
+mod_gzip_maximum_inmem_size   60000
+mod_gzip_min_http             1000
+mod_gzip_handle_methods GET POST
+
+mod_gzip_item_exclude         reqheader  "User-agent: Mozilla/4.0[678]"
+mod_gzip_item_include         file       \.html$
+mod_gzip_item_exclude         file       \.js$
+mod_gzip_item_exclude         file       \.css$
+mod_gzip_item_include         file       \.pl$
+mod_gzip_item_include         handler    ^cgi-script$
+mod_gzip_item_include         mime       ^text/html$
+mod_gzip_item_include         mime       ^text/plain$
+mod_gzip_item_include         mime       ^httpd/unix-directory$
+mod_gzip_item_exclude         mime       ^image/
+
+mod_gzip_dechunk              Yes
+LogFormat "%h %l %u %t \"%V %r\" %<s %b mod_gzip: %{mod_gzip_result}n In:%{mod_gzip_input_size}n -<Out:%{mod_gzip_output_size}n = %{mod_gzip_compression_ratio}n pct." common_with_mod_gzip_info2
+CustomLog                     logs/mod_gzip.log common_with_mod_gzip_info2
+mod_gzip_add_header_count     Yes
+mod_gzip_send_vary Yes
 ################# Mod_GZIP ##################
 </IfModule>
 
@@ -38,4 +52,6 @@ notice "$MENUTRUE" " Updated httpd.conf-dist for Mod_GZIP...\n"
 cd $root
 notice "$MENUTRUE" "Mod_GZIP setup\n"
 
-APACHECFG="$APACHECFG --add-module=$root/src/mod_gzip.c $r"
+APACHECFG="$APACHECFG --add-module=$root/src/mod_gzip-$MODGZIP/mod_gzip.c $r"
+
+
