@@ -37,5 +37,5 @@ else
  notice "$MENUTRUE" "Mod_Index_RSS already setup!\n"
 fi
 
-APACHECFG="$APACHECFG --add-module=$root/src/mod_index_rss-0.8/mod_index_rss.c $r"
+APACHECFG="$APACHECFG --add-module=$root/src/mod_index_rss-${MODINDEXRSS}/mod_index_rss.c $r"
 cd $root
