@@ -6,13 +6,22 @@ explode suphp-$SUPHP.tar.gz
 notice "$MENUTRUE" " Untared Mod_suPHP...\n"
 
 cd $root/src/suphp-$SUPHP
+
 notice "$MENUTRUE" " Configuring suPHP... "
-./configure --with-apache-user=apache &> $logdir/suphp-configure.log
+
+ $SED -e "s|/usr/sbin/suphp|$PHP_PATH/sbin/suphp|" < src/apache/mod_suphp.c  > mod_suphp.c.tmp
+ $MV mod_suphp.c.tmp src/apache/mod_suphp.c
+
+./configure --prefix=$PHP_PATH --with-php=$PHP_PATH/bin/php --with-logfile=$APACHE_PATH/logs/suphp_log --with-apache-user=apache &> $logdir/suphp-configure.log
 echo "[DONE]"
 
 notice "$MENUTRUE" " Compiling suPHP... "
 $MAKE install &> $logdir/suphp-compile.log
 echo " [DONE]"
+
+notice "$MENUTRUE" " suPHP: setting up Apache httpd.conf-dist additions..."
+echo -e "\n\n############## Mod_suPHP ####################\nsuPHP_Engine on\nAddHandler application/x-httpd-php .php .phtml .php3\n############################################\n" >> $root/apache_$APACHE/conf/httpd.conf-dist
+echo " [$DONE]"
 
 notice "$MENUTRUE" "Mod_suPHP setup!\n"
 
