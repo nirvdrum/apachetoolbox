@@ -6,7 +6,8 @@ CONTINUE3=$FALSE
         banner
 comp_menu_item 53 "$INSTALL_MODMP3" "Mod MP3"; TAB; TAB; TAB; comp_menu_item 54 "$INSTALL_MODAUTHPAM" "Mod_Auth_PAM\n";
 comp_menu_item 55 "$INSTALL_MODAUTHKERB" "Mod_Auth_Kerb"; TAB; TAB; comp_menu_item 56 "$INSTALL_MODDOSEVASIVE" "Mod_DoS_Evasive\n";
-comp_menu_item 57 "$INSTALL_MODCVS" "Mod CVS"; TAB; TAB; TAB; comp_menu_item 58 "$INSTALL_MODFORTRESS" "Mod Fortress\n"; 
+comp_menu_item 57 "$INSTALL_MODCVS" "Mod CVS"; TAB; TAB; TAB; comp_menu_item 58 "$INSTALL_MODFORTRESS" "Mod Fortress\n";
+comp_menu_item 59 "$INSTALL_MODMONO" "Mod Mono\n";
 
 #comp_menu_item 65 "$INSTALL_MODDNS" "Mod DNS\n";
 comp_menu_item on "0" "All ON"; TAB; TAB; TAB; comp_menu_item off "0" "All OFF\n";
@@ -39,6 +40,10 @@ echo "   99) Descriptions"
 	    58)
 		test_choice INSTALL_MODFORTRESS $INSTALL_MODFORTRESS
 		INSTALL_MODFORTRESS=$var
+		;;
+	    59)
+		test_choice INSTALL_MODMONO $INSTALL_MODMONO
+		INSTALL_MODMONO=$var
 		;;
 
             on)   

@@ -174,7 +174,7 @@ comp_menu_item 13 "$INSTALL_MODACCESSREF" "-Mod AccessRef $MODACCESSREF"; TAB; c
 comp_menu_item 15 "$INSTALL_MODBANDWIDTH" "-Mod Bandwidth"; TAB;TAB; comp_menu_item 16 "$INSTALL_MODPERL" "-Mod Perl $MODPERL$n"
 comp_menu_item 17 "$INSTALL_MODAUTHLDAP" "-Mod Auth LDAP"; TAB;TAB; comp_menu_item 18 "$INSTALL_MODJK" "-Mod JK $MOD_JK $n"
 comp_menu_item 19 "$INSTALL_MODAUTHRADIUS" "-Mod Auth Radius"; TAB; comp_menu_item 20 "$INSTALL_MODAUTHPOP3" "-Mod Auth POP3$n";
-comp_menu_item 21 "$INSTALL_MODLAYOUT" "-Mod Layout $MODLAYOUT"; TAB;TAB; comp_menu_item 22 "$INSTALL_MODTCL" "-Mod DTCL$n";
+comp_menu_item 21 "$INSTALL_MODLAYOUT" "-Mod Layout $MODLAYOUT"; TAB; comp_menu_item 22 "$INSTALL_MODTCL" "-Mod DTCL$n";
 
         say "$t q) Quit$t$t 99) Descriptions$n$t$t go) Compile selections...$n"
 
@@ -709,6 +709,10 @@ test $INSTALL_MODCVS -eq $TRUE && . $root/bin/contrib/mod_cvs
 #------------------------------------- Mod Fortress ---------------------------------------------
 
 test $INSTALL_MODFORTRESS -eq $TRUE && . $root/bin/contrib/mod_fortress
+
+#------------------------------------- Mod Mono ------------------------------
+
+test $INSTALL_MODMONO -eq $TRUE && . $root/bin/contrib/mod_mono
 
 #	End of apache module section, start the apache configuration section
 

@@ -1,0 +1,19 @@
+# Created by Kevin J. Menard, Jr. <kmenard@wpi.edu>, August 10, 2004.
+
+notice "$MENUTRUE" "Getting Mod Mono v$MODMONO ready . . .\n"
+
+  cd $root/src
+  check_source "mod_mono-${MODMONO}.tar.gz" "http://www.go-mono.com/archive/1.0.1/mod_mono-${MODMONO}.tar.gz"
+  explode mod_mono-${MODMONO}.tar.gz
+  notice "$MENUTRUE" " Untar'ed Mod Mono . . .\n"
+
+  if [ -d "$root/apache_$APACHE/src/modules/mono" ]; 
+	then rm -rf $root/apache_$APACHE/src/modules/mono;
+  fi
+
+  $MV -f $root/src/mod_mono-$MODMONO $root/apache_$APACHE/src/modules/mono
+
+cd $root
+notice "$MENUTRUE" "Mod_Mono setup\n"
+
+APACHECFG="$APACHECFG --activate-module=src/modules/mono/libmono.a $r"
