@@ -1,3 +1,9 @@
+v1.5.72		
+		Patched Apache to work with some third party mods (e.g., 
+		mod_dav & frontpage extensions) correctly.  Many version 
+		updates in general.  Fixed a bug with the MySQL install 
+		script.
+
 v1.5.71		08/12/04
 		Updated Apache httpd to v1.3.31 as well as mod_ssl.  Many other
 		updates, including PHP, MySQL, GD, libcurl, libxml2, libmcrypt,

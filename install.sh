@@ -165,7 +165,7 @@ comp_menu_item page2 "$INSTALL_CONTRIB_checkbox" "  Apache Modules PAGE 2 ...\n"
 comp_menu_item page3 "$INSTALL_CONTRIB_checkbox" "  Apache Modules PAGE 3 ...\n"
 echo_line
 comp_menu_item 1 "$INSTALL_GD" "GD $GD" TAB;TAB;TAB; comp_menu_item 2 "$FALSE" "-SQL DB Menus-\n"
-comp_menu_item 3 "$INSTALL_MODPYTHON" "Mod Python $MODPYTHON" TAB;TAB;TAB; comp_menu_item 4 "$INSTALL_SSL" "Mod_SSL+OpenSSL\n"
+comp_menu_item 3 "$INSTALL_MODPYTHON" "Mod Python $MODPYTHON" TAB;TAB; comp_menu_item 4 "$INSTALL_SSL" "Mod_SSL+OpenSSL\n"
 comp_menu_item 5 "$INSTALL_MODTHROTTLE" "-Mod Throttle $THROTTLE"; TAB; comp_menu_item 6 "$INSTALL_WEBDAV" "-WebDAV $WEBDAV$n";
 comp_menu_item 7 "$INSTALL_MODFASTCGI" "-Mod FastCGI"; TAB;TAB; comp_menu_item 8 "$INSTALL_MODAUTHNDS" "-Mod AuthNDS $MODAUTHNDS$n";
 comp_menu_item 9 "$INSTALL_MODFRONTPAGE" "-Frontpage 2002"; TAB;TAB; comp_menu_item 10 "$INSTALL_MODGZIP" "-Mod GZIP $MODGZIP$n";
@@ -467,7 +467,7 @@ if [ -d apache_$APACHE ]; then
 
 else 
  cd $root/src
- check_source "apache_$APACHE.tar.gz" "http://ftp.epix.net/apache/httpd/apache_$APACHE.tar.gz"
+ check_source "apache_$APACHE.tar.gz" "http://apache.mirrors.pair.com/httpd/apache_$APACHE.tar.gz"
  explode apache_$APACHE.tar.gz
  $MV -f $root/src/apache_$APACHE $root/apache_$APACHE >/dev/null
  $CP -f $root/apache_$APACHE/conf/httpd.conf-dist $root/apache_$APACHE/conf/httpd.conf-dist~
@@ -484,6 +484,14 @@ fi
 #	otherwise we've had a huge problem and should exit
 
 if [ ! -d apache_$APACHE ]; then notice "$MENUFALSE" "Uncompressing Apache source failed!"; exit; fi
+
+
+
+# Integrate a patch that should fix a few modules (mod_dav and frontpage extensions at least) in 1.3.31.  Hopefully this will be fixed in later releases and can be removed from ATB.
+
+notice "$MENUTRUE" " Patching Apache source to fix a bug that affects several modules.\n"
+$SED -e "s|r->connection->keepalive > 0|r->connection->keepalive != -1|" < $root/apache_$APACHE/src/main/http_request.c > $root/apache_$APACHE/src/main/http_request.c.tmp
+$MV $root/apache_$APACHE/src/main/http_request.c.tmp $root/apache_$APACHE/src/main/http_request.c
 
 
 
@@ -507,8 +515,6 @@ cd $root
 
 #	at this point apache is all set and ready to have modules add
 #	to it.  we add modules from here on.
-
-
 
 #---------------------------------- Default Apache Mods ---------------------------------------
 

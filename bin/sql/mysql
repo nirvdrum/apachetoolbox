@@ -3,12 +3,12 @@
 cd $root/src
 notice "$MENUTRUE" "Setting up MySQL...\n"  
 
-  test -x /usr/local/bin/safe_mysqld && MYSQLD=/usr/local/bin/safe_mysqld
-  test -x /usr/bin/safe_mysqld && MYSQLD=/usr/bin/safe_mysqld
-  test -x /opt/mysql/bin/safe_mysqld && MYSQLD=/opt/mysql/bin/safe_mysqld
-  test -x /usr/local/mysql/bin/safe_mysqld && MYSQLD=/usr/local/mysql/bin/safe_mysqld
-  test -x $LOCAL_PATH/bin/safe_mysqld && MYSQLD=$LOCAL_PATH/bin/safe_mysqld
-  test -x $LOCAL_PATH/mysql/bin/safe_mysqld && MYSQLD=$LOCAL_PATH/mysql/bin/safe_mysqld
+  test -x /usr/local/bin/safe_mysqld && MYSQLD=/usr/local/bin/mysqld_safe
+  test -x /usr/bin/mysqld_safe && MYSQLD=/usr/bin/mysqld_safe
+  test -x /opt/mysql/bin/mysqld_safe && MYSQLD=/opt/mysql/bin/mysqld_safe
+  test -x /usr/local/mysql/bin/mysqld_safe && MYSQLD=/usr/local/mysql/bin/mysqld_safe
+  test -x $LOCAL_PATH/bin/mysqld_safe && MYSQLD=$LOCAL_PATH/bin/mysqld_safe
+  test -x $LOCAL_PATH/mysql/bin/mysqld_safe && MYSQLD=$LOCAL_PATH/mysql/bin/mysqld_safe
 
 if [ ! -x "$MYSQLD" ];then
  check_source "mysql-$MYSQL.tar.gz" "http://mirror.services.wisc.edu/mysql/Downloads/MySQL-4.0/mysql-$MYSQL.tar.gz"
@@ -182,7 +182,7 @@ if [ ! -x "$MYSQLD" ];then
  if [ ! $MYSQL_START -eq $TRUE ]; then
   notice "$MENUFALSE" "MySQL failed to start, exiting.\n\n"
   echo
-  notice "$MENUFALSE" "Test \"${MYSQLPREFIX}/bin/safe_mysqld --user=$MYSQLUSER &\"...\n";
+  notice "$MENUFALSE" "Test \"${MYSQLPREFIX}/bin/mysqld_safe --user=$MYSQLUSER &\"...\n";
   exit 1
  fi
 
