@@ -11,7 +11,7 @@ notice "$MENUTRUE" "Setting up MySQL...\n"
   test -x $LOCAL_PATH/mysql/bin/safe_mysqld && MYSQLD=$LOCAL_PATH/mysql/bin/safe_mysqld
 
 if [ ! -x "$MYSQLD" ];then
- check_source "mysql-$MYSQL.tar.gz" "http://mysql.towardex.com/Downloads/MySQL-3.23/mysql-$MYSQL.tar.gz"
+ check_source "mysql-$MYSQL.tar.gz" "http://mirror.services.wisc.edu/mysql/Downloads/MySQL-4.0/mysql-$MYSQL.tar.gz"
  notice "$MENUTRUE" " MySQL: uncompressing...\n"
  explode mysql-$MYSQL.tar.gz
 
