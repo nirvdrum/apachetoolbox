@@ -1,0 +1,19 @@
+notice "$MENUTRUE" "Setting up Mod_suPHP...\n"
+cd $root/src
+
+check_source "suphp-$SUPHP.tar.gz" "http://www.suphp.org/download/suphp-$SUPHP.tar.gz"
+explode suphp-$SUPHP.tar.gz
+notice "$MENUTRUE" " Untared Mod_suPHP...\n"
+
+cd $root/src/suphp-$SUPHP
+notice "$MENUTRUE" " Configuring suPHP... "
+./configure --with-apache-user=apache &> $logdir/suphp-configure.log
+echo "[DONE]"
+
+notice "$MENUTRUE" " Compiling suPHP... "
+$MAKE install &> $logdir/suphp-compile.log
+echo " [DONE]"
+
+notice "$MENUTRUE" "Mod_suPHP setup!\n"
+
+APACHECFG="$APACHECFG --add-module=$root/src/suphp-$SUPHP/src/apache/mod_suphp.c $r"
