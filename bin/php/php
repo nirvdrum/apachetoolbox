@@ -19,8 +19,7 @@ PHPROOT=`echo $PHP|cut -d "." -f 1`
  fi
 
 #	check for PHP more options to add to PHP
-
-. $root/bin/php/php-gdlibs
+. $root/bin/php/php-openssl
 test $INSTALL_PHP_IMAP -eq $TRUE && . $root/bin/php/php-imap
 test $INSTALL_PHP_MHASH -eq $TRUE && . $root/bin/php/php-mhash
 test $INSTALL_PHP_MCRYPT -eq $TRUE && . $root/bin/php/php-mcrypt
@@ -28,7 +27,6 @@ test $INSTALL_PHP_UNIXODBC -eq $TRUE && . $root/bin/php/php-unixodbc
 test $INSTALL_PHP_PDFLIB_SRC -eq $TRUE && . $root/bin/php/php-pdflib-src
 test $INSTALL_PHP_PDFLIB_BINARY -eq $TRUE && . $root/bin/php/php-pdflib-binary
 test $INSTALL_PHP_SNMP -eq $TRUE && . $root/bin/php/php-snmp
-. $root/bin/php/php-openssl
 test $INSTALL_PHP_LIBCURL -eq $TRUE && . $root/bin/php/php-libcurl
 test $INSTALL_PHP_APC -eq $TRUE && . $root/bin/php/php-apc
 test $INSTALL_PHP_MING -eq $TRUE && . $root/bin/php/php-ming
@@ -42,6 +40,7 @@ test $INSTALL_PHP_DOM -eq $TRUE && . $root/bin/php/php-dom
 test $INSTALL_PHP_XSLT -eq $TRUE && . $root/bin/php/php-xslt
 test $INSTALL_PHP_GMP -eq $TRUE && . $root/bin/php/php-gmp
 test $INSTALL_PHP_GD -eq $TRUE && . $root/bin/php/php-gd
+test $INSTALL_PHP_GD -eq $FALSE && . $root/bin/php/php-gdlibs
 . $root/bin/php/php-mysql
 . $root/bin/php/php-postgres
 . $root/bin/php/php-frontbase
