@@ -16,7 +16,7 @@ comp_menu_item 13 "$INSTALL_PHP_SYSVSHM" "System V shared memory"; TAB; comp_men
 comp_menu_item 15 "$INSTALL_PHP_OCI8" "Oracle 8i Support"; TAB; comp_menu_item 16 "$INSTALL_PHP_GETTEXT" "Gettext Support\n";
 comp_menu_item 17 "$INSTALL_PHP_SSL" "OpenSSL Support"; TAB; TAB; comp_menu_item 18 "$INSTALL_PHP_CYRUS" "Cyrus IMAP Admin Support\n";
 comp_menu_item 19 "$INSTALL_PHP_DOM" "DOM XML"; TAB; TAB; TAB; comp_menu_item 20 "$INSTALL_PHP_XSLT" "XSLT Support\n";
-comp_menu_item 21 "$INSTALL_PHP_GMP" "GMP"; TAB; TAB; TAB; comp_menu_item 22 "$INSTALL_PHP_GD" "GD Support\n";
+comp_menu_item 21 "$INSTALL_PHP_GMP" "GMP"; TAB; TAB; TAB; comp_menu_item 22 "$INSTALL_PHP_GD" "GD $PHP_GD Support\n";
 
 echo
 echo -e "   go) Back to main menu..."
