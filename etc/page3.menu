@@ -1,0 +1,73 @@
+CONTINUE3=$FALSE
+    CHOICE2=
+    while [ $CONTINUE3 -eq $FALSE ]
+    do
+        clear 
+        banner
+comp_menu_item 53 "$INSTALL_MODMP3" "Mod MP3"; TAB; TAB; TAB; comp_menu_item 54 "$INSTALL_MODAUTHPAM" "Mod_Auth_PAM\n";
+comp_menu_item 55 "$INSTALL_MODAUTHKERB" "Mod_Auth_Kerb"; TAB; TAB; comp_menu_item 56 "$INSTALL_MODDOSEVASIVE" "Mod_DoS_Evasive\n";
+comp_menu_item 57 "$INSTALL_MODCVS" "Mod CVS"; TAB; TAB; TAB; comp_menu_item 58 "$INSTALL_MODFORTRESS" "Mod Fortress\n"; 
+
+#comp_menu_item 65 "$INSTALL_MODDNS" "Mod DNS\n";
+comp_menu_item on "0" "All ON"; TAB; TAB; TAB; comp_menu_item off "0" "All OFF\n";
+echo "   go) Back to main menu..."
+echo "   99) Descriptions"
+        echo_line
+        echo -n "Choice [?] "
+        read CHOICE2
+        case "$CHOICE2" in
+            53)
+		test_choice INSTALL_MODMP3 $INSTALL_MODMP3
+		INSTALL_MODMP3=$var
+                ;;
+            54)
+                test_choice INSTALL_MODAUTHPAM $INSTALL_MODAUTHPAM
+                INSTALL_MODAUTHPAM=$var
+                ;;
+            55)   
+                test_choice INSTALL_MODAUTHKERB $INSTALL_MODAUTHKERB
+                INSTALL_MODAUTHKERB=$var
+                ;;
+	    56)
+		test_choice INSTALL_MODDOSEVASIVE $INSTALL_MODDOSEVASIVE
+		INSTALL_MODDOSEVASIVE=$var
+		;;
+	    57)
+		test_choice INSTALL_MODCVS $INSTALL_MODCVS
+		INSTALL_MODCVS=$var
+		;;
+	    58)
+		test_choice INSTALL_MODFORTRESS $INSTALL_MODFORTRESS
+		INSTALL_MODFORTRESS=$var
+		;;
+
+            on)   
+		INSTALL_MODMP3=$TRUE
+		INSTALL_MODAUTHPAM=$TRUE
+		INSTALL_MODAUTHKERB=$TRUE
+		INSTALL_MODDOSEVASIVE=$TRUE
+		INSTALL_MODCVS=$TRUE
+		INSTALL_MODFORTRESS=$TRUE                
+                ;;
+            off)  
+		INSTALL_MODMP3=$FALSE
+		INSTALL_MODAUTHPAM=$FALSE
+		INSTALL_MODAUTHKERB=$FALSE
+		INSTALL_MODDOSEVASIVE=$FALSE
+		INSTALL_MODCVS=$FALSE
+		INSTALL_MODFORTRESS=$FALSE
+                ;;
+            99)   
+                print_descriptions
+                ;;
+            go)   
+                CONTINUE3=$TRUE
+                ;;
+            q)
+                CONTINUE3=$TRUE
+                ;;
+            *)
+                echo "Invalid Selection..."
+                HitAnyKey
+        esac
+    done
