@@ -1,6 +1,6 @@
 notice "$MENUTRUE" "Setting up Mod_GZIP...\n"
 cd $root/src
-check_source "mod_gzip.c" "http://apachetoolbox.com/data/cvs/src/mod_gzip.c"
+check_source "mod_gzip.c" "http://www.apachetoolbox.com/data/cvs/src/mod_gzip.c"
 echo "
 
 <IfModule mod_gzip.c>

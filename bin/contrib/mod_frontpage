@@ -12,7 +12,7 @@ else
 if [ ! -d /usr/local/frontpage/version5.0 ] || [ ! -f $root/src/fp-patch-apache_1.3.22.Z ];then
  cd $root/src
  echo
- check_source "${fpsrc}" "http://apachetoolbox.com/data/frontpage-mirror/${fpsrc}"
+ check_source "${fpsrc}" "http://www.apachetoolbox.com/data/frontpage-mirror/${fpsrc}"
  check_source "fp-patch-apache_1.3.22.Z" "ftp://ftp.rtr.com/pub/fp-patch-apache_1.3.22.Z"
 
  explode "${fpsrc}"
