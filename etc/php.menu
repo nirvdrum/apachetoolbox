@@ -6,7 +6,8 @@ CHOICE2=
         banner
 
 comp_menu_item path "$FALSE" "Change PHP's installation path: $PHP_PATH\n";
-comp_menu_item 1 "$INSTALL_PHP" "mod_php"; TAB;TAB;TAB; comp_menu_item 2 "$TRUE" "v$PHP\n";
+comp_menu_item cgi "$INSTALL_PHP_CGI" "Build PHP as a CGI program\n";
+comp_menu_item 1 "$INSTALL_PHP_MODPHP" "mod_php"; TAB;TAB;TAB; comp_menu_item 2 "$TRUE" "v$PHP\n";
 comp_menu_item 3 "$INSTALL_PHP_IMAP" "IMAP"; TAB;TAB;TAB; comp_menu_item 4 "$INSTALL_PHP_MHASH" "mhash\n";
 comp_menu_item 5 "$INSTALL_PHP_MCRYPT" "libmcrypt"; TAB;TAB; comp_menu_item 6 "$INSTALL_PHP_APC" "APC (like zendoptimizer)\n";
 comp_menu_item 7 "$INSTALL_PHP_PDFLIB" "-PDFlib-"; TAB;TAB;TAB; comp_menu_item 8 "$INSTALL_PHP_UNIXODBC" "unixODBC\n";
@@ -17,6 +18,7 @@ comp_menu_item 15 "$INSTALL_PHP_OCI8" "Oracle 8i Support"; TAB; comp_menu_item 1
 comp_menu_item 17 "$INSTALL_PHP_SSL" "OpenSSL Support"; TAB; TAB; comp_menu_item 18 "$INSTALL_PHP_CYRUS" "Cyrus IMAP Admin Support\n";
 comp_menu_item 19 "$INSTALL_PHP_DOM" "DOM XML"; TAB; TAB; TAB; comp_menu_item 20 "$INSTALL_PHP_XSLT" "XSLT Support\n";
 comp_menu_item 21 "$INSTALL_PHP_GMP" "GMP"; TAB; TAB; TAB; comp_menu_item 22 "$INSTALL_PHP_GD" "GD $PHP_GD Support\n";
+comp_menu_item 23 "$INSTALL_PHP_SUPHP" "suPHP\n";
 
 echo
 echo -e "   go) Back to main menu..."
@@ -38,9 +40,20 @@ echo -e "   99) Descriptions"
         fi
         ;; 
 
+        [cC][gG][iI])
+	test_choice INSTALL_PHP_CGI $INSTALL_PHP_CGI
+        INSTALL_PHP_CGI=$var
+        INSTALL_PHP=$var
+
+	if [ $var -eq $TRUE ]; then
+	  INSTALL_PHP_MODPHP=$FALSE
+	fi
+        ;; 	
+
             1)
-                test_choice INSTALL_PHP $INSTALL_PHP
-                INSTALL_PHP=$var
+                test_choice INSTALL_PHP_MODPHP $INSTALL_PHP_MODPHP
+                INSTALL_PHP_MODPHP=$var
+		INSTALL_PHP=$var
                 if [ $var -eq $FALSE ]
                 then
                  INSTALL_PHP_IMAP=$FALSE
@@ -68,6 +81,9 @@ echo -e "   99) Descriptions"
 		 INSTALL_PHP_XSLT=$FALSE
 		 INSTALL_PHP_GMP=$FALSE
 		 INSTALL_PHP_GD=$FALSE
+		else
+		 INSTALL_PHP_CGI=$FALSE
+		 INSTALL_PHP_SUPHP=$FALSE
                 fi
                 ;;                 
             2)
@@ -192,6 +208,11 @@ echo -e "   99) Descriptions"
 	    22)
 		test_choice INSTALL_PHP_GD $INSTALL_PHP_GD
 		INSTALL_PHP_GD=$var
+		;;
+	    23)
+		test_choice INSTALL_PHP_SUPHP $INSTALL_PHP_SUPHP
+		INSTALL_PHP_SUPHP=$var
+		INSTALL_PHP_CGI=$var
 		;;
             99)   
                 print_descriptions
