@@ -25,6 +25,7 @@ comp_menu_item 66 "$INSTALL_MODAUTHMYSQL" "Mod Auth MySQL"; TAB; TAB; comp_menu_
 comp_menu_item 68 "$INSTALL_MODINDEXRSS" "Mod Index RSS"; TAB; TAB; comp_menu_item 69 "$INSTALL_MODRANDOM" "Mod Random [Brian Akar's]\n";
 comp_menu_item 70 "$INSTALL_MODMP3" "Mod MP3"; TAB; TAB; TAB; comp_menu_item 71 "$INSTALL_MODAUTHPAM" "Mod_Auth_PAM\n";
 comp_menu_item 72 "$INSTALL_MODAUTHKERB" "Mod_Auth_Kerb"; TAB; TAB; comp_menu_item 73 "$INSTALL_MODDOSEVASIVE" "Mod_DoS_Evasive\n";
+comp_menu_item 74 "$INSTALL_MODCVS" "Mod CVS"; TAB; TAB; TAB; comp_menu_item 75 "$INSTALL_MODFORTRESS" "Mod Fortress\n"; 
 
 #comp_menu_item 65 "$INSTALL_MODDNS" "Mod DNS\n";
 #comp_menu_item on "0" "All ON\n";  
@@ -195,6 +196,14 @@ echo "   99) Descriptions"
 		test_choice INSTALL_MODDOSEVASIVE $INSTALL_MODDOSEVASIVE
 		INSTALL_MODDOSEVASIVE=$var
 		;;
+	    74)
+		test_choice INSTALL_MODCVS $INSTALL_MODCVS
+		INSTALL_MODCVS=$var
+		;;
+	    75)
+		test_choice INSTALL_MODFORTRESS $INSTALL_MODFORTRESS
+		INSTALL_MODFORTRESS=$var
+		;;
 
 
             beta)
@@ -238,7 +247,9 @@ echo "   99) Descriptions"
 		INSTALL_MODAUTHPAM=$TRUE
 		INSTALL_MODAUTHKERB=$TRUE
 		INSTALL_MODDOSEVASIVE=$TRUE
-                
+		INSTALL_MODCVS=$TRUE
+		INSTALL_MODFORTRESS=$TRUE                
+
                 echo "** WARNING: Mod_Macro requires mod_perl!"
                 HitAnyKey
                 
@@ -280,6 +291,8 @@ echo "   99) Descriptions"
 		INSTALL_MODAUTHPAM=$FALSE
 		INSTALL_MODAUTHKERB=$FALSE
 		INSTALL_MODDOSEVASIVE=$FALSE
+		INSTALL_MODCVS=$FALSE
+		INSTALL_MODFORTRESS=$FALSE
                 ;;
             99)   
                 print_descriptions
