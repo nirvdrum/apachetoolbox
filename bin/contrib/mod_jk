@@ -12,10 +12,10 @@ check_source "jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src.tar.gz" "http://www.
   fi
 
 cd jakarta-tomcat-connectors-${JAKARTA_TOMCAT}-src/jk/native
-./buildconf.sh > $logdir/mod_jk-build.log
-./configure --with-apache=$root/apache_$APACHE > $logdir/mod_jk-configure.log
-$MAKE > $logdir/mod_jk-compile.log
-$MAKE install > $logdir/mod_jk-install.log
+./buildconf.sh &> $logdir/mod_jk-build.log
+./configure --with-apache=$root/apache_$APACHE &> $logdir/mod_jk-configure.log
+$MAKE &> $logdir/mod_jk-compile.log
+$MAKE install &> $logdir/mod_jk-install.log
 
 notice "$MENUTRUE" "Mod_JK setup!\n"
 
