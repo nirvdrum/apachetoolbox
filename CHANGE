@@ -1,3 +1,12 @@
+v1.5.71		xx/xx/04
+		Updated Apache httpd to v1.3.31 as well as mod_ssl.  Many other
+		updates, including MySQL, GD, libcurl, libxml2, libmcrypt,
+		OpenLDAP, and Python.
+
+v1.5.70		05/27/04
+		Updates for a number of modules.  Fixed a number of small bugs,
+		including the issue with mod_perl.
+
 v1.5.69		11/04/03
 		Updates for a number of modules, notably mod_ssl and mod_php.
 		Added PHP5 support.  Reorganized ATB menus.  Better support
