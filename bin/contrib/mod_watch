@@ -10,6 +10,11 @@ check_source "mod_watch${MODWATCH}.tgz" "http://www.snert.com/Software/download/
  $MV TEMPmod_watch${MODWATCH}.tgz mod_watch${MODWATCH}.tgz
  notice "$MENUTRUE" " Untared Mod_Watch...\n"
 
+ cd mod_watch
+ $SED -e "s|APACHEDIR=/usr/local/src/apache_1.3.27|APACHEDIR=$root/apache_$APACHE/|" < Makefile  > Makefile.tmp
+ $MV Makefile.tmp Makefile
+ $MAKE install-static &> $logdir/mod_watch-install
+
 echo "
 
 <IfModule mod_watch.c>
