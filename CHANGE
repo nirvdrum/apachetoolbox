@@ -1,3 +1,8 @@
+v1.5.69		11/04/03
+		Updates for a number of modules, notably mod_ssl and mod_php.
+		Added PHP5 support.  Reorganized ATB menus.  Better support
+		for MacOS X w/ fink.
+
 v1.5.68		10/30/03
 		Updated Apache, mod_perl, mod_mp3, MySQL, libmcrypt bug,
 		mysql ATB script bug - credit to ON jOlt for emailing me
