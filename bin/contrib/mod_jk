@@ -1,6 +1,6 @@
 cd $root/src
 
-check_source "jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src.tar.gz" "http://www.wmwweb.com/apache/jakarta/tomcat-4/source/jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src.tar.gz"
+check_source "jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src.tar.gz" "http://mirrors.midco.net/pub/apache.org/jakarta/tomcat-4/v$JAKARTA_TOMCAT/src/jakarta-tomcat-connectors-$JAKARTA_TOMCAT-src.tar.gz"
  notice "$MENUTRUE" " Jakarta-Tomcat Connectors begin setup...\n"
 
  explode jakarta-tomcat-connectors-${JAKARTA_TOMCAT}-src.tar.gz
