@@ -560,7 +560,7 @@ test $INSTALL_MODRANDOM -eq $TRUE && . $root/bin/contrib/mod_random
 
 #----------------------------------- Mod MP3 --------------------------------------
 
-test $INSTALL_MODMP3 -eq $TRUE && . $root/bin/contri/mod_mp3
+test $INSTALL_MODMP3 -eq $TRUE && . $root/bin/contrib/mod_mp3
 
 #------------------------------------- MOD AuthNDS  ---------------------------------------------------
 
