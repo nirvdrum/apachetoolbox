@@ -2,208 +2,178 @@ CONTINUE2=$FALSE
     CHOICE2=
     while [ $CONTINUE2 -eq $FALSE ]
     do
-#comp_menu_item 60 "$INSTALL_CONTRIB_cache" "Mod Cache"; TAB;TAB;
-#comp_menu_item 47 "$INSTALL_CONTRIB_define" "Mod Define$n";
-#comp_menu_item 51 "$INSTALL_CONTRIB_lock" "Mod Lock$n";
         clear 
         banner
-comp_menu_item 40 "$INSTALL_CONTRIB_mod_auth_cookie" "Mod Auth Cookie"; TAB;TAB; 
-comp_menu_item 41 "$INSTALL_CONTRIB_auth_cookie_file" "Mod Auth Cookie File$n";
-comp_menu_item 42 "$INSTALL_CONTRIB_auth_external" "Mod Auth External"; TAB; comp_menu_item 43 "$INSTALL_CONTRIB_auth_inst"  "Mod Auth Instant$n";
-comp_menu_item 44 "$INSTALL_CONTRIB_cgisock" "Mod CGI Sock"; TAB;TAB; comp_menu_item 45 "$INSTALL_CONTRIB_cvs" "Mod CVS$n";
-comp_menu_item 46 "$INSTALL_CONTRIB_session" "Mod Session"; TAB;TAB; comp_menu_item 47 "$INSTALL_CONTRIB_ticket" "Mod Ticket$n";
-comp_menu_item 48 "$INSTALL_CONTRIB_disallow_id" "Mod Disallow ID"; TAB;TAB; comp_menu_item 49 "$INSTALL_CONTRIB_eaccess"  "Mod EAccess$n";
-comp_menu_item 50 "$INSTALL_CONTRIB_ip_forwarding" "Mod IP Forwarding"; TAB; comp_menu_item 51 "$INSTALL_CONTRIB_urlcount"  "Mod Url count$n";
-comp_menu_item 52 "$INSTALL_CONTRIB_macro" "Mod Macro"; TAB;TAB; comp_menu_item 53 "$INSTALL_CONTRIB_monitor" "Mod Monitor$n"; 
-comp_menu_item 54 "$INSTALL_CONTRIB_peephole" "Mod Peephole"; TAB;TAB; comp_menu_item 55 "$INSTALL_CONTRIB_put" "Mod Put$n";   
-comp_menu_item 56 "$INSTALL_CONTRIB_qs2ssi" "Mod QS2 SSI"; TAB;TAB; comp_menu_item 57 "$INSTALL_CONTRIB_random" "Mod Random [old]$n";
-comp_menu_item 58 "$INSTALL_CONTRIB_allowdev" "Mod AllowDev"; TAB;TAB; comp_menu_item 59 "$INSTALL_MODRELOCATE" "Mod Relocate\n";
-comp_menu_item 60 "$INSTALL_APACHE_IPV6" "Apache IPv6 Support"; TAB; comp_menu_item 61 "$INSTALL_MODPCGI2" "Mod PCGI2\n";
-comp_menu_item 62 "$INSTALL_MODBACKHAND" "Mod Backhand"; TAB; TAB;  comp_menu_item 63 "$INSTALL_MODWATCH" "Mod Watch\n";
-comp_menu_item 64 "$INSTALL_MODTRIGGER" "Mod Trigger"; TAB; TAB; comp_menu_item 65 "$INSTALL_MODFILTER" "Mod Filter\n";
-comp_menu_item 66 "$INSTALL_MODAUTHMYSQL" "Mod Auth MySQL"; TAB; TAB; comp_menu_item 67 "$INSTALL_MODAUTHSAMBA" "Mod Auth SAMBA\n";
-comp_menu_item 68 "$INSTALL_MODINDEXRSS" "Mod Index RSS"; TAB; TAB; comp_menu_item 69 "$INSTALL_MODRANDOM" "Mod Random [Brian Akar's]\n";
-comp_menu_item 70 "$INSTALL_MODMP3" "Mod MP3"; TAB; TAB; TAB; comp_menu_item 71 "$INSTALL_MODAUTHPAM" "Mod_Auth_PAM\n";
-comp_menu_item 72 "$INSTALL_MODAUTHKERB" "Mod_Auth_Kerb"; TAB; TAB; comp_menu_item 73 "$INSTALL_MODDOSEVASIVE" "Mod_DoS_Evasive\n";
-comp_menu_item 74 "$INSTALL_MODCVS" "Mod CVS"; TAB; TAB; TAB; comp_menu_item 75 "$INSTALL_MODFORTRESS" "Mod Fortress\n"; 
+comp_menu_item 23 "$INSTALL_CONTRIB_mod_auth_cookie" "Mod Auth Cookie"; TAB;TAB; 
+comp_menu_item 24 "$INSTALL_CONTRIB_auth_cookie_file" "Mod Auth Cookie File$n";
+comp_menu_item 25 "$INSTALL_CONTRIB_auth_external" "Mod Auth External"; TAB; comp_menu_item 26 "$INSTALL_CONTRIB_auth_inst"  "Mod Auth Instant$n";
+comp_menu_item 27 "$INSTALL_CONTRIB_cgisock" "Mod CGI Sock"; TAB;TAB; comp_menu_item 28 "$INSTALL_CONTRIB_cvs" "Mod CVS$n";
+comp_menu_item 29 "$INSTALL_CONTRIB_session" "Mod Session"; TAB;TAB; comp_menu_item 30 "$INSTALL_CONTRIB_ticket" "Mod Ticket$n";
+comp_menu_item 31 "$INSTALL_CONTRIB_disallow_id" "Mod Disallow ID"; TAB;TAB; comp_menu_item 32 "$INSTALL_CONTRIB_eaccess"  "Mod EAccess$n";
+comp_menu_item 33 "$INSTALL_CONTRIB_ip_forwarding" "Mod IP Forwarding"; TAB; comp_menu_item 34 "$INSTALL_CONTRIB_urlcount"  "Mod Url count$n";
+comp_menu_item 35 "$INSTALL_CONTRIB_macro" "Mod Macro"; TAB;TAB; comp_menu_item 36 "$INSTALL_CONTRIB_monitor" "Mod Monitor$n"; 
+comp_menu_item 37 "$INSTALL_CONTRIB_peephole" "Mod Peephole"; TAB;TAB; comp_menu_item 38 "$INSTALL_CONTRIB_put" "Mod Put$n";   
+comp_menu_item 39 "$INSTALL_CONTRIB_qs2ssi" "Mod QS2 SSI"; TAB;TAB; comp_menu_item 40 "$INSTALL_CONTRIB_random" "Mod Random [old]$n";
+comp_menu_item 41 "$INSTALL_CONTRIB_allowdev" "Mod AllowDev"; TAB;TAB; comp_menu_item 42 "$INSTALL_MODRELOCATE" "Mod Relocate\n";
+comp_menu_item 43 "$INSTALL_APACHE_IPV6" "Apache IPv6 Support"; TAB; comp_menu_item 44 "$INSTALL_MODPCGI2" "Mod PCGI2\n";
+comp_menu_item 45 "$INSTALL_MODBACKHAND" "Mod Backhand"; TAB; TAB;  comp_menu_item 46 "$INSTALL_MODWATCH" "Mod Watch\n";
+comp_menu_item 47 "$INSTALL_MODTRIGGER" "Mod Trigger"; TAB; TAB; comp_menu_item 48 "$INSTALL_MODFILTER" "Mod Filter\n";
+comp_menu_item 49 "$INSTALL_MODAUTHMYSQL" "Mod Auth MySQL"; TAB; TAB; comp_menu_item 50 "$INSTALL_MODAUTHSAMBA" "Mod Auth SAMBA\n";
+comp_menu_item 51 "$INSTALL_MODINDEXRSS" "Mod Index RSS"; TAB; TAB; comp_menu_item 52 "$INSTALL_MODRANDOM" "Mod Random [Brian Akar's]\n";
 
 #comp_menu_item 65 "$INSTALL_MODDNS" "Mod DNS\n";
-#comp_menu_item on "0" "All ON\n";  
-comp_menu_item off "0" "All OFF\n";
+comp_menu_item on "0" "All ON"; TAB; TAB; TAB; comp_menu_item off "0" "All OFF\n";
 echo "   go) Back to main menu..."
+echo "   page3) Apache Modules PAGE 3 ..."
 echo "   99) Descriptions"
         echo_line
         echo -n "Choice [?] "
         read CHOICE2
         case "$CHOICE2" in
-            40)   
+            23)   
                 test_choice INSTALL_CONTRIB_mod_auth_cookie $INSTALL_CONTRIB_mod_auth_cookie
                 INSTALL_CONTRIB_mod_auth_cookie=$var
                 INSTALL_CONTRIB_checkbox=$TRUE  
                 ;;
-            41)   
+            24)   
                 test_choice INSTALL_CONTRIB_auth_cookie_file $INSTALL_CONTRIB_auth_cookie_file
                 INSTALL_CONTRIB_auth_cookie_file=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            42)   
+            25)   
                 test_choice INSTALL_CONTRIB_auth_external $INSTALL_CONTRIB_auth_external
                 INSTALL_CONTRIB_auth_external=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            43)   
+            26)   
                 test_choice INSTALL_CONTRIB_auth_inst $INSTALL_CONTRIB_auth_inst
                 INSTALL_CONTRIB_auth_inst=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            44)
+            27)
                 test_choice INSTALL_CONTRIB_cgisock $INSTALL_CONTRIB_cgisock
                 INSTALL_CONTRIB_cgisock=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            45)   
+            28)   
                 test_choice INSTALL_CONTRIB_cvs $INSTALL_CONTRIB_cvs
                 INSTALL_CONTRIB_cvs=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            48)   
+            29)   
+                test_choice INSTALL_CONTRIB_session $INSTALL_CONTRIB_session
+                INSTALL_CONTRIB_session=$var
+                INSTALL_CONTRIB_checkbox=$TRUE
+                ;;
+            30)   
+                test_choice INSTALL_CONTRIB_ticket $INSTALL_CONTRIB_ticket
+                INSTALL_CONTRIB_ticket=$var
+                INSTALL_CONTRIB_checkbox=$TRUE
+                ;;
+            31)   
                 test_choice INSTALL_CONTRIB_disallow_id $INSTALL_CONTRIB_disallow_id
                 INSTALL_CONTRIB_disallow_id=$var
                 INSTALL_CONTRIB_checkbox=$TRUE  
                 ;;
-            49)   
+            32)   
                 test_choice INSTALL_CONTRIB_eaccess $INSTALL_CONTRIB_eaccess
                 INSTALL_CONTRIB_eaccess=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            50)   
+            33)   
                 test_choice INSTALL_CONTRIB_ip_forwarding $INSTALL_CONTRIB_ip_forwarding
                 INSTALL_CONTRIB_ip_forwarding=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            52)   
+            34)   
+                test_choice INSTALL_CONTRIB_urlcount $INSTALL_CONTRIB_urlcount
+                INSTALL_CONTRIB_urlcount=$var
+                INSTALL_CONTRIB_checkbox=$TRUE
+                ;;
+            35)   
                 test_choice INSTALL_CONTRIB_macro $INSTALL_CONTRIB_macro
                 INSTALL_CONTRIB_macro=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 echo "** WARNING: Mod_Macro requires mod_perl!"
                 HitAnyKey
                 ;;
-            53)   
+            36)   
                 test_choice INSTALL_CONTRIB_monitor $INSTALL_CONTRIB_monitor
                 INSTALL_CONTRIB_monitor=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            54)   
+            37)   
                 test_choice INSTALL_CONTRIB_peephole $INSTALL_CONTRIB_peephole
                 INSTALL_CONTRIB_peephole=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            55)   
+            38)   
                 test_choice INSTALL_CONTRIB_put $INSTALL_CONTRIB_put
                 INSTALL_CONTRIB_put=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            56)   
+            39)   
                 test_choice INSTALL_CONTRIB_qs2ssi $INSTALL_CONTRIB_qs2ssi
                 INSTALL_CONTRIB_qs2ssi=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            57)   
+            40)   
                 test_choice INSTALL_CONTRIB_random $INSTALL_CONTRIB_random
                 INSTALL_CONTRIB_random=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            46)   
-                test_choice INSTALL_CONTRIB_session $INSTALL_CONTRIB_session
-                INSTALL_CONTRIB_session=$var
-                INSTALL_CONTRIB_checkbox=$TRUE
-                ;;
-            47)   
-                test_choice INSTALL_CONTRIB_ticket $INSTALL_CONTRIB_ticket
-                INSTALL_CONTRIB_ticket=$var
-                INSTALL_CONTRIB_checkbox=$TRUE
-                ;;
-            58)   
+            41)   
                 test_choice INSTALL_CONTRIB_allowdev $INSTALL_CONTRIB_allowdev
                 INSTALL_CONTRIB_allowdev=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            59)   
+            42)   
                 test_choice INSTALL_MODRELOCATE $INSTALL_MODRELOCATE
                 INSTALL_MODRELOCATE=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            51)   
-                test_choice INSTALL_CONTRIB_urlcount $INSTALL_CONTRIB_urlcount
-                INSTALL_CONTRIB_urlcount=$var
-                INSTALL_CONTRIB_checkbox=$TRUE
-                ;;
-            60)
+            43)
                 test_choice INSTALL_APACHE_IPV6 $INSTALL_APACHE_IPV6
                 INSTALL_APACHE_IPV6=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            61)
+            44)
                 test_choice INSTALL_MODPCGI2 $INSTALL_MODPCGI2
                 INSTALL_MODPCGI2=$var
                 INSTALL_CONTRIB_checkbox=$TRUE
                 ;;
-            62)
+            45)
                 test_choice INSTALL_MODBACKHAND $INSTALL_MODBACKHAND
                 INSTALL_MODBACKHAND=$var
                 ;;
-            63)
+            46)
                 test_choice INSTALL_MODWATCH $INSTALL_MODWATCH
                 INSTALL_MODWATCH=$var
                 ;;
-            64)
+            47)
                 test_choice INSTALL_MODTRIGGER $INSTALL_MODTRIGGER
                 INSTALL_MODTRIGGER=$var
                 ;;
-            65)
+            48)
                 test_choice INSTALL_MODFILTER $INSTALL_MODFILTER
                 INSTALL_MODFILTER=$var
                 ;;
-            66)
+            49)
                 test_choice INSTALL_MODAUTHMYSQL $INSTALL_MODAUTHMYSQL
                 INSTALL_MODAUTHMYSQL=$var
                 ;;
-            67)
+            50)
                 test_choice INSTALL_MODAUTHSAMBA $INSTALL_MODAUTHSAMBA
                 INSTALL_MODAUTHSAMBA=$var
                 ;;
-            68)
+            51)
                 test_choice INSTALL_MODINDEXRSS $INSTALL_MODINDEXRSS
                 INSTALL_MODINDEXRSS=$var
                 ;;
-            69)
+            52)
                 test_choice INSTALL_MODRANDOM $INSTALL_MODRANDOM
                 INSTALL_MODRANDOM=$var
                 ;;
-            70)
-		test_choice INSTALL_MODMP3 $INSTALL_MODMP3
-		INSTALL_MODMP3=$var
-                ;;
-            71)
-                test_choice INSTALL_MODAUTHPAM $INSTALL_MODAUTHPAM
-                INSTALL_MODAUTHPAM=$var
-                ;;
-            72)   
-                test_choice INSTALL_MODAUTHKERB $INSTALL_MODAUTHKERB
-                INSTALL_MODAUTHKERB=$var
-                ;;
-	    73)
-		test_choice INSTALL_MODDOSEVASIVE $INSTALL_MODDOSEVASIVE
-		INSTALL_MODDOSEVASIVE=$var
-		;;
-	    74)
-		test_choice INSTALL_MODCVS $INSTALL_MODCVS
-		INSTALL_MODCVS=$var
-		;;
-	    75)
-		test_choice INSTALL_MODFORTRESS $INSTALL_MODFORTRESS
-		INSTALL_MODFORTRESS=$var
-		;;
 
 
             beta)
@@ -238,17 +208,11 @@ echo "   99) Descriptions"
 		INSTALL_MODWATCH=$TRUE
 		INSTALL_MODDNS=$TRUE
 		INSTALL_MODTRIGGER=$TRUE
-		INSTALL_FILTER=$TRUE
+		INSTALL_MODFILTER=$TRUE
 		INSTALL_MODAUTHMYSQL=$TRUE
 		INSTALL_MODAUTHSAMBA=$TRUE
 		INSTALL_MODINDEXRSS=$TRUE
 		INSTALL_MODRANDOM=$TRUE
-		INSTALL_MODMP3=$TRUE
-		INSTALL_MODAUTHPAM=$TRUE
-		INSTALL_MODAUTHKERB=$TRUE
-		INSTALL_MODDOSEVASIVE=$TRUE
-		INSTALL_MODCVS=$TRUE
-		INSTALL_MODFORTRESS=$TRUE                
 
                 echo "** WARNING: Mod_Macro requires mod_perl!"
                 HitAnyKey
@@ -287,16 +251,13 @@ echo "   99) Descriptions"
 		INSTALL_MODAUTHSAMBA=$FALSE
 		INSTALL_MODINDEXRSS=$FALSE
 		INSTALL_MODRANDOM=$FALSE
-		INSTALL_MODMP3=$FALSE
-		INSTALL_MODAUTHPAM=$FALSE
-		INSTALL_MODAUTHKERB=$FALSE
-		INSTALL_MODDOSEVASIVE=$FALSE
-		INSTALL_MODCVS=$FALSE
-		INSTALL_MODFORTRESS=$FALSE
                 ;;
             99)   
                 print_descriptions
                 ;;
+	    [pP][aA][gG][eE]3)
+		. etc/page3.menu
+		;;
             go)   
                 CONTINUE2=$TRUE
                 ;;
