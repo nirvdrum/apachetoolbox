@@ -1,7 +1,7 @@
 v1.5.71		08/12/04
 		Updated Apache httpd to v1.3.31 as well as mod_ssl.  Many other
 		updates, including PHP, MySQL, GD, libcurl, libxml2, libmcrypt,
-		OpenLDAP, and Python.  Fixed the mod_gzip bug.
+		libpng, OpenLDAP, and Python.  Fixed the mod_gzip bug.
 
 v1.5.70		05/27/04
 		Updates for a number of modules.  Fixed a number of small bugs,
