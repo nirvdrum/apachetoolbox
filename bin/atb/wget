@@ -1,22 +1,10 @@
 cd $root/src
 
-notice "$MENUTRUE" "Looking for wget..."
-if [ -x /bin/wget ] || [ -x /usr/bin/wget ] || [ -x /usr/local/bin/wget ] || [ -x wget ] || [ -x /opt/sfw/bin/wget ] || [ -x $HOME/bin/wget ]
-then
- echo " [$DONE]"
- wth WGET wget
+if [ -z $WGET ]; then
 
+ notice "$MENUFALSE" " WGet utility not installed...\n"
 
-for i in / /usr /usr/local /opt/sfw $HOME; do
-	test -x $i/bin/wget && WGET_DIR=$i
-done
-
-
-else
- echo " [$TXT_FALSE]"
- echo " WGet utility not installed..."
-
-IsYNLoop "Do you want to try and download it right now with lynx and install it?"
+ IsYNLoop "Do you want to try and download it right now with lynx and install it?"
         case "$?" in
             $NO)
                 echo -e "Moving on without wget, please make sure all the sources you'll need are in \"$root/src\"!\n
@@ -26,25 +14,25 @@ IsYNLoop "Do you want to try and download it right now with lynx and install it?
             $YES)
 
 
-	  if [ ! -f wget-$WGET.tar.gz ]; then
-	   echo "wget-$WGET.tar.gz detection failed, downloading..."
-	   $LYNX -dump ftp://ftp.gnu.org/gnu/wget/wget-$WGET.tar.gz > wget-$WGET.tar.gz
+	  if [ ! -f wget-$WGETV.tar.gz ]; then
+	   echo "wget-$WGETV.tar.gz detection failed, downloading..."
+	   $LYNX -dump ftp://ftp.gnu.org/gnu/wget/wget-$WGETV.tar.gz > wget-$WGETV.tar.gz
 	  fi
 
-	  if [ ! -f wget-$WGET.tar.gz ]; then
-	   echo "wget-$WGET.tar.gz download failed from ftp.gnu.org, trying from apachetoolbox.com..."
-	   $LYNX -dump http://www.apachetoolbox.com/data/cvs/src/wget-$WGET.tar.gz > wget-$WGET.tar.gz
+	  if [ ! -f wget-$WGETV.tar.gz ]; then
+	   echo "wget-$WGETV.tar.gz download failed from ftp.gnu.org, trying from apachetoolbox.com..."
+	   $LYNX -dump http://www.apachetoolbox.com/data/cvs/src/wget-$WGETV.tar.gz > wget-$WGETV.tar.gz
 	  fi
 
-	  if [ ! -f wget-$WGET.tar.gz ]; then
-	   echo "failed to download wget-$WGET.tar.gz from anywhere. exiting."
+	  if [ ! -f wget-$WGETV.tar.gz ]; then
+	   echo "failed to download wget-$WGETV.tar.gz from anywhere. exiting."
 	   exit 1
 	  fi
 
 
-	 explode "wget-$WGET.tar.gz"
+	 explode "wget-$WGETV.tar.gz"
 	 echo uncompressed wget...
-	 cd wget-$WGET
+	 cd wget-$WGETV
 
 	notice $MENUTRUE " Configuring..."
 	 ./configure --prefix=$LOCAL_PATH > $logdir/wget-configure.log
@@ -62,7 +50,7 @@ IsYNLoop "Do you want to try and download it right now with lynx and install it?
 	echo " [$DONE]"
 
 	 cd ..
-	 rm -rf $root/src/wget-$WGET
+	 rm -rf $root/src/wget-$WGETV
 	 if [ ! -x $LOCAL_PATH/bin/wget ];then notice "$MENUFALSE" "WGet was't automatically installed, manually install it.\n"; exit; fi
      ;;
         esac
