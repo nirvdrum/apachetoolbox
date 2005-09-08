@@ -8,7 +8,7 @@ notice "$MENUTRUE" " MING: Checking for an existing installation..."
 if [ ! -f $LOCAL_PATH/lib/libming.so ];then
  echo
  cd $root/src
- check_source "ming-${MING}.tgz" "http://www.opaque.net/ming/ming-${MING}.tgz"
+ check_source "ming-${MING}.tgz" "http://telia.dl.sourceforge.net/sourceforge/ming/ming-${MING}.tgz"
  explode ming-${MING}.tgz
 
  cd $root/src/ming-${MING}
