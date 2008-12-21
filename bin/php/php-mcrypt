@@ -6,7 +6,7 @@ if [ -z "$MCRYPTDIR" ];then
  MCRYPTDIR=$LOCAL_PATH
  cd $root/src
  notice "$MENUTRUE" "Getting Mcrypt Source ready for PHP...\n"
- check_source "libmcrypt-$MCRYPT.tar.gz" "http://easynews.dl.sourceforge.net/sourceforge/mcrypt/libmcrypt-$MCRYPT.tar.gz"
+ check_source "libmcrypt-$MCRYPT.tar.gz" "http://internap.dl.sourceforge.net/sourceforge/mcrypt/libmcrypt-$MCRYPT.tar.gz"
  explode libmcrypt-$MCRYPT.tar.gz
  notice "$MENUTRUE" " Untared libmcrypt Source for PHP...\n"
  cd libmcrypt-$MCRYPT

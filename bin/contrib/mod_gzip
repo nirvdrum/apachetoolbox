@@ -1,7 +1,7 @@
 notice "$MENUTRUE" "Setting up Mod_GZIP...\n"
 
 cd $root/src
-check_source "mod_gzip-$MODGZIP.tgz" "http://aleron.dl.sourceforge.net/sourceforge/mod-gzip/mod_gzip-$MODGZIP.tgz"
+check_source "mod_gzip-$MODGZIP.tgz" "http://internap.dl.sourceforge.net/sourceforge/mod-gzip/mod_gzip-$MODGZIP.tgz"
 
  explode mod_gzip-$MODGZIP.tgz
  notice "$MENUTRUE" " Untared mod_gzip...\n"

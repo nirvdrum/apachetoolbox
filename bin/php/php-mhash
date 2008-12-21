@@ -7,7 +7,7 @@ then
  MHASHDIR=$LOCAL_PATH
  cd $root/src
  notice "$MENUTRUE" "Getting mhash Source ready for PHP...\n"
- check_source "mhash-$MHASH.tar.gz" "http://telia.dl.sourceforge.net/sourceforge/mhash/mhash-${MHASH}.tar.gz"
+ check_source "mhash-$MHASH.tar.gz" "http://internap.dl.sourceforge.net/sourceforge/mhash/mhash-${MHASH}.tar.gz"
  explode mhash-$MHASH.tar.gz
  notice "$MENUTRUE" " Untared mhash Source for PHP...\n"
  cd mhash-$MHASH
