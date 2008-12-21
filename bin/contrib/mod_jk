@@ -1,17 +1,17 @@
 cd $root/src
 
-check_source "jakarta-tomcat-connectors-jk-$MOD_JK-src.tar.gz" "http://mirrors.midco.net/pub/apache.org/jakarta/tomcat-connectors/jk/source/jakarta-tomcat-connectors-jk-$MOD_JK-src.tar.gz"
+check_source "tomcat-connectors-$MOD_JK-src.tar.gz" "ftp://ftp.osuosl.org/pub/apache/tomcat/tomcat-connectors/jk/source/jk-$MOD_JK/tomcat-connectors-$MOD_JK-src.tar.gz"
  notice "$MENUTRUE" " Jakarta-Tomcat Connectors begin setup...\n"
 
- explode jakarta-tomcat-connectors-jk-$MOD_JK-src.tar.gz
+ explode tomcat-connectors-$MOD_JK-src.tar.gz
  notice "$MENUTRUE" "  Jakarta-Tomcat Connectors tarball uncompressed...\n"
 
-  if [ ! -d jakarta-tomcat-connectors-jk-$MOD_JK-src ]; then
+  if [ ! -d tomcat-connectors-$MOD_JK-src ]; then
    notice "$MENUFALSE" " Jakarta-Tomcat Connectors source failed to be uncompressed!\n"
    exit 1
   fi
 
-cd jakarta-tomcat-connectors-jk-$MOD_JK-src/jk/native
+cd tomcat-connectors-$MOD_JK-src/native
 ./buildconf.sh &> $logdir/mod_jk-build.log
 ./configure --with-apache=$root/apache_$APACHE &> $logdir/mod_jk-configure.log
 $MAKE &> $logdir/mod_jk-compile.log
